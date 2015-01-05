@@ -28,9 +28,10 @@ int main(int argc, const char *argv[]) {
 	NVGcontext* vg = NULL;
 
 	int defaultFont = -1;
-	PerfGraph fps;
+	GPUtimer gpuTimer;
+	PerfGraph fps, cpuGraph, gpuGraph;
 
-	double prevt = 0;
+	double prevt = 0, cpuTime = 0;
 
 	if (!glfwInit()) {
 		printf("Failed to init GLFW.");
@@ -38,6 +39,8 @@ int main(int argc, const char *argv[]) {
 	}
 
 	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
+	initGraph(&cpuGraph, GRAPH_RENDER_MS, "CPU Time");
+	initGraph(&gpuGraph, GRAPH_RENDER_MS, "GPU Time");
 
 	glfwSetErrorCallback(errorcb);
 
@@ -77,6 +80,8 @@ int main(int argc, const char *argv[]) {
 	// Load default font for performance rendering
 	defaultFont = nvgCreateFont(vg, "sans", "assets/Roboto-Regular.ttf");
 
+	initGPUTimer(&gpuTimer);
+
 	// Start timer
 	glfwSetTime(0);
 	prevt = glfwGetTime();
@@ -84,14 +89,19 @@ int main(int argc, const char *argv[]) {
 	// Run loop
 	while (!glfwWindowShouldClose(window)) {
 		double mx, my, t, dt;
+
 		int winWidth, winHeight;
 		int fbWidth, fbHeight;
 		float pxRatio;
 
+		float gpuTimes[3];
+		int i, n;
+
 		t = glfwGetTime();
 		dt = t - prevt;
 		prevt = t;
-		updateGraph(&fps, dt);
+
+		startGPUTimer(&gpuTimer);
 
 		glfwGetCursorPos(window, &mx, &my);
 		glfwGetWindowSize(window, &winWidth, &winHeight);
@@ -111,7 +121,24 @@ int main(int argc, const char *argv[]) {
 		nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
 			// Performance graph
 			renderGraph(vg, 5,5, &fps);
+			renderGraph(vg, 5 + 200 + 5, 5, &cpuGraph);
+			if (gpuTimer.supported) {
+				renderGraph(vg, 5 + 200 + 5 + 200 + 5, 5, &gpuGraph);
+			}
 		nvgEndFrame(vg);
+
+		// Measure the CPU time taken excluding swap buffers
+		// (as the swap may wait for GPU)
+		cpuTime = glfwGetTime() - t;
+
+		updateGraph(&fps, dt);
+		updateGraph(&cpuGraph, cpuTime);
+
+		// We may get multiple results.
+		n = stopGPUTimer(&gpuTimer, gpuTimes, 3);
+		for (i = 0; i < n; i++) {
+			updateGraph(&gpuGraph, gpuTimes[i]);
+		}
 
 		// Swap frame
 		glfwSwapBuffers(window);

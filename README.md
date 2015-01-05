@@ -7,5 +7,5 @@ Mural NanoVG branch (experimental)
 
 - [x] SCons building system
 - [x] Basic app setup
-- [ ] CPU & GPU Graph
+- [x] CPU & GPU Graph
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
