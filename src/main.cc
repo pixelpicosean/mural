@@ -68,9 +68,9 @@ int main(int argc, const char *argv[]) {
 
 // TODO: Set MSAA from script or enable by default
 #ifdef MURAL_MSAA
-	vg = nvgCreateGL2(NVG_STENCIL_STROKES | NVG_DEBUG);
+	vg = nvgCreateGL2(NVG_DEBUG);
 #else
-	vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+	vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_DEBUG);
 #endif
 	if (vg == NULL) {
 		printf("Could not init nanovg.\n");
