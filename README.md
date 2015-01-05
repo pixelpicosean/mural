@@ -8,4 +8,7 @@ Mural NanoVG branch (experimental)
 - [x] SCons building system
 - [x] Basic app setup
 - [x] CPU & GPU Graph
+- [ ] FBO based CanvasContext
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
+- [ ] Async assets loading
+- [ ] JavaScript bindings
