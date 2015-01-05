@@ -1,8 +1,5 @@
 #include <cstdio>
 
-#ifdef NANOVG_GLEW
-#  include <GL/glew.h>
-#endif
 #ifdef __APPLE__
 #   define GLFW_INCLUDE_GLCOREARB
 #endif
@@ -87,12 +84,6 @@ int main(int argc, const char *argv[]) {
     glfwSetKeyCallback(window, key);
 
     glfwMakeContextCurrent(window);
-#ifdef NANOVG_GLEW
-    if (glewInit() != GLEW_OK) {
-        printf("Could not init glew.\n");
-        return -1;
-    }
-#endif
 
 // TODO: Set MSAA from script or enable by default
 #ifdef MURAL_MSAA
