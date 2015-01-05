@@ -6,8 +6,7 @@ env = Environment(
 )
 
 env.Program(target='app', source=[
-    'src/nanovg.c',
-    'example/demo.c',
-    'example/perf.c',
-    'example/example_gl2.c'
+    'src/nanovg/nanovg.c',
+    'src/perf.c',
+    'src/main.cc',
 ])

@@ -1,4 +1,3 @@
-#include "perf.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -6,7 +5,8 @@
 #  include <GL/glew.h>
 #endif
 #include <GLFW/glfw3.h>
-#include "nanovg.h"
+
+#include "perf.h"
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -145,7 +145,7 @@ void renderGraph(NVGcontext* vg, float x, float y, PerfGraph* fps)
 		}
 	}
 	nvgLineTo(vg, x+w, y+h);
-	nvgFillColor(vg, nvgRGBA(255,192,0,128));
+	nvgFillColor(vg, nvgRGBA(0, 255, 192, 128));
 	nvgFill(vg);
 
 	nvgFontFace(vg, "sans");

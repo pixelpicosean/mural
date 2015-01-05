@@ -1,30 +1,13 @@
-//
-// Copyright (c) 2013 Mikko Mononen memon@inside.org
-//
-// This software is provided 'as-is', without any express or implied
-// warranty.  In no event will the authors be held liable for any damages
-// arising from the use of this software.
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-// 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-//
+#include <cstdio>
 
-#include <stdio.h>
 #ifdef NANOVG_GLEW
 #  include <GL/glew.h>
 #endif
 #include <GLFW/glfw3.h>
-#include "../src/nanovg.h"
+#include "nanovg/nanovg.h"
 #define NANOVG_GL2_IMPLEMENTATION
-#include "../src/nanovg_gl.h"
-#include "demo.h"
+#include "nanovg/nanovg_gl.h"
+
 #include "perf.h"
 
 
@@ -42,9 +25,11 @@ static void key(GLFWwindow *window, int key, int scancode, int action, int mods)
 
 int main(int argc, const char *argv[]) {
 	GLFWwindow* window;
-	DemoData data;
 	NVGcontext* vg = NULL;
+
+	int defaultFont = -1;
 	PerfGraph fps;
+
 	double prevt = 0;
 
 	if (!glfwInit()) {
@@ -57,7 +42,7 @@ int main(int argc, const char *argv[]) {
 	glfwSetErrorCallback(errorcb);
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #ifdef DEMO_MSAA
 	glfwWindowHint(GLFW_SAMPLES, 4);
 #endif
@@ -78,7 +63,8 @@ int main(int argc, const char *argv[]) {
 	}
 #endif
 
-#ifdef DEMO_MSAA
+// TODO: Set MSAA from script or enable by default
+#ifdef MURAL_MSAA
 	vg = nvgCreateGL2(NVG_STENCIL_STROKES | NVG_DEBUG);
 #else
 	vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
@@ -88,15 +74,14 @@ int main(int argc, const char *argv[]) {
 		return -1;
 	}
 
-	if (loadDemoData(vg, &data) == -1) {
-		return -1;
-	}
+	// Load default font for performance rendering
+	defaultFont = nvgCreateFont(vg, "sans", "assets/Roboto-Regular.ttf");
 
-	// glfwSwapInterval(0);
-
+	// Start timer
 	glfwSetTime(0);
 	prevt = glfwGetTime();
 
+	// Run loop
 	while (!glfwWindowShouldClose(window)) {
 		double mx, my, t, dt;
 		int winWidth, winHeight;
@@ -124,10 +109,8 @@ int main(int argc, const char *argv[]) {
 
 		// Draw frame
 		nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
-
-		renderDemo(vg, mx,my, winWidth,winHeight, t, 0, &data);
-		renderGraph(vg, 5,5, &fps);
-
+			// Performance graph
+			renderGraph(vg, 5,5, &fps);
 		nvgEndFrame(vg);
 
 		// Swap frame
@@ -135,10 +118,8 @@ int main(int argc, const char *argv[]) {
 		glfwPollEvents();
 	}
 
-	freeDemoData(vg, &data);
-
 	nvgDeleteGL2(vg);
-
 	glfwTerminate();
+
 	return 0;
 }
