@@ -3,150 +3,181 @@
 #ifdef NANOVG_GLEW
 #  include <GL/glew.h>
 #endif
+#ifdef __APPLE__
+#   define GLFW_INCLUDE_GLCOREARB
+#endif
 #include <GLFW/glfw3.h>
 #include "nanovg/nanovg.h"
-#define NANOVG_GL2_IMPLEMENTATION
+#define NANOVG_GL3_IMPLEMENTATION
 #include "nanovg/nanovg_gl.h"
+#include "nanovg/nanovg_gl_utils.h"
 
 #include "perf.h"
 
 
 void errorcb(int error, const char *desc) {
-	printf("GLFW error %d: %s\n", error, desc);
+    printf("GLFW error %d: %s\n", error, desc);
 }
 
 static void key(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	NVG_NOTUSED(scancode);
-	NVG_NOTUSED(mods);
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
+    NVG_NOTUSED(scancode);
+    NVG_NOTUSED(mods);
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+}
+
+void testApp(NVGcontext *vg) {
+    nvgFillColor(vg, nvgRGBA(220, 160, 0, 200));
+
+    nvgBeginPath(vg);
+    nvgCircle(vg, 32.0f, 32.0f, 32.0f);
+    nvgFill(vg);
+
+    nvgBeginPath(vg);
+    nvgCircle(vg, 960.0f - 32.0f, 640.0f - 32.0f, 32.0f);
+    nvgFill(vg);
 }
 
 int main(int argc, const char *argv[]) {
-	GLFWwindow* window;
-	NVGcontext* vg = NULL;
+    GLFWwindow* window;
+    NVGcontext* vg = NULL;
 
-	int defaultFont = -1;
-	GPUtimer gpuTimer;
-	PerfGraph fps, cpuGraph, gpuGraph;
+    int winWidth, winHeight;
+    int fbWidth, fbHeight;
+    float pxRatio;
 
-	double prevt = 0, cpuTime = 0;
+    int defaultFont = -1;
+    GPUtimer gpuTimer;
+    PerfGraph fps, cpuGraph, gpuGraph;
 
-	if (!glfwInit()) {
-		printf("Failed to init GLFW.");
-		return -1;
-	}
+    double prevt = 0, cpuTime = 0;
 
-	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
-	initGraph(&cpuGraph, GRAPH_RENDER_MS, "CPU Time");
-	initGraph(&gpuGraph, GRAPH_RENDER_MS, "GPU Time");
+    if (!glfwInit()) {
+        printf("Failed to init GLFW.");
+        return -1;
+    }
 
-	glfwSetErrorCallback(errorcb);
+    initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
+    initGraph(&cpuGraph, GRAPH_RENDER_MS, "CPU Time");
+    initGraph(&gpuGraph, GRAPH_RENDER_MS, "GPU Time");
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwSetErrorCallback(errorcb);
+
+    // Disable window resizable
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    // OpenGL version
+#ifndef _WIN32 // don't require this on win32, and works with more cards
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 #ifdef DEMO_MSAA
-	glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 #endif
 
-	window = glfwCreateWindow(960, 640, "Mural", NULL, NULL);
-	if (!window) {
-		glfwTerminate();
-		return -1;
-	}
+    window = glfwCreateWindow(960, 640, "Mural", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
 
-	glfwSetKeyCallback(window, key);
+    glfwSetKeyCallback(window, key);
 
-	glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(window);
 #ifdef NANOVG_GLEW
     if (glewInit() != GLEW_OK) {
-		printf("Could not init glew.\n");
-		return -1;
-	}
+        printf("Could not init glew.\n");
+        return -1;
+    }
 #endif
 
 // TODO: Set MSAA from script or enable by default
 #ifdef MURAL_MSAA
-	vg = nvgCreateGL2(NVG_DEBUG);
+    vg = nvgCreateGL3(NVG_DEBUG);
 #else
-	vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_DEBUG);
+    vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_DEBUG);
 #endif
-	if (vg == NULL) {
-		printf("Could not init nanovg.\n");
-		return -1;
-	}
+    if (vg == NULL) {
+        printf("Could not init nanovg.\n");
+        return -1;
+    }
 
-	// Load default font for performance rendering
-	defaultFont = nvgCreateFont(vg, "sans", "assets/Roboto-Regular.ttf");
+    // Create hi-dpi FBO for hi-dpi screens.
+    glfwGetWindowSize(window, &winWidth, &winHeight);
+    glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+    // Calculate pixel ration for hi-dpi devices.
+    pxRatio = (float)fbWidth / (float)winWidth;
 
-	initGPUTimer(&gpuTimer);
+    // Load default font for performance rendering
+    defaultFont = nvgCreateFont(vg, "sans", "assets/Roboto-Regular.ttf");
 
-	// Start timer
-	glfwSetTime(0);
-	prevt = glfwGetTime();
+    initGPUTimer(&gpuTimer);
 
-	// Run loop
-	while (!glfwWindowShouldClose(window)) {
-		double mx, my, t, dt;
+    // Start timer
+    glfwSetTime(0);
+    prevt = glfwGetTime();
 
-		int winWidth, winHeight;
-		int fbWidth, fbHeight;
-		float pxRatio;
+    // Run loop
+    while (!glfwWindowShouldClose(window)) {
+        double mx, my, t, dt;
 
-		float gpuTimes[3];
-		int i, n;
+        float gpuTimes[3];
+        int i, n;
 
-		t = glfwGetTime();
-		dt = t - prevt;
-		prevt = t;
+        t = glfwGetTime();
+        dt = t - prevt;
+        prevt = t;
 
-		startGPUTimer(&gpuTimer);
+        startGPUTimer(&gpuTimer);
 
-		glfwGetCursorPos(window, &mx, &my);
-		glfwGetWindowSize(window, &winWidth, &winHeight);
-		glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glfwGetCursorPos(window, &mx, &my);
+        glfwGetWindowSize(window, &winWidth, &winHeight);
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
 
-		// Calculate pixel ration for hi-dpi devices.
-		pxRatio = (float)fbWidth / (float)winWidth;
+        // Calculate pixel ration for hi-dpi devices.
+        pxRatio = (float)fbWidth / (float)winWidth;
 
-		// Setup viewport
-		glViewport(0, 0, fbWidth, fbHeight);
+        // Setup viewport
+        glViewport(0, 0, fbWidth, fbHeight);
 
-		// Clear screen
-		glClearColor(0, 0, 0, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        // Clear screen
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		// Draw frame
-		nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
-			// Performance graph
-			renderGraph(vg, 5,5, &fps);
-			renderGraph(vg, 5 + 200 + 5, 5, &cpuGraph);
-			if (gpuTimer.supported) {
-				renderGraph(vg, 5 + 200 + 5 + 200 + 5, 5, &gpuGraph);
-			}
-		nvgEndFrame(vg);
+        // Draw frame
+        nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+            testApp(vg);
+            // Performance graph
+            renderGraph(vg, 5,5, &fps);
+            renderGraph(vg, 5 + 200 + 5, 5, &cpuGraph);
+            if (gpuTimer.supported) {
+                renderGraph(vg, 5 + 200 + 5 + 200 + 5, 5, &gpuGraph);
+            }
+        nvgEndFrame(vg);
 
-		// Measure the CPU time taken excluding swap buffers
-		// (as the swap may wait for GPU)
-		cpuTime = glfwGetTime() - t;
+        // Measure the CPU time taken excluding swap buffers
+        // (as the swap may wait for GPU)
+        cpuTime = glfwGetTime() - t;
 
-		updateGraph(&fps, dt);
-		updateGraph(&cpuGraph, cpuTime);
+        updateGraph(&fps, dt);
+        updateGraph(&cpuGraph, cpuTime);
 
-		// We may get multiple results.
-		n = stopGPUTimer(&gpuTimer, gpuTimes, 3);
-		for (i = 0; i < n; i++) {
-			updateGraph(&gpuGraph, gpuTimes[i]);
-		}
+        // We may get multiple results.
+        n = stopGPUTimer(&gpuTimer, gpuTimes, 3);
+        for (i = 0; i < n; i++) {
+            updateGraph(&gpuGraph, gpuTimes[i]);
+        }
 
-		// Swap frame
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+        // Swap frame
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
-	nvgDeleteGL2(vg);
-	glfwTerminate();
+    nvgDeleteGL3(vg);
+    glfwTerminate();
 
-	return 0;
+    return 0;
 }
