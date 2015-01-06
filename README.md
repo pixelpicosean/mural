@@ -9,6 +9,7 @@ Mural NanoVG branch (experimental)
 - [x] Basic app setup
 - [x] CPU & GPU Graph
 - [x] Make build file support OSX, Windows and Linux
+- [ ] Separate source and build directory
 - [ ] FBO based CanvasContext
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
 - [ ] Async assets loading
