@@ -8,9 +8,9 @@ Mural NanoVG branch (experimental)
 - [x] SCons building system
 - [x] Basic app setup
 - [x] CPU & GPU Graph
+- [x] Make build file support OSX, Windows and Linux
 - [ ] FBO based CanvasContext
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
 - [ ] Async assets loading
 - [ ] JavaScript bindings
 - [ ] Include GLEW source with SCons build file (MinGW)
-- [ ] Let build file support OSX, Windows and Linux
