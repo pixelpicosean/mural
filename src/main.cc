@@ -1,9 +1,20 @@
 #include <cstdio>
 
+// ONLY include GLEW for non-Apple platforms
+#ifndef __APPLE__
+#define NANOVG_GLEW
+#endif
+
+#ifdef NANOVG_GLEW
+#define GLEW_STATIC
+#include <GL/glew.h>
+#endif
+
 #ifdef __APPLE__
 #   define GLFW_INCLUDE_GLCOREARB
 #endif
 #include <GLFW/glfw3.h>
+
 #include "nanovg/nanovg.h"
 #define NANOVG_GL3_IMPLEMENTATION
 #include "nanovg/nanovg_gl.h"
@@ -84,6 +95,15 @@ int main(int argc, const char *argv[]) {
     glfwSetKeyCallback(window, key);
 
     glfwMakeContextCurrent(window);
+
+#ifdef NANOVG_GLEW
+    if (glewInit() != GLEW_OK) {
+        printf("Could not init glew.\n");
+        return -1;
+    }
+    // GLEW generates GL error because it calls glGetString(GL_EXTENSIONS), we'll consume it here.
+    glGetError();
+#endif
 
 // TODO: Set MSAA from script or enable by default
 #ifdef MURAL_MSAA

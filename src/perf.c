@@ -1,9 +1,17 @@
+// ONLY include GLEW for non-Apple platforms
+#ifndef __APPLE__
+#define NANOVG_GLEW
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+
 #ifdef NANOVG_GLEW
-#  include <GL/glew.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #endif
+
 #include <GLFW/glfw3.h>
 
 #include "perf.h"
