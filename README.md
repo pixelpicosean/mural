@@ -12,3 +12,5 @@ Mural NanoVG branch (experimental)
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
 - [ ] Async assets loading
 - [ ] JavaScript bindings
+- [ ] Include GLEW source with SCons build file (MinGW)
+- [ ] Let build file support OSX, Windows and Linux
