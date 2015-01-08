@@ -51,5 +51,6 @@ env.Program(target='bin/' + settings['mode'] + '/' + settings['platform'] + '/' 
     'src/nanovg/nanovg.c',
     'src/perf.c',
     'src/MuEvent.cc',
+    'src/MuEventDispatcher.cc',
     'src/main.cc',
 ])
