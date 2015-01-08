@@ -13,7 +13,7 @@ Help(vars.GenerateHelpText(settings))
 # Build for OSX
 envOSX = Environment(
     CC='clang', CXX='clang++',
-    CXXFLAGS = ['-std=c++11', '-stdlib=libc++'],
+    CXXFLAGS = ['-std=c++11', '-stdlib=libc++', '-mmacosx-version-min=10.8'],
     CPPPATH=['src'],
     LIBS=['glfw3'],
     FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo']
