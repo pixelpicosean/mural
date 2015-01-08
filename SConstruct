@@ -50,5 +50,6 @@ elif settings['mode'] == 'profile':
 env.Program(target='bin/' + settings['mode'] + '/' + TARGET, source=[
     'src/nanovg/nanovg.c',
     'src/perf.c',
+    'src/MuEvent.cc',
     'src/main.cc',
 ])
