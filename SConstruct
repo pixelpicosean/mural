@@ -52,5 +52,6 @@ env.Program(target='bin/' + settings['mode'] + '/' + settings['platform'] + '/' 
     'src/perf.c',
     'src/MuEvent.cc',
     'src/MuEventDispatcher.cc',
-    'src/main.cc',
+    'src/MuCore.cc',
+    'src/main.cc'
 ])
