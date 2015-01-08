@@ -47,7 +47,7 @@ elif settings['mode'] == 'release':
 elif settings['mode'] == 'profile':
     env.Append(CCFLAGS = ['-Wall', '-pg', '-O0', '-DNDEBUG'])
 
-env.Program(target='bin/' + settings['mode'] + '/' + TARGET, source=[
+env.Program(target='bin/' + settings['mode'] + '/' + settings['platform'] + '/' + TARGET, source=[
     'src/nanovg/nanovg.c',
     'src/perf.c',
     'src/MuEvent.cc',
