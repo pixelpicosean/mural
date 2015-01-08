@@ -41,12 +41,14 @@ THE SOFTWARE.
 #include "perf.h"
 
 #include "MuGlobals.h"
+#include "MuEventDispatcher.h"
+
 #include <vector>
 
 namespace mural {
 
     class MuAppController;
-    class MuCore : public MuObject {
+    class MuCore : public EventDispatcher {
         public:
             static MuCore& getInstance() {
                 static MuCore instance;
