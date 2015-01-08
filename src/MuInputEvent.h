@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2011 by Ivan Safrin
+Copyright (c) 2015 Sean Bohan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,103 +21,36 @@ THE SOFTWARE.
 */
 
 #pragma once
+
 #include "MuGlobals.h"
 #include "MuEvent.h"
-#include "MuVector.h"
-#include "MuInputKeys.h"
-#include <vector>
 
 namespace mural {
 
-    class TouchInfo {
+    class MouseEvent : public Event {
         public:
-            int id;
-            vec2 position;
-    };
+            // "type"
+            static const int MOUSE_DOWN = 1;
+            static const int MOUSE_MOVE = 2;
+            static const int MOUSE_UP = 3;
+            // "which"
+            static const int MOUSE_NO_BUTTON = 0;
+            static const int MOUSE_LEFT = 1;
+            static const int MOUSE_MIDDLE = 2;
+            static const int MOUSE_RIGHT = 3;
 
-    /**
-     * Event dispatched by CoreInput. This event is dispatched by CoreInput when input happens.
-     */
-    class InputEvent : public Event {
-        public:
-            InputEvent();
-            InputEvent(vec2 mousePosition, int timestamp);
-            InputEvent(MuKEY key, wchar_t charCode, int timestamp);
-            virtual ~InputEvent();
+            // Properties
+            int type;
+            int which;
+            int buttons;
+            bool altDown;
+            bool ctrlDown;
+            bool metaDown;
+            bool shiftDown;
+            Number x, y;
+            Number movementX, movementY;
 
-            // ----------------------------------------------------------------------------------------------------------------
-            /** @name Input event types.
-             *  Possible input event types dispatched by MuCore.
-             */
-            //@{
-            static const int EVENTBASE_INPUTEVENT = 0x400;
-            static const int EVENT_MOUSEDOWN = EVENTBASE_INPUTEVENT+0;
-            static const int EVENT_MOUSEUP = EVENTBASE_INPUTEVENT+1;
-            static const int EVENT_MOUSEMOVE = EVENTBASE_INPUTEVENT+2;
-            static const int EVENT_MOUSEOVER = EVENTBASE_INPUTEVENT+3;
-            static const int EVENT_MOUSEOUT = EVENTBASE_INPUTEVENT+4;
-            static const int EVENT_DOUBLECLICK = EVENTBASE_INPUTEVENT+5;
-            static const int EVENT_MOUSEUP_OUTSIDE = EVENTBASE_INPUTEVENT+6;
-            static const int EVENT_MOUSEWHEEL_UP = EVENTBASE_INPUTEVENT+7;
-            static const int EVENT_MOUSEWHEEL_DOWN = EVENTBASE_INPUTEVENT+8;
-
-            static const int EVENT_KEYDOWN = EVENTBASE_INPUTEVENT+13;
-            static const int EVENT_KEYUP = EVENTBASE_INPUTEVENT+14;
-
-            static const int EVENT_JOYBUTTON_DOWN = EVENTBASE_INPUTEVENT+15;
-            static const int EVENT_JOYBUTTON_UP = EVENTBASE_INPUTEVENT+16;
-            static const int EVENT_JOYAXIS_MOVED = EVENTBASE_INPUTEVENT+17;
-            static const int EVENT_JOYDEVICE_ATTACHED = EVENTBASE_INPUTEVENT+18;
-            static const int EVENT_JOYDEVICE_DETACHED = EVENTBASE_INPUTEVENT+19;
-
-            static const int EVENT_TOUCHES_BEGAN = EVENTBASE_INPUTEVENT+20;
-            static const int EVENT_TOUCHES_MOVED = EVENTBASE_INPUTEVENT+21;
-            static const int EVENT_TOUCHES_ENDED = EVENTBASE_INPUTEVENT+22;
-
-
-            //@}
-            // ----------------------------------------------------------------------------------------------------------------
-
-            /**
-             * If this is a mouse click event, the mouse button that's pressed.
-             */
-            int mouseButton;
-
-            /**
-             * If this is a mouse event, the mouse position.
-             */
-            vec2 mousePosition;
-
-            vec2 getMousePosition() { return mousePosition; }
-            MuKEY getKey() { return key; }
-            int getMouseButton() { return mouseButton; }
-
-            /**
-             * If this is a key event, the key code that's coming down or up.
-             */
-            MuKEY key;
-
-
-            wchar_t getCharCode();
-
-            int keyCode() { return key; }
-
-            /**
-             * If this is a key press event, this will contain the unicode character that's being typed.
-             */
-            wchar_t charCode;
-            int timestamp;
-
-            std::vector<TouchInfo> touches;
-            TouchInfo touch;
-
-            unsigned int joystickDeviceID;
-            float joystickAxisValue;
-            unsigned int joystickButton;
-            unsigned int joystickAxis;
-            unsigned int joystickIndex;
-
-            Number hitDistance;
+            MouseEvent();
     };
 
 }
