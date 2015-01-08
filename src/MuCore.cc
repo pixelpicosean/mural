@@ -189,6 +189,29 @@ namespace mural {
         render();
     }
 
+    void MuCore::update() {}
+
+    void MuCore::render() {
+        Number radius = 64.0f;
+        nvgFillColor(renderer, nvgRGBA(220, 160, 0, 200));
+
+        nvgBeginPath(renderer);
+        nvgCircle(renderer, radius, radius, radius);
+        nvgFill(renderer);
+
+        nvgBeginPath(renderer);
+        nvgCircle(renderer, 960.0f - radius, radius, radius);
+        nvgFill(renderer);
+
+        nvgBeginPath(renderer);
+        nvgCircle(renderer, radius, 640.0f - radius, radius);
+        nvgFill(renderer);
+
+        nvgBeginPath(renderer);
+        nvgCircle(renderer, 960.0f - radius, 640.0f - radius, radius);
+        nvgFill(renderer);
+    }
+
     void MuCore::terminate() {
         nvgDeleteGL3(renderer);
         glfwTerminate();

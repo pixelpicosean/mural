@@ -57,8 +57,8 @@ namespace mural {
 
             void tickAndRender();
 
-            virtual void update() {}
-            virtual void render() {}
+            virtual void update();
+            virtual void render();
 
             void terminate();
         private:
