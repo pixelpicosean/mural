@@ -9,7 +9,7 @@ Mural *NanoVG* branch (experimental)
 - [x] Basic app setup
 - [x] CPU & GPU Graph
 - [x] Make build file support OSX, Windows
-- [ ] Foundation classes (Event, App...)
+- [x] Foundation classes (Event, App...)
 - [ ] Build file for Linux x86 and x64
 - [ ] Separate source and build directory
 - [ ] FBO based CanvasContext

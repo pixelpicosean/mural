@@ -45,6 +45,7 @@ THE SOFTWARE.
 
 namespace mural {
 
+    class MuAppController;
     class MuCore : public MuObject {
         public:
             static MuCore& getInstance() {
@@ -54,11 +55,14 @@ namespace mural {
 
             bool init();
             void start();
+            void setController(MuAppController *ac) {
+                appController = ac;
+            }
 
             void tickAndRender();
 
-            virtual void update();
-            virtual void render();
+            void update();
+            void render();
 
             void terminate();
         private:
@@ -70,6 +74,7 @@ namespace mural {
         private:
             GLFWwindow *window;
             NVGcontext *renderer;
+            MuAppController *appController;
 
             int winWidth, winHeight;
             int fbWidth, fbHeight;
@@ -77,7 +82,7 @@ namespace mural {
 
             int defaultFont;
 
-            Number cpuTime, prevt;
+            Number cpuTime, prevt, dt;
             GPUtimer gpuTimer;
             PerfGraph fpsGraph, cpuGraph, gpuGraph;
     };

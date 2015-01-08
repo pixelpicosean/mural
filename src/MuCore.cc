@@ -26,6 +26,8 @@ THE SOFTWARE.
 #include "nanovg/nanovg_gl.h"
 #include "nanovg/nanovg_gl_utils.h"
 
+#include "MuAppController.h"
+
 #include <cstdio>
 
 namespace mural {
@@ -45,10 +47,10 @@ namespace mural {
     MuCore::MuCore():
         window(nullptr),
         renderer(nullptr),
+        appController(nullptr),
         ratio(0.0f),
         defaultFont(-1),
-        cpuTime(0.0f),
-        prevt(0.0f)
+        cpuTime(0), prevt(0), dt(0)
     {}
 
     MuCore::~MuCore() {
@@ -125,6 +127,7 @@ namespace mural {
         // Start timer
         glfwSetTime(0);
         prevt = glfwGetTime();
+        dt = 0;
 
         return true;
     }
@@ -132,7 +135,7 @@ namespace mural {
     void MuCore::start() {
         // Run loop
         while (!glfwWindowShouldClose(window)) {
-            double mx, my, t, dt;
+            Number mx, my, t;
 
             float gpuTimes[3];
             int i, n;
@@ -189,30 +192,21 @@ namespace mural {
         render();
     }
 
-    void MuCore::update() {}
+    void MuCore::update() {
+        if (appController) {
+            appController->update(dt);
+        }
+    }
 
     void MuCore::render() {
-        Number radius = 64.0f;
-        nvgFillColor(renderer, nvgRGBA(220, 160, 0, 200));
-
-        nvgBeginPath(renderer);
-        nvgCircle(renderer, radius, radius, radius);
-        nvgFill(renderer);
-
-        nvgBeginPath(renderer);
-        nvgCircle(renderer, 960.0f - radius, radius, radius);
-        nvgFill(renderer);
-
-        nvgBeginPath(renderer);
-        nvgCircle(renderer, radius, 640.0f - radius, radius);
-        nvgFill(renderer);
-
-        nvgBeginPath(renderer);
-        nvgCircle(renderer, 960.0f - radius, 640.0f - radius, radius);
-        nvgFill(renderer);
+        if (appController) {
+            appController->render(renderer);
+        }
     }
 
     void MuCore::terminate() {
+        delete appController;
+
         nvgDeleteGL3(renderer);
         glfwTerminate();
     }
