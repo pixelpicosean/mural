@@ -25,6 +25,7 @@ envWin = Environment(
     CXX='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-g++',
     AR='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ar',
     RANLIB='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ranlib',
+    CXXFLAGS=['-std=c++11'],
     CPPPATH=['./include', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/include'],
     LIBPATH=['./lib', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/lib'],
     LIBS=['glfw3', 'GLEW', 'glu32', 'opengl32', 'gdi32', 'user32', 'kernel32']

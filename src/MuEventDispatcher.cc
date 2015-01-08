@@ -36,7 +36,7 @@ void EventDispatcher::addEventListenerUnique(EventHandler *handler, int eventCod
 }
 
 bool EventDispatcher::hasEventListener(EventHandler *handler, int eventCode) {
-    for (int i = 0; i < handlerEntries.size(); ++i) {
+    for (unsigned int i = 0; i < handlerEntries.size(); ++i) {
         if (handlerEntries[i].eventCode == eventCode && handlerEntries[i].handler == handler) {
             return true;
         }
@@ -68,7 +68,7 @@ void EventDispatcher::removeAllHandlersForListener(EventHandler *handler) {
 }
 
 void EventDispatcher::removeEventListener(EventHandler *handler, int eventCode) {
-    for (int i = 0; i < handlerEntries.size(); ++i) {
+    for (unsigned int i = 0; i < handlerEntries.size(); ++i) {
         if (handlerEntries[i].eventCode == eventCode && handlerEntries[i].handler == handler) {
             handlerEntries.erase(handlerEntries.begin()+i);
         }
@@ -78,7 +78,7 @@ void EventDispatcher::removeEventListener(EventHandler *handler, int eventCode) 
 void EventDispatcher::__dispatchEvent(Event *event, int eventCode) {
     event->setDispatcher(this);
     event->setEventCode(eventCode);
-    for (int i = 0; i < handlerEntries.size(); ++i) {
+    for (unsigned int i = 0; i < handlerEntries.size(); ++i) {
         if (handlerEntries[i].eventCode == eventCode) {
             handlerEntries[i].handler->handleEvent(event);
         }

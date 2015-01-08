@@ -52,19 +52,34 @@ THE SOFTWARE.
 #define PLATFORM_ANDROID  5
 
 // TODO: iOS and Android
-#ifdef _WINDOWS
-    #define PLATFORM PLATFORM_WINDOWS
-#elif defined(__APPLE__) && defined(__MACH__)
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+    #if defined(WINAPI_PARTITION_DESKTOP)
+        #define PLATFORM PLATFORM_WINDOWS
+    #endif
+#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
     #define PLATFORM PLATFORM_MAC
-#else
+#elif defined(linux) || defined(__linux) || defined(__linux__)
     #include <cstddef>
     #define PLATFORM PLATFORM_UNIX
+#else
+    #error "Mural compile error: Unknown platform"
 #endif
 
 /**
  * Number definition
  */
+#include <cstdint>
 typedef double Number;
+namespace mural {
+    using std::int8_t;
+    using std::uint8_t;
+    using std::int16_t;
+    using std::uint16_t;
+    using std::int32_t;
+    using std::uint32_t;
+    using std::int64_t;
+    using std::uint64_t;
+}
 
 #define RANDOM_NUMBER ((Number)rand()/(Number)RAND_MAX)
 
@@ -89,3 +104,6 @@ typedef std::string String;
  * Base class for anything
  */
 class MuObject {};
+
+// Create a namepace alias as shorthand for mural::
+namespace mu = mural;
