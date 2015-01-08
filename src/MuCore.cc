@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "nanovg/nanovg_gl_utils.h"
 
 #include "MuAppController.h"
+#include "MuInputEvent.h"
 
 #include <cstdio>
 
@@ -34,6 +35,25 @@ namespace mural {
 
     void errorcb(int error, const char *desc) {
         printf("GLFW error %d: %s\n", error, desc);
+    }
+
+    static void mousebutton(GLFWwindow *window, int button, int action, int mods) {
+        int type = (action == GLFW_PRESS) ? MouseEvent::MOUSE_DOWN : (action == GLFW_RELEASE ? MouseEvent::MOUSE_UP : 0);
+        int which = (button == GLFW_MOUSE_BUTTON_LEFT) ? MouseEvent::MOUSE_LEFT : (button == GLFW_MOUSE_BUTTON_RIGHT ? MouseEvent::MOUSE_RIGHT : 0);
+
+        MouseEvent *evt = new MouseEvent();
+        evt->type = type;
+        evt->which = which;
+
+        app.dispatchEvent(evt, type);
+    }
+
+    static void mousemove(GLFWwindow *window, double xpos, double ypos) {
+        MouseEvent *evt = new MouseEvent();
+        evt->x = xpos;
+        evt->y = ypos;
+
+        app.dispatchEvent(evt, MouseEvent::MOUSE_MOVE);
     }
 
     static void key(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -85,6 +105,8 @@ namespace mural {
             return -2;
         }
 
+        glfwSetMouseButtonCallback(window, mousebutton);
+        glfwSetCursorPosCallback(window, mousemove);
         glfwSetKeyCallback(window, key);
 
         glfwMakeContextCurrent(window);
