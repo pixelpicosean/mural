@@ -1,11 +1,14 @@
 #include "MuCore.h"
 
 #include "MuAppController.h"
+#include "MuInputEvent.h"
 
 // Create a controller class for testing
 class GameController : public mural::MuAppController {
     public:
-        GameController() {}
+        GameController() {
+            app.addEventListener(this, mural::MouseEvent::MOUSE_DOWN);
+        }
         ~GameController() {}
         void update(Number dt) {}
         void render(NVGcontext *ctx) {
@@ -27,6 +30,10 @@ class GameController : public mural::MuAppController {
             nvgBeginPath(ctx);
             nvgCircle(ctx, 960.0f - radius, 640.0f - radius, radius);
             nvgFill(ctx);
+        }
+        void handleEvent(mural::Event *evt) {
+            mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);
+            printf("Mouse pressed at (%d, %d)\n", mouse->x, mouse->y);
         }
 };
 
