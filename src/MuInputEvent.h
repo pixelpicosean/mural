@@ -47,8 +47,8 @@ namespace mural {
             bool ctrlDown;
             bool metaDown;
             bool shiftDown;
-            Number x, y;
-            Number movementX, movementY;
+            int x, y;
+            int movementX, movementY;
 
             MouseEvent();
     };

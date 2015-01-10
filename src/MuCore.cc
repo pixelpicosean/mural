@@ -45,6 +45,12 @@ namespace mural {
         evt->type = type;
         evt->which = which;
 
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+        // Round to integer
+        evt->x = (int)x;
+        evt->y = (int)y;
+
         app.dispatchEvent(evt, type);
     }
 
