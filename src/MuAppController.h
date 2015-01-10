@@ -23,11 +23,12 @@ THE SOFTWARE.
 #pragma once
 
 #include "MuGlobals.h"
+#include "MuEventHandler.h"
 #include "nanovg/nanovg.h"
 
 namespace mural {
 
-    class MuAppController : public MuObject {
+    class MuAppController : public EventHandler {
         public:
             MuAppController() {}
             virtual ~MuAppController() {}
