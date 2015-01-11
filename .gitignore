@@ -28,3 +28,4 @@ build/*
 *xcuserdata*
 .sconsign.dblite
 app
+tests/bin

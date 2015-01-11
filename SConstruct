@@ -7,14 +7,23 @@ vars.Add(EnumVariable('platform', 'Compile for which platform', 'osx', allowed_v
 # 3 build modes
 vars.Add(EnumVariable('mode', 'Building mode', 'debug', allowed_values=('debug', 'profile', 'release')))
 settings = Environment(variables=vars)
-Export('settings')
 Help(vars.GenerateHelpText(settings))
+
+# Source files (main.cc not included)
+SOURCES = [
+    'src/nanovg/nanovg.c',
+    'src/perf.c',
+    'src/MuEvent.cc',
+    'src/MuInputEvent.cc',
+    'src/MuEventDispatcher.cc',
+    'src/MuCore.cc'
+]
 
 # Build for OSX
 envOSX = Environment(
     CC='clang', CXX='clang++',
     CXXFLAGS = ['-std=c++11', '-stdlib=libc++', '-mmacosx-version-min=10.8'],
-    CPPPATH=['src'],
+    CPPPATH=['./src'],
     LIBS=['glfw3'],
     FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo']
 )
@@ -26,7 +35,7 @@ envWin = Environment(
     AR='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ar',
     RANLIB='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ranlib',
     CXXFLAGS=['-std=c++11'],
-    CPPPATH=['./include', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/include'],
+    CPPPATH=['./src', './include', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/include'],
     LIBPATH=['./lib', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/lib'],
     LIBS=['glfw3', 'GLEW', 'glu32', 'opengl32', 'gdi32', 'user32', 'kernel32']
 )
@@ -48,12 +57,16 @@ elif settings['mode'] == 'release':
 elif settings['mode'] == 'profile':
     env.Append(CCFLAGS = ['-Wall', '-pg', '-O0', '-DNDEBUG'])
 
-env.Program(target='bin/' + settings['mode'] + '/' + settings['platform'] + '/' + TARGET, source=[
-    'src/nanovg/nanovg.c',
-    'src/perf.c',
-    'src/MuEvent.cc',
-    'src/MuInputEvent.cc',
-    'src/MuEventDispatcher.cc',
-    'src/MuCore.cc',
-    'src/main.cc'
-])
+# Export to sub-directories
+Export('env', 'SOURCES')
+
+# Compile the executable file
+MAIN_SOURCE_LIST = list(SOURCES)
+MAIN_SOURCE_LIST.append('src/main.cc')
+env.Program(
+    target='bin/' + settings['mode'] + '/' + settings['platform'] + '/' + TARGET,
+    source=MAIN_SOURCE_LIST
+)
+
+# Compile tests
+SConscript('tests/SConscript', exports=['env', 'SOURCES'])
