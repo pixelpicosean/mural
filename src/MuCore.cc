@@ -37,6 +37,11 @@ namespace mural {
         printf("GLFW error %d: %s\n", error, desc);
     }
 
+    int lastX = -1, lastY = -1;
+    bool altDown = false,
+        ctrlDown = false,
+        metaDown = false,
+        shiftDown = false;
     static void mousebutton(GLFWwindow *window, int button, int action, int mods) {
         int type = (action == GLFW_PRESS) ? MouseEvent::MOUSE_DOWN : (action == GLFW_RELEASE ? MouseEvent::MOUSE_UP : 0);
         int which = (button == GLFW_MOUSE_BUTTON_LEFT) ? MouseEvent::WHICH_LEFT : (button == GLFW_MOUSE_BUTTON_RIGHT ? MouseEvent::WHICH_RIGHT : 0);
@@ -62,20 +67,67 @@ namespace mural {
         evt->x = (int)x;
         evt->y = (int)y;
 
+        if (lastX >= 0) {
+            evt->movementX = evt->x - lastX;
+        }
+        lastX = evt->x;
+        if (lastY >= 0) {
+            evt->movementY = evt->y - lastY;
+        }
+        lastY = evt->x;
+
+        altDown = evt->altDown = mods & GLFW_MOD_ALT;
+        ctrlDown = evt->ctrlDown = mods & GLFW_MOD_CONTROL;
+        metaDown = evt->metaDown = mods & GLFW_MOD_SUPER;
+        shiftDown = evt->shiftDown = mods & GLFW_MOD_SHIFT;
+
         app.dispatchEvent(evt, type);
     }
 
     static void mousemove(GLFWwindow *window, double xpos, double ypos) {
+        int buttons = 0;
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_LEFT;
+        }
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_RIGHT;
+        }
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_MIDDLE;
+        }
+
         MouseEvent *evt = new MouseEvent();
+        evt->type = 0;
+        evt->which = 0;
+        evt->buttons = buttons;
         evt->x = xpos;
         evt->y = ypos;
+
+        if (lastX >= 0) {
+            evt->movementX = evt->x - lastX;
+        }
+        lastX = evt->x;
+        if (lastY >= 0) {
+            evt->movementY = evt->y - lastY;
+        }
+        lastY = evt->x;
+
+        evt->altDown = altDown;
+        evt->ctrlDown = ctrlDown;
+        evt->metaDown = metaDown;
+        evt->shiftDown = shiftDown;
 
         app.dispatchEvent(evt, MouseEvent::MOUSE_MOVE);
     }
 
     static void key(GLFWwindow *window, int key, int scancode, int action, int mods) {
         NVG_NOTUSED(scancode);
-        NVG_NOTUSED(mods);
+
+        altDown = mods & GLFW_MOD_ALT;
+        ctrlDown = mods & GLFW_MOD_CONTROL;
+        metaDown = mods & GLFW_MOD_SUPER;
+        shiftDown = mods & GLFW_MOD_SHIFT;
+
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GL_TRUE);
         }

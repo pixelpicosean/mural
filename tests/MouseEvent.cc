@@ -11,26 +11,7 @@ class GameController : public mural::MuAppController {
         }
         ~GameController() {}
         void update(Number dt) {}
-        void render(NVGcontext *ctx) {
-            Number radius = 64.0f;
-            nvgFillColor(ctx, nvgRGBA(220, 160, 0, 200));
-
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, radius, radius, radius);
-            nvgFill(ctx);
-
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, 960.0f - radius, radius, radius);
-            nvgFill(ctx);
-
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, radius, 640.0f - radius, radius);
-            nvgFill(ctx);
-
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, 960.0f - radius, 640.0f - radius, radius);
-            nvgFill(ctx);
-        }
+        void render(NVGcontext *ctx) {}
         void handleEvent(mural::Event *evt) {
             mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);
             printf("Mouse pressed at (%d, %d)\n", mouse->x, mouse->y);
