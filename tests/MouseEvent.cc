@@ -7,13 +7,15 @@
 class GameController : public mural::MuAppController {
     private:
         bool leftBtn, rightBtn;
+        int mouseX, mouseY;
     public:
         GameController():
-            leftBtn(false),
-            rightBtn(false)
+            leftBtn(false), rightBtn(false),
+            mouseX(0), mouseY(0)
         {
             app.addEventListener(this, mural::MouseEvent::MOUSE_DOWN);
             app.addEventListener(this, mural::MouseEvent::MOUSE_UP);
+            app.addEventListener(this, mural::MouseEvent::MOUSE_MOVE);
         }
         ~GameController() {}
         void update(Number dt) {}
@@ -51,11 +53,20 @@ class GameController : public mural::MuAppController {
             nvgMoveTo(ctx, marginLeft, marginTop + btnHeight - strokeWidth / 2);
             nvgLineTo(ctx, marginLeft + w, marginTop + btnHeight - strokeWidth / 2);
             nvgStroke(ctx);
+
+            nvgFontSize(ctx, 32);
+            nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+            String text("Position: (");
+            text += std::to_string(mouseX); text += ", ";
+            text += std::to_string(mouseY); text += ")";
+            nvgText(ctx, 110.0f, 70.0f, text.c_str(), NULL);
         }
         void handleEvent(mural::Event *evt) {
             mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);
             leftBtn = mouse->buttons & 1;
             rightBtn = mouse->buttons & 2;
+            mouseX = mouse->x;
+            mouseY = mouse->y;
         }
 };
 
