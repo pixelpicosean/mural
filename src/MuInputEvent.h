@@ -34,10 +34,14 @@ namespace mural {
             static const int MOUSE_MOVE = 2;
             static const int MOUSE_UP = 3;
             // "which"
-            static const int MOUSE_NO_BUTTON = 0;
-            static const int MOUSE_LEFT = 1;
-            static const int MOUSE_MIDDLE = 2;
-            static const int MOUSE_RIGHT = 3;
+            static const int WHICH_NO_BUTTON = 0;
+            static const int WHICH_LEFT = 1;
+            static const int WHICH_MIDDLE = 2;
+            static const int WHICH_RIGHT = 3;
+            // "buttons"
+            static const int BUTTONS_LEFT = 1;
+            static const int BUTTONS_RIGHT = 2;
+            static const int BUTTONS_MIDDLE = 4;
 
             // Properties
             int type;

@@ -4,7 +4,7 @@ namespace mural {
 
     MouseEvent::MouseEvent():
         type(0),
-        which(MOUSE_NO_BUTTON),
+        which(WHICH_NO_BUTTON),
         buttons(0),
         altDown(false),
         ctrlDown(false),

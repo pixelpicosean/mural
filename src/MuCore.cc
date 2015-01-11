@@ -39,11 +39,22 @@ namespace mural {
 
     static void mousebutton(GLFWwindow *window, int button, int action, int mods) {
         int type = (action == GLFW_PRESS) ? MouseEvent::MOUSE_DOWN : (action == GLFW_RELEASE ? MouseEvent::MOUSE_UP : 0);
-        int which = (button == GLFW_MOUSE_BUTTON_LEFT) ? MouseEvent::MOUSE_LEFT : (button == GLFW_MOUSE_BUTTON_RIGHT ? MouseEvent::MOUSE_RIGHT : 0);
+        int which = (button == GLFW_MOUSE_BUTTON_LEFT) ? MouseEvent::WHICH_LEFT : (button == GLFW_MOUSE_BUTTON_RIGHT ? MouseEvent::WHICH_RIGHT : 0);
+        int buttons = 0;
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_LEFT;
+        }
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_RIGHT;
+        }
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+            buttons |= MouseEvent::BUTTONS_MIDDLE;
+        }
 
         MouseEvent *evt = new MouseEvent();
         evt->type = type;
         evt->which = which;
+        evt->buttons = buttons;
 
         double x, y;
         glfwGetCursorPos(window, &x, &y);
