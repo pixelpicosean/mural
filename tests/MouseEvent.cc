@@ -7,10 +7,12 @@
 class GameController : public mural::MuAppController {
     private:
         bool leftBtn, rightBtn;
+        bool alt, ctrl, meta, shift;
         int mouseX, mouseY;
     public:
         GameController():
             leftBtn(false), rightBtn(false),
+            alt(false), ctrl(false), meta(false), shift(false),
             mouseX(0), mouseY(0)
         {
             app.addEventListener(this, mural::MouseEvent::MOUSE_DOWN);
@@ -60,13 +62,23 @@ class GameController : public mural::MuAppController {
             text += std::to_string(mouseX); text += ", ";
             text += std::to_string(mouseY); text += ")";
             nvgText(ctx, 110.0f, 70.0f, text.c_str(), NULL);
+
+            nvgBeginPath(ctx);
+            // TODO: draw buttons
         }
         void handleEvent(mural::Event *evt) {
             mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);
+
             leftBtn = mouse->buttons & 1;
             rightBtn = mouse->buttons & 2;
+
             mouseX = mouse->x;
             mouseY = mouse->y;
+
+            alt = mouse->altDown;
+            ctrl = mouse->ctrlDown;
+            meta = mouse->metaDown;
+            shift = mouse->shiftDown;
         }
 };
 
