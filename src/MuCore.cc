@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "MuAppController.h"
 #include "MuInputEvent.h"
+#include "MuInputKeys.h"
 
 #include <cstdio>
 
@@ -127,6 +128,22 @@ namespace mural {
         ctrlDown = mods & GLFW_MOD_CONTROL;
         metaDown = mods & GLFW_MOD_SUPER;
         shiftDown = mods & GLFW_MOD_SHIFT;
+
+        int type = (action == GLFW_PRESS ? KeyboardEvent::KEY_DOWN : (action == GLFW_RELEASE ? KeyboardEvent::KEY_UP : 0));
+
+        if (type == KeyboardEvent::KEY_DOWN) {
+            KeyboardEvent *downEvt = new KeyboardEvent(type, key);
+            app.dispatchEvent(downEvt, KeyboardEvent::KEY_DOWN);
+
+            if (PrintableKeys.find(key) != PrintableKeys.end()) {
+                KeyboardEvent *pressEvt = new KeyboardEvent(KeyboardEvent::KEY_PRESS, key);
+                app.dispatchEvent(pressEvt, KeyboardEvent::KEY_PRESS);
+            }
+        }
+        else if (type == KeyboardEvent::KEY_UP) {
+            KeyboardEvent *upEvt = new KeyboardEvent(type, key);
+            app.dispatchEvent(upEvt, KeyboardEvent::KEY_UP);
+        }
 
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GL_TRUE);

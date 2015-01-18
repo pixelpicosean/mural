@@ -57,4 +57,19 @@ namespace mural {
             MouseEvent();
     };
 
+    class KeyboardEvent : public Event {
+        public:
+            // "type"
+            static const int KEY_DOWN = 1;
+            static const int KEY_PRESS = 2;
+            static const int KEY_UP = 3;
+
+            // Properties
+            int type;
+            int keyCode;
+            const String code;
+
+            KeyboardEvent(int type, int key);
+    };
+
 }
