@@ -16,6 +16,7 @@ SOURCES = [
     'src/MuEvent.cc',
     'src/MuInputEvent.cc',
     'src/MuEventDispatcher.cc',
+    'src/MuTimer.cc',
     'src/MuCore.cc'
 ]
 

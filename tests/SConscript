@@ -1,7 +1,8 @@
 TESTS = [
     'MouseEvent',
     'KeyboardEvent',
-    'Active'
+    'Active',
+    'Timer'
 ]
 
 Import('env', 'SOURCES')
