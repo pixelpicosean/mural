@@ -31,8 +31,6 @@ THE SOFTWARE.
 #include <memory>
 #include <thread>
 
-using namespace std;
-
 namespace mural {
 
     template <class T>
@@ -67,11 +65,11 @@ namespace mural {
 
     class Active : public MuObject {
         public:
-            typedef function<void()> Message;
+            typedef std::function<void()> Message;
 
             Active(): done(false) {
-                thd = unique_ptr<thread>(
-                    new thread([=] {
+                thd = std::unique_ptr<std::thread>(
+                    new std::thread([=] {
                         this->run();
                     })
                 );
@@ -94,7 +92,7 @@ namespace mural {
 
             bool done;                      // le flag
             message_queue<Message> mq;      // le queue
-            unique_ptr<thread> thd;         // le thread
+            std::unique_ptr<std::thread> thd;         // le thread
 
             void run() {
                 while (!done) {

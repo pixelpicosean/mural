@@ -3,6 +3,8 @@
 #include "../src/MuAppController.h"
 #include "../src/MuInputEvent.h"
 
+#include <cstdio>
+
 // Create a controller class for testing
 class GameController : public mural::MuAppController {
     public:
