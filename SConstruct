@@ -11,13 +11,18 @@ Help(vars.GenerateHelpText(settings))
 
 # Source files (main.cc not included)
 SOURCES = [
+    'src/linebreak/linebreak.c',
+    'src/linebreak/linebreakdata.c',
+    'src/linebreak/linebreakdef.c',
+
     'src/nanovg/nanovg.c',
     'src/perf.c',
     'src/MuEvent.cc',
     'src/MuInputEvent.cc',
     'src/MuEventDispatcher.cc',
     'src/MuTimer.cc',
-    'src/MuCore.cc'
+    'src/MuCore.cc',
+    'src/MuUnicode.cc'
 ]
 
 # Build for OSX
