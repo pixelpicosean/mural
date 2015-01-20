@@ -47,7 +47,6 @@ using std::wstring;
 namespace mural {
 
     fs::path getAppPath() {
-        string pathSplit = "/";
     #if PLATFORM == PLATFORM_WINDOWS
         TCHAR exePathWin[MAX_PATH];
         GetModuleFileName(NULL, exePathWin, MAX_PATH);
@@ -56,7 +55,6 @@ namespace mural {
         if (exePath.substr(length - 4, length) == ".exe") {
             exePath = exePath.substr(0, length - 4);
         }
-        pathSplit = "\\";
     #elif PLATFORM == PLATFORM_MAC
         CFBundleRef mainBundle = CFBundleGetMainBundle();
         CFURLRef exeURL = CFBundleCopyExecutableURL(mainBundle);
@@ -74,10 +72,7 @@ namespace mural {
         exePath = split(exePath, splitChars)[0];
     #endif
 
-        std::vector<string> pathElements = split(exePath, pathSplit);
-        string exeName = pathElements[pathElements.size()-1];
-
-        return exeName;
+        return exePath;
     }
 
     fs::path expandPath(const fs::path &path) {
@@ -115,23 +110,23 @@ namespace mural {
     }
 
     fs::path getTemporaryDirectory() {
-        return fs::path();
+        return "./";
     }
 
     fs::path getTemporaryFilePath(const std::string &prefix) {
-        return fs::path();
+        return "./";
     }
 
     std::string getPathDirectory(const std::string &path) {
-        return "";
+        return "./";
     }
 
     std::string getPathFileName(const std::string &path) {
-        return "";
+        return "./";
     }
 
     std::string getPathExtension(const std::string &path) {
-        return "";
+        return "./";
     }
 
     bool createDirectories(const fs::path &path, bool createParents) {
