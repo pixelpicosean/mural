@@ -34,7 +34,7 @@ namespace mural {
 
     Event::~Event() {}
 
-    const String& Event::getEventType() const {
+    const std::string& Event::getEventType() const {
         return this->eventType;
     }
 

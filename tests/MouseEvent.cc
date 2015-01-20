@@ -1,3 +1,4 @@
+#include "../src/MuGlobals.h"
 #include "../src/MuCore.h"
 
 #include "../src/MuAppController.h"
@@ -60,7 +61,7 @@ class GameController : public mural::MuAppController {
 
             nvgFontSize(ctx, 32);
             nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            String text("Position: (");
+            std::string text("Position: (");
             text += std::to_string(mouseX); text += ", ";
             text += std::to_string(mouseY); text += ")";
             nvgText(ctx, 110.0f, 70.0f, text.c_str(), NULL);

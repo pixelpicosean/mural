@@ -21,6 +21,7 @@ THE SOFTWARE.
 */
 
 #pragma once
+
 #include "MuGlobals.h"
 
 namespace mural {
@@ -58,7 +59,7 @@ namespace mural {
 
             void setEventCode(int eventCode);
             void setDispatcher(EventDispatcher *dispatcher);
-            const String& getEventType() const;
+            const std::string& getEventType() const;
 
             // In order to prevent "namespace" collisions between events of different types, all event integers must be unique.
             // This is managed by arbitrarily assigning each class a "base" constant, and adding it to all its event type constants.
@@ -71,7 +72,7 @@ namespace mural {
             bool deleteOnDispatch;
 
         protected:
-            String eventType;
+            std::string eventType;
             EventDispatcher *dispatcher;
             int eventCode;
     };

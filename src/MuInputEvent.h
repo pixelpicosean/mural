@@ -67,7 +67,7 @@ namespace mural {
             // Properties
             int type;
             int keyCode;
-            const String code;
+            const std::string code;
 
             KeyboardEvent(int type, int key);
     };

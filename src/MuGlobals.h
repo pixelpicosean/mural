@@ -103,11 +103,7 @@ inline Number clampf(Number x, Number a, Number b) {
     #define MAX(a, b)  (((a) > (b)) ? (a) : (b))
 #endif
 
-/**
- * String definition
- */
 #include <string>
-typedef std::string String;
 
 /**
  * Base class for anything

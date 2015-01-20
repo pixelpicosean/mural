@@ -13,7 +13,7 @@ class Backgrounder {
                 std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 
                 // Run the callback
-                String res("Defered task: ");
+                std::string res("Defered task: ");
                 res += std::to_string(idx);
                 returnCallback(res.c_str());
             });

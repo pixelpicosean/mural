@@ -292,7 +292,7 @@ namespace mural {
         { KEY_NumpadSubtract, 0x6D }
     };
 
-    static const std::map<int, const String> KeyboardCodeMap = {
+    static const std::map<int, const std::string> KeyboardCodeMap = {
         /* Digits */
         { KEY_Digit0, "Digit0" },
         { KEY_Digit1, "Digit1" },
