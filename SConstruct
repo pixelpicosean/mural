@@ -29,8 +29,9 @@ SOURCES = [
 envOSX = Environment(
     CC='clang', CXX='clang++',
     CXXFLAGS = ['-std=c++11', '-stdlib=libc++', '-mmacosx-version-min=10.8'],
-    CPPPATH=['src', 'src/boost'],
-    LIBS=['glfw3'],
+    CPPPATH=['src', 'src/boost', 'src/zlib-1.2.3'],
+    LIBPATH=['lib/macosx'],
+    LIBS=['glfw3', 'z', 'boost_date_time', 'boost_filesystem', 'boost_system'],
     FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo']
 )
 
