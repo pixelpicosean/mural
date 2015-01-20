@@ -56,7 +56,7 @@ THE SOFTWARE.
  */
 #define PLATFORM_MAC      1
 #define PLATFORM_WINDOWS  2
-#define PLATFORM_UNIX     3 // Linux, *BSD, RaspberryPi
+#define PLATFORM_LINUX    3 // Linux, RaspberryPi
 #define PLATFORM_IOS      4
 #define PLATFORM_ANDROID  5
 
@@ -69,12 +69,19 @@ THE SOFTWARE.
     #define PLATFORM PLATFORM_MAC
 #elif defined(linux) || defined(__linux) || defined(__linux__)
     #include <cstddef>
-    #define PLATFORM PLATFORM_UNIX
+    #define PLATFORM PLATFORM_LINUX
 #else
     #error "Mural compile error: Unknown platform"
 #endif
 
 #define MURAL_LITTLE_ENDIAN
+
+#if PLATFORM == PLATFORM_MAC
+    #include "TargetConditionals.h"
+    #ifndef __OBJC__
+        #include <CoreFoundation/CoreFoundation.h>
+    #endif
+#endif
 
 /**
  * Number definition
