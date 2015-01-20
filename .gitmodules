@@ -1,0 +1,4 @@
+[submodule "src/boost"]
+	path = src/boost
+	url = https://github.com/cinder/Cinder-Boost.git
+	branch = dev

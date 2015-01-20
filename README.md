@@ -3,6 +3,9 @@ Mural *NanoVG* branch (experimental)
 
 [NanoVG](https://github.com/memononen/nanovg) has finished lots of Canvas API implementation, so I'm trying to use it as backend for Mural.
 
+## Dependence information
+- Boost: [CinderBoost](https://github.com/cinder/Cinder-Boost/tree/dev)
+
 ## Progress
 
 - [x] SCons building system
@@ -12,6 +15,9 @@ Mural *NanoVG* branch (experimental)
 - [x] Foundation classes (Event, App...)
 - [x] Mouse event
 - [x] Keyboard event
+- [x] Active class for async operations
+- [x] Import Cinder specific Boost as dependence
+- [ ] AssetManager for file io
 - [ ] Use a config to compile tests instead of each time
 - [ ] Build file for Linux x86 and x64
 - [ ] Separate source and build directory
