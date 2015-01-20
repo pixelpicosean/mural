@@ -29,3 +29,5 @@ build/*
 .sconsign.dblite
 app
 tests/bin
+*.sublime-project
+*.sublime-workspace
