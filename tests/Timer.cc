@@ -1,7 +1,10 @@
+#include "../src/MuGlobals.h"
 #include "../src/MuCore.h"
 
 #include "../src/MuAppController.h"
 #include "../src/MuTimer.h"
+
+#include <cstdio>
 
 // Create a controller class for testing
 class GameController : public mural::MuAppController {
