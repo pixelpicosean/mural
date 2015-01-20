@@ -63,11 +63,11 @@ namespace mural {
             std::condition_variable c;
     };
 
-    class Active : public MuObject {
+    class MuActive : public MuObject {
         public:
             typedef std::function<void()> Message;
 
-            Active(): done(false) {
+            MuActive(): done(false) {
                 thd = std::unique_ptr<std::thread>(
                     new std::thread([=] {
                         this->run();
@@ -75,7 +75,7 @@ namespace mural {
                 );
             }
 
-            ~Active() {
+            ~MuActive() {
                 send([&] {
                     done = true;
                 });
@@ -87,8 +87,8 @@ namespace mural {
             }
 
         private:
-            Active(const Active&);          // no copying
-            void operator=(const Active&);  // no copying
+            MuActive(const MuActive&);          // no copying
+            void operator=(const MuActive&);  // no copying
 
             bool done;                      // le flag
             message_queue<Message> mq;      // le queue

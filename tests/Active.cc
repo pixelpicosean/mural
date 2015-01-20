@@ -19,7 +19,7 @@ class Backgrounder {
             });
         }
     private:
-        mural::Active a;
+        mural::MuActive a;
 };
 
 void task(const char *res) {
