@@ -74,6 +74,8 @@ THE SOFTWARE.
     #error "Mural compile error: Unknown platform"
 #endif
 
+#define MURAL_LITTLE_ENDIAN
+
 /**
  * Number definition
  */

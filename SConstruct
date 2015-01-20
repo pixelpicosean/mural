@@ -14,15 +14,21 @@ SOURCES = [
     'src/linebreak/linebreak.c',
     'src/linebreak/linebreakdata.c',
     'src/linebreak/linebreakdef.c',
-
     'src/nanovg/nanovg.c',
-    'src/perf.c',
-    'src/MuEvent.cc',
-    'src/MuInputEvent.cc',
-    'src/MuEventDispatcher.cc',
-    'src/MuTimer.cc',
+
+    'src/MuBuffer.cc',
     'src/MuCore.cc',
-    'src/MuUnicode.cc'
+    'src/MuDataSource.cc',
+    'src/MuDataTarget.cc',
+    'src/MuEvent.cc',
+    'src/MuEventDispatcher.cc',
+    'src/MuInputEvent.cc',
+    'src/MuStream.cc',
+    'src/MuTimer.cc',
+    'src/MuUnicode.cc',
+    'src/MuUrl.cc',
+    'src/MuUtilities.cc',
+    'src/perf.c'
 ]
 
 # Build for OSX

@@ -30,7 +30,7 @@ namespace mural {
     //! All exceptions thrown in mural derive from mural::Exception
     class Exception : public std::exception {
         public:
-            Exception();
+            Exception() {}
             Exception(const std::string &description): mDescription(description) {}
             virtual ~Exception() throw() {}
 
