@@ -24,7 +24,7 @@ SOURCES = [
 envOSX = Environment(
     CC='clang', CXX='clang++',
     CXXFLAGS = ['-std=c++11', '-stdlib=libc++', '-mmacosx-version-min=10.8'],
-    CPPPATH=['./src'],
+    CPPPATH=['src', 'src/boost'],
     LIBS=['glfw3'],
     FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo']
 )
@@ -36,8 +36,8 @@ envWin = Environment(
     AR='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ar',
     RANLIB='/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-ranlib',
     CXXFLAGS=['-std=c++11'],
-    CPPPATH=['./src', './include', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/include'],
-    LIBPATH=['./lib', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/lib'],
+    CPPPATH=['src', 'include', 'src/boost', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/include'],
+    LIBPATH=['lib', '/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/i586-mingw32/lib'],
     LIBS=['glfw3', 'GLEW', 'glu32', 'opengl32', 'gdi32', 'user32', 'kernel32']
 )
 
@@ -70,4 +70,14 @@ env.Program(
 )
 
 # Compile tests
-SConscript('tests/SConscript', exports=['env', 'SOURCES'])
+TESTS = [
+    'MouseEvent',
+    'KeyboardEvent',
+    'Active',
+    'Timer'
+]
+
+for t in TESTS:
+    l = list(SOURCES)
+    l.append('tests/' + t + '.cc');
+    env.Program(target=('tests/bin/' + t), source=l)
