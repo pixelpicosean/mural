@@ -28,8 +28,17 @@
 #include "MuFilesystem.h"
 
 #include <vector>
-#include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
+
+#if PLATFORM == PLATFORM_WINDOWS
+#include <shlobj.h>
+#elif PLATFORM == PLATFORM_LINUX
+#include <linux/limits.h>
+#include <unistd.h>
+#endif
+#include <fstream>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 using std::vector;
 using std::string;
@@ -37,16 +46,72 @@ using std::wstring;
 
 namespace mural {
 
+    fs::path getAppPath() {
+        string pathSplit = "/";
+    #if PLATFORM == PLATFORM_WINDOWS
+        TCHAR exePathWin[MAX_PATH];
+        GetModuleFileName(NULL, exePathWin, MAX_PATH);
+        string exePath(exePathWin);
+        int length = exePath.length();
+        if (exePath.substr(length - 4, length) == ".exe") {
+            exePath = exePath.substr(0, length - 4);
+        }
+        pathSplit = "\\";
+    #elif PLATFORM == PLATFORM_MAC
+        CFBundleRef mainBundle = CFBundleGetMainBundle();
+        CFURLRef exeURL = CFBundleCopyExecutableURL(mainBundle);
+        char exePath[PATH_MAX];
+        if (!CFURLGetFileSystemRepresentation(exeURL, TRUE, (UInt8 *)exePath, PATH_MAX)) {
+            CFRelease(exeURL);
+            printf("Couldn't get exe name.");
+            return "";
+        }
+        CFRelease(exeURL);
+    #elif PLATFORM == PLATFORM_LINUX
+        string exePath = ReadWholeFile("/proc/self/cmdline");
+        string splitChars = "";
+        splitChars.push_back('\0'); // have to construct null-containing strings carefully
+        exePath = split(exePath, splitChars)[0];
+    #endif
+
+        std::vector<string> pathElements = split(exePath, pathSplit);
+        string exeName = pathElements[pathElements.size()-1];
+
+        return exeName;
+    }
+
     fs::path expandPath(const fs::path &path) {
         return path;
     }
 
     fs::path getHomeDirectory() {
-        return fs::path();
+#if PLATFORM == PLATFORM_WINDOWS
+        return "./";
+#elif PLATFORM == PLATFORM_MAC
+        return getenv("HOME");
+#elif PLATFORM == PLATFORM_LINUX
+        return getenv("HOME");
+#endif
     }
 
     fs::path getDocumentsDirectory() {
-        return fs::path();
+#if PLATFORM == PLATFORM_WINDOWS
+        char myDocs[MAX_PATH];
+        HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocs);
+        if (result != S_OK) {
+            printf("ERROR: Couldn't get path to \"My Documents\" directory.");
+            return string("");
+        }
+        else {
+            return string(myDocs);
+        }
+#elif PLATFORM == PLATFORM_MAC
+        string path = getenv("HOME");
+        return path + "/Documents/";
+#elif PLATFORM == PLATFORM_LINUX
+        string path = getenv("HOME");
+        return path + "/Documents/";
+#endif
     }
 
     fs::path getTemporaryDirectory() {
@@ -85,7 +150,7 @@ namespace mural {
         vector<string> result;
 
         boost::algorithm::split(result, str, boost::is_any_of(separators),
-            compress ? boost::token_compress_on : boost::token_compress_off);
+                                compress ? boost::token_compress_on : boost::token_compress_off);
 
         return result;
     }
@@ -95,39 +160,39 @@ namespace mural {
         size_t dataSize = loadedBuffer.getDataSize();
         Buffer padded(dataSize + 1);
         memcpy(padded.getData(), loadedBuffer.getData(), dataSize);
-        (static_cast<uint8_t*>(padded.getData()))[dataSize] = 0;
-        return string(static_cast<const char*>(padded.getData()));
+        (static_cast<uint8_t *>(padded.getData()))[dataSize] = 0;
+        return string(static_cast<const char *>(padded.getData()));
     }
 
     void sleep(float milliseconds) {}
 
     int16_t swapEndian(int16_t val) {
-        return (int16_t) ( (((uint16_t) (val) & (uint16_t) 0x00ffU) << 8) |
-                            (((uint16_t) (val) & (uint16_t) 0xff00U) >> 8));
+        return (int16_t)((((uint16_t)(val) & (uint16_t) 0x00ffU) << 8) |
+                         (((uint16_t)(val) & (uint16_t) 0xff00U) >> 8));
     }
 
     uint16_t swapEndian(uint16_t val) {
-        return (uint16_t) ((((uint16_t) (val) & (uint16_t) 0x00ffU) << 8) |
-                            (((uint16_t) (val) & (uint16_t) 0xff00U) >> 8));
+        return (uint16_t)((((uint16_t)(val) & (uint16_t) 0x00ffU) << 8) |
+                          (((uint16_t)(val) & (uint16_t) 0xff00U) >> 8));
     }
 
     int32_t swapEndian(int32_t val) {
-        return (int32_t)((((uint32_t) (val) & (uint32_t) 0x000000FFU) << 24) |
-                         (((uint32_t) (val) & (uint32_t) 0x0000FF00U) <<  8) |
-                         (((uint32_t) (val) & (uint32_t) 0x00FF0000U) >>  8) |
-                         (((uint32_t) (val) & (uint32_t) 0xFF000000U) >> 24));
+        return (int32_t)((((uint32_t)(val) & (uint32_t) 0x000000FFU) << 24) |
+                         (((uint32_t)(val) & (uint32_t) 0x0000FF00U) <<  8) |
+                         (((uint32_t)(val) & (uint32_t) 0x00FF0000U) >>  8) |
+                         (((uint32_t)(val) & (uint32_t) 0xFF000000U) >> 24));
     }
 
     uint32_t swapEndian(uint32_t val) {
-        return (uint32_t)((((uint32_t) (val) & (uint32_t) 0x000000FFU) << 24) |
-                         (((uint32_t) (val) & (uint32_t) 0x0000FF00U) <<  8) |
-                         (((uint32_t) (val) & (uint32_t) 0x00FF0000U) >>  8) |
-                         (((uint32_t) (val) & (uint32_t) 0xFF000000U) >> 24));
+        return (uint32_t)((((uint32_t)(val) & (uint32_t) 0x000000FFU) << 24) |
+                          (((uint32_t)(val) & (uint32_t) 0x0000FF00U) <<  8) |
+                          (((uint32_t)(val) & (uint32_t) 0x00FF0000U) >>  8) |
+                          (((uint32_t)(val) & (uint32_t) 0xFF000000U) >> 24));
     }
 
     float swapEndian(float val) {
-        uint32_t temp = swapEndian(* reinterpret_cast<uint32_t*>(&val));
-        return *(reinterpret_cast<float*>(&temp));
+        uint32_t temp = swapEndian(* reinterpret_cast<uint32_t *>(&val));
+        return *(reinterpret_cast<float *>(&temp));
     }
 
     double swapEndian(double val) {
@@ -157,7 +222,7 @@ namespace mural {
         size_t blockSize = blockSizeInBytes / sizeof(float);
 
         for (size_t b = 0; b < blockSize; b++) {
-            *(reinterpret_cast<uint32_t*>(blockPtr)) = swapEndian(*(reinterpret_cast<uint32_t*>(blockPtr)));
+            *(reinterpret_cast<uint32_t *>(blockPtr)) = swapEndian(*(reinterpret_cast<uint32_t *>(blockPtr)));
             blockPtr++;
         }
     }

@@ -34,6 +34,8 @@
 
 namespace mural {
 
+    //! Returns the folder contains the executable file
+    fs::path getAppPath();
     //! Returns a canonical version of \a path by expanding a "~" and symlinks on the Mac "..", "." and "//"
     fs::path expandPath(const fs::path &path);
     //! Returns a path to the user's home directory.

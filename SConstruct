@@ -38,7 +38,7 @@ envOSX = Environment(
     CPPPATH=['src', 'src/boost', 'src/zlib-1.2.3'],
     LIBPATH=['lib/macosx'],
     LIBS=['glfw3', 'z', 'boost_date_time', 'boost_filesystem', 'boost_system'],
-    FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo']
+    FRAMEWORKS=['Cocoa', 'OpenGL', 'IOKit', 'CoreVideo', 'CoreFoundation']
 )
 
 # Build for Windows (MinGW)
@@ -86,7 +86,8 @@ TESTS = [
     'MouseEvent',
     'KeyboardEvent',
     'Active',
-    'Timer'
+    'Timer',
+    'FileUtilities'
 ]
 
 for t in TESTS:
