@@ -48,16 +48,16 @@ namespace mural {
             MuTimerCollection();
             ~MuTimerCollection();
 
-            int scheduleCallback(std::function<void()> callback, double interval, bool repeat);
-            void cancelId(int id);
+            unsigned int scheduleCallback(std::function<void()> callback, double interval, bool repeat);
+            void cancelId(unsigned int id);
             void update();
 
         private:
-            std::map<int, MuTimer *> timerListA;
-            std::map<int, MuTimer *> timerListB;
-            std::vector<MuTimer *> timersToBeRemoved;
+            std::map<unsigned int, MuTimer> timerListA;
+            std::map<unsigned int, MuTimer> timerListB;
+            std::vector<MuTimer> timersToBeRemoved;
             int currListIdx;
-            int lastId;
+            unsigned int lastId;
     };
 
 }

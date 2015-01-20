@@ -28,7 +28,7 @@ class GameController : public mural::MuAppController {
             int timeId = timers.scheduleCallback([&] {
                 count++;
                 printf("Action: interval repeat %d times\n", count);
-            }, 90, true);
+            }, 80, true);
             // Clear interval
             timers.scheduleCallback([=] {
                 timers.cancelId(timeId);

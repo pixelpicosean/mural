@@ -23,6 +23,8 @@ THE SOFTWARE.
 #include "MuTimer.h"
 #include "GLFW/glfw3.h"
 
+#include <utility>
+
 namespace mural {
 
     double performanceNow() {
@@ -72,51 +74,49 @@ namespace mural {
         timerListB.clear();
     }
 
-    int MuTimerCollection::scheduleCallback(std::function<void()> callback, double interval, bool repeat) {
+    unsigned int MuTimerCollection::scheduleCallback(std::function<void()> callback, double interval, bool repeat) {
         lastId++;
 
-        MuTimer *timer = new MuTimer(callback, interval, repeat);
+        MuTimer timer(callback, interval, repeat);
+
         if (currListIdx == 0) {
-            timerListA[lastId] = timer;
+            timerListA.emplace(lastId, timer);
         }
         else if (currListIdx == 1) {
-            timerListB[lastId] = timer;
+            timerListB.emplace(lastId, timer);
         }
 
         return lastId;
     }
 
-    void MuTimerCollection::cancelId(int id) {
+    void MuTimerCollection::cancelId(unsigned int id) {
         auto it = timerListA.find(id);
         if (it != timerListA.end()) {
-            timersToBeRemoved.push_back(it->second);
-            // timerListA.erase(it);
+            timersToBeRemoved.push_back(std::move(it->second));
+            timerListA.erase(it);
         }
         else {
             it = timerListB.find(id);
             if (it != timerListB.end()) {
-                timersToBeRemoved.push_back(it->second);
-                // timerListB.erase(it);
+                timersToBeRemoved.push_back(std::move(it->second));
+                timerListB.erase(it);
             }
         }
     }
 
     void MuTimerCollection::update() {
-        for (auto it = timersToBeRemoved.begin(); it != timersToBeRemoved.end(); ++it) {
-            delete (*it);
-        }
         timersToBeRemoved.clear();
 
         if (currListIdx == 0) {
             currListIdx = 1;
             for (auto it = timerListA.begin(); it != timerListA.end(); ++it) {
-                it->second->check();
+                it->second.check();
             }
         }
         else if (currListIdx == 1) {
             currListIdx = 0;
             for (auto it = timerListB.begin(); it != timerListB.end(); ++it) {
-                it->second->check();
+                it->second.check();
             }
         }
     }
