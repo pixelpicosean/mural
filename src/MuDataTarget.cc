@@ -27,68 +27,59 @@ namespace mural {
 
     /////////////////////////////////////////////////////////////////////////////
     // DataTarget
-    void DataTarget::setFilePathHint( const fs::path &aFilePathHint )
-    {
+    void DataTarget::setFilePathHint(const fs::path &aFilePathHint) {
         mFilePathHint = aFilePathHint;
     }
 
-    const fs::path& DataTarget::getFilePath() const
-    {
+    const fs::path& DataTarget::getFilePath() const {
         return mFilePath;
     }
 
-    const Url& DataTarget::getUrl() const
-    {
+    const Url& DataTarget::getUrl() const {
         return mUrl;
     }
 
-    const fs::path& DataTarget::getFilePathHint() const
-    {
+    const fs::path& DataTarget::getFilePathHint() const {
         return mFilePathHint;
     }
 
     /////////////////////////////////////////////////////////////////////////////
     // DataTargetPath
-    DataTargetPathRef DataTargetPath::createRef( const fs::path &path )
-    {
-        return DataTargetPathRef( new DataTargetPath( path ) );
+    DataTargetPathRef DataTargetPath::createRef(const fs::path &path) {
+        return DataTargetPathRef(new DataTargetPath(path));
     }
 
-    DataTargetPath::DataTargetPath( const fs::path &path )
-        : DataTarget( path, Url() )
-    {
-        setFilePathHint( path );
+    DataTargetPath::DataTargetPath(const fs::path &path)
+        : DataTarget(path, Url()) {
+        setFilePathHint(path);
     }
 
-    OStreamRef DataTargetPath::getStream()
-    {
-        if( ! mStream )
-            mStream = writeFileStream( mFilePath );
+    OStreamRef DataTargetPath::getStream() {
+        if (!mStream)
+            mStream = writeFileStream(mFilePath);
 
         return mStream;
     }
 
     /////////////////////////////////////////////////////////////////////////////
     // DataTargetStream
-    DataTargetStreamRef DataTargetStream::createRef( OStreamRef stream )
-    {
-        return DataTargetStreamRef( new DataTargetStream( stream ) );
+    DataTargetStreamRef DataTargetStream::createRef(OStreamRef stream) {
+        return DataTargetStreamRef(new DataTargetStream(stream));
     }
 
-    DataTargetStream::DataTargetStream( OStreamRef stream )
-        : DataTarget( "", Url() ), mStream( stream )
+    DataTargetStream::DataTargetStream(OStreamRef stream):
+        DataTarget("", Url()), mStream(stream)
     {
-        setFilePathHint( mStream->getFileName() );
+        setFilePathHint(mStream->getFileName());
     }
 
     /////////////////////////////////////////////////////////////////////////////
     // Free functions
-    DataTargetPathRef writeFile( const fs::path &path, bool createParents )
-    {
-        if( createParents )
-            createDirectories( path );
+    DataTargetPathRef writeFile(const fs::path &path, bool createParents) {
+        if (createParents)
+            createDirectories(path);
 
-        return DataTargetPath::createRef( path );
+        return DataTargetPath::createRef(path);
     }
 
 }

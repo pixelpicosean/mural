@@ -33,78 +33,78 @@
 
 namespace mural {
 
-    typedef std::shared_ptr<class DataSource>   DataSourceRef;
+    typedef std::shared_ptr<class DataSource> DataSourceRef;
 
     class DataSource : public MuObject {
-      public:
-        virtual bool    isFilePath() = 0;
-        virtual bool    isUrl() = 0;
+        public:
+            virtual bool isFilePath() = 0;
+            virtual bool isUrl() = 0;
 
-        const fs::path&     getFilePath();
-        const Url&          getUrl();
-        const fs::path&     getFilePathHint();
+            const fs::path& getFilePath();
+            const Url& getUrl();
+            const fs::path& getFilePathHint();
 
-        Buffer&             getBuffer();
-        virtual IStreamRef  createStream() = 0;
+            Buffer& getBuffer();
+            virtual IStreamRef createStream() = 0;
 
-      protected:
-        DataSource( const fs::path &aFilePath, const Url &aUrl )
-            : mFilePath( aFilePath ), mUrl( aUrl )
-        {}
-        virtual ~DataSource() {}
+        protected:
+            DataSource(const fs::path &aFilePath, const Url &aUrl):
+                mFilePath(aFilePath), mUrl(aUrl)
+            {}
+            virtual ~DataSource() {}
 
-        virtual void    createBuffer() = 0;
+            virtual void createBuffer() = 0;
 
-        void    setFilePathHint( const fs::path &aFilePathHint );
+            void setFilePathHint(const fs::path &aFilePathHint);
 
-        Buffer              mBuffer;
-        fs::path            mFilePath;
-        fs::path            mFilePathHint;
-        Url                 mUrl;
+            Buffer   mBuffer;
+            fs::path mFilePath;
+            fs::path mFilePathHint;
+            Url      mUrl;
     };
 
 
-    typedef std::shared_ptr<class DataSourcePath>   DataSourcePathRef;
+    typedef std::shared_ptr<class DataSourcePath> DataSourcePathRef;
 
     class DataSourcePath : public DataSource {
-      public:
-        static DataSourcePathRef    create( const fs::path &path );
+        public:
+            static DataSourcePathRef create(const fs::path &path);
 
-        virtual bool    isFilePath() { return true; }
-        virtual bool    isUrl() { return false; }
+            virtual bool isFilePath() { return true; }
+            virtual bool isUrl() { return false; }
 
-        virtual IStreamRef  createStream();
+            virtual IStreamRef createStream();
 
-      protected:
-        explicit DataSourcePath( const fs::path &path );
+        protected:
+            explicit DataSourcePath(const fs::path &path);
 
-        virtual void    createBuffer();
+            virtual void createBuffer();
 
-        IStreamFileRef  mStream;
+            IStreamFileRef mStream;
     };
 
-    DataSourceRef   loadFile( const fs::path &path );
+    DataSourceRef loadFile(const fs::path &path);
 
-    DataSourceRef           loadUrl( const Url &Url, const UrlOptions &options = UrlOptions() );
-    inline DataSourceRef    loadUrl( const std::string &urlString, const UrlOptions &options = UrlOptions() ) { return loadUrl( Url( urlString ), options ); }
+    DataSourceRef loadUrl(const Url &Url, const UrlOptions &options = UrlOptions());
+    inline DataSourceRef loadUrl(const std::string &urlString, const UrlOptions &options = UrlOptions()) { return loadUrl(Url(urlString), options); }
 
     typedef std::shared_ptr<class DataSourceBuffer> DataSourceBufferRef;
 
     class DataSourceBuffer : public DataSource {
-      public:
-        static DataSourceBufferRef      create( Buffer buffer, const fs::path &filePathHint = "" );
+        public:
+            static DataSourceBufferRef      create(Buffer buffer, const fs::path &filePathHint = "");
 
-        virtual bool    isFilePath() { return false; }
-        virtual bool    isUrl() { return false; }
+            virtual bool isFilePath() { return false; }
+            virtual bool isUrl() { return false; }
 
-        virtual IStreamRef  createStream();
+            virtual IStreamRef createStream();
 
-      protected:
-        DataSourceBuffer( Buffer aBuffer );
+        protected:
+            DataSourceBuffer(Buffer aBuffer);
 
-        virtual void    createBuffer();
+            virtual void createBuffer();
 
-        IStreamMemRef   mStream;
+            IStreamMemRef mStream;
     };
 
 }

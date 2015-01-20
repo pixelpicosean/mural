@@ -29,66 +29,66 @@
 #include <utility>
 
 #include <boost/signals2.hpp>
-namespace mural { namespace signals {
-    using namespace boost::signals2;
-} } // cinder::signals
+namespace mural {
+    namespace signals {
+        using namespace boost::signals2;
+    }
+} // mural::signals
 
 #include <functional>
 
 namespace mural {
 
-//! Represents a unique identifier for a callback
-typedef uint32_t CallbackId;
+    //! Represents a unique identifier for a callback
+    typedef uint32_t CallbackId;
 
-//! Implements a utility class for maintaining a list of callbacks
-template<typename SIG>
-class CallbackMgr {
-  public:
-    typedef typename std::vector<std::pair<CallbackId,std::function<SIG> > >    collection;
-    typedef typename collection::iterator                                       iterator;
+    //! Implements a utility class for maintaining a list of callbacks
+    template<typename SIG>
+    class CallbackMgr : public MuObject {
+        public:
+            typedef typename std::vector<std::pair<CallbackId,std::function<SIG> > > collection;
+            typedef typename collection::iterator iterator;
 
-    CallbackId  registerCb( std::function<SIG> cb )
-    {
-        CallbackId cbId = 0;
-        if( ! mCallbacks.empty() )
-            cbId = mCallbacks.rbegin()->first + 1;
-        mCallbacks.push_back( std::make_pair( cbId, cb ) );
-        return cbId;
-    }
+            CallbackId  registerCb(std::function<SIG> cb) {
+                CallbackId cbId = 0;
+                if (!mCallbacks.empty())
+                    cbId = mCallbacks.rbegin()->first + 1;
+                mCallbacks.push_back(std::make_pair(cbId, cb));
+                return cbId;
+            }
 
-    CallbackId  registerCb( iterator position, std::function<SIG> cb )
-    {
-        CallbackId cbId = 0;
-        if( ! mCallbacks.empty() )
-            cbId = mCallbacks.rbegin()->first + 1;
-        mCallbacks.insert( position, std::make_pair( cbId, cb ) );
-        return cbId;
-    }
+            CallbackId  registerCb(iterator position, std::function<SIG> cb) {
+                CallbackId cbId = 0;
+                if (!mCallbacks.empty())
+                    cbId = mCallbacks.rbegin()->first + 1;
+                mCallbacks.insert(position, std::make_pair(cbId, cb));
+                return cbId;
+            }
 
-    void call() { for( iterator it = begin(); it != end(); ++it ) it->second(); }
-    template<typename A1>
-    void call( A1 a1 ) { for( iterator it = begin(); it != end(); ++it ) it->second( a1 ); }
-    template<typename A1, typename A2>
-    void call( A1 a1, A2 a2 ) { for( iterator it = begin(); it != end(); ++it ) it->second( a1, a2 ); }
-    template<typename A1, typename A2, typename A3>
-    void call( A1 a1, A2 a2, A3 a3 ) { for( iterator it = begin(); it != end(); ++it ) it->second( a1, a2, a3 ); }
-    template<typename A1, typename A2, typename A3, typename A4>
-    void call( A1 a1, A2 a2, A3 a3, A4 a4 ) { for( iterator it = begin(); it != end(); ++it ) it->second( a1, a2, a3, a4 ); }
-    template<typename A1, typename A2, typename A3, typename A4, typename A5>
-    void call( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5 ) { for( iterator it = begin(); it != end(); ++it ) it->second( a1, a2, a3, a4, a5 ); }
+            void call() { for (iterator it = begin(); it != end(); ++it) it->second(); }
+            template<typename A1>
+            void call(A1 a1) { for (iterator it = begin(); it != end(); ++it) it->second(a1); }
+            template<typename A1, typename A2>
+            void call(A1 a1, A2 a2) { for (iterator it = begin(); it != end(); ++it) it->second(a1, a2); }
+            template<typename A1, typename A2, typename A3>
+            void call(A1 a1, A2 a2, A3 a3) { for (iterator it = begin(); it != end(); ++it) it->second(a1, a2, a3); }
+            template<typename A1, typename A2, typename A3, typename A4>
+            void call(A1 a1, A2 a2, A3 a3, A4 a4) { for (iterator it = begin(); it != end(); ++it) it->second(a1, a2, a3, a4); }
+            template<typename A1, typename A2, typename A3, typename A4, typename A5>
+            void call(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) { for (iterator it = begin(); it != end(); ++it) it->second(a1, a2, a3, a4, a5); }
 
-    void    unregisterCb( CallbackId cbId ) { mCallbacks.erase( find( cbId ) ); }
+            void unregisterCb(CallbackId cbId) { mCallbacks.erase(find(cbId)); }
 
-    bool    empty() const { return mCallbacks.empty(); }
+            bool empty() const { return mCallbacks.empty(); }
 
-    iterator find( CallbackId cbId ) { for( iterator it = begin(); it != end(); ++it ) if( it->first == cbId ) return it; return mCallbacks.end(); }
-    iterator begin() { return mCallbacks.begin(); }
-    iterator end() { return mCallbacks.end(); }
+            iterator find(CallbackId cbId) { for (iterator it = begin(); it != end(); ++it) if (it->first == cbId) return it; return mCallbacks.end(); }
+            iterator begin() { return mCallbacks.begin(); }
+            iterator end() { return mCallbacks.end(); }
 
-    collection&     getCallbacks() { return mCallbacks; }
+            collection& getCallbacks() { return mCallbacks; }
 
-  private:
-    collection      mCallbacks;
-};
+        private:
+            collection mCallbacks;
+    };
 
 }

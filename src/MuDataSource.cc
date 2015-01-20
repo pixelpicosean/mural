@@ -96,8 +96,8 @@ namespace mural {
         return result;
     }
 
-    DataSourceBuffer::DataSourceBuffer( Buffer buffer )
-        : DataSource( "", Url() )
+    DataSourceBuffer::DataSourceBuffer(Buffer buffer):
+        DataSource("", Url())
     {
         mBuffer = buffer;
     }

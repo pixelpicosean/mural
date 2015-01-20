@@ -30,83 +30,75 @@
 
 namespace mural {
 
-    Buffer::Obj::Obj( void * aData, size_t aSize, bool aOwnsData )
-        : mData( aData ), mAllocatedSize( aSize ), mDataSize( aSize ), mOwnsData( aOwnsData )
-    {
-    }
+    Buffer::Obj::Obj(void * aData, size_t aSize, bool aOwnsData):
+        mData(aData),
+        mAllocatedSize(aSize),
+        mDataSize(aSize),
+        mOwnsData(aOwnsData)
+    {}
 
-    Buffer::Obj::~Obj()
-    {
-        if( mOwnsData ) {
-            free( mData );
+    Buffer::Obj::~Obj() {
+        if (mOwnsData) {
+            free(mData);
         }
     }
 
-    Buffer::Buffer( std::shared_ptr<DataSource> dataSource )
-    {
+    Buffer::Buffer(std::shared_ptr<DataSource> dataSource) {
         Buffer &otherBuffer = dataSource->getBuffer();
-        char *data = reinterpret_cast<char*>( malloc( otherBuffer.getDataSize() ) );
-        memcpy( data, otherBuffer.getData(), otherBuffer.getDataSize() );
-        mObj = std::shared_ptr<Obj>( new Obj( data, otherBuffer.getDataSize(), true ) );
+        char *data = reinterpret_cast<char*>(malloc(otherBuffer.getDataSize()));
+        memcpy(data, otherBuffer.getData(), otherBuffer.getDataSize());
+        mObj = std::shared_ptr<Obj>(new Obj(data, otherBuffer.getDataSize(), true));
     }
 
-    Buffer::Buffer( void * aData, size_t aSize )
-        : mObj( new Obj( aData, aSize, false ) )
-    {
-    }
+    Buffer::Buffer(void * aData, size_t aSize):
+        mObj(new Obj(aData, aSize, false))
+    {}
 
-    Buffer::Buffer( size_t aSize )
-        : mObj( new Obj( malloc( aSize ), aSize, true ) )
-    {
-    }
+    Buffer::Buffer(size_t aSize):
+        mObj(new Obj(malloc(aSize), aSize, true))
+    {}
 
-    void Buffer::resize( size_t newSize )
-    {
-        if( ! mObj->mOwnsData ) return;
+    void Buffer::resize(size_t newSize) {
+        if (! mObj->mOwnsData) return;
 
-        mObj->mData = realloc( mObj->mData, newSize );
+        mObj->mData = realloc(mObj->mData, newSize);
         mObj->mDataSize = newSize;
         mObj->mAllocatedSize = newSize;
     }
 
-    void Buffer::copyFrom( const void * aData, size_t length )
-    {
-        memcpy( mObj->mData, aData, length );
+    void Buffer::copyFrom(const void * aData, size_t length) {
+        memcpy(mObj->mData, aData, length);
     }
 
-    void Buffer::write( std::shared_ptr<class DataTarget> dataTarget )
-    {
+    void Buffer::write(std::shared_ptr<class DataTarget> dataTarget) {
         OStreamRef os = dataTarget->getStream();
-        os->write( *this );
+        os->write(*this);
     }
 
-    std::shared_ptr<uint8_t>    Buffer::convertToSharedPtr()
-    {
+    std::shared_ptr<uint8_t>    Buffer::convertToSharedPtr() {
         mObj->mOwnsData = false;
-        return std::shared_ptr<uint8_t>( reinterpret_cast<uint8_t*>( mObj->mData ), free );
+        return std::shared_ptr<uint8_t>(reinterpret_cast<uint8_t*>(mObj->mData), free);
     }
 
-    Buffer compressBuffer( const Buffer &aBuffer, int8_t compressionLevel, bool resizeResult )
-    {
+    Buffer compressBuffer(const Buffer &aBuffer, int8_t compressionLevel, bool resizeResult) {
         /*Initial output buffer size needs to be 0.1% larger than source buffer + 12 bytes*/
-        size_t outSize = (size_t)(( aBuffer.getDataSize() * 1.001f ) + 12);
-        Buffer outBuffer = Buffer( outSize );
+        size_t outSize = (size_t)((aBuffer.getDataSize() * 1.001f) + 12);
+        Buffer outBuffer = Buffer(outSize);
 
-        int err = compress2( (Bytef *)outBuffer.getData(), (uLongf*)&outSize, (Bytef *)aBuffer.getData(), (uLongf)aBuffer.getDataSize(), compressionLevel );
-        if( err != Z_OK ) {
+        int err = compress2((Bytef *)outBuffer.getData(), (uLongf*)&outSize, (Bytef *)aBuffer.getData(), (uLongf)aBuffer.getDataSize(), compressionLevel);
+        if (err != Z_OK) {
             //TODO: throw
         }
 
-        outBuffer.setDataSize( outSize );
-        if( resizeResult ) {
-            outBuffer.resize( outSize );
+        outBuffer.setDataSize(outSize);
+        if (resizeResult) {
+            outBuffer.resize(outSize);
         }
 
         return outBuffer;
     }
 
-    Buffer decompressBuffer( const Buffer &aBuffer, bool resizeResult, bool useGZip )
-    {
+    Buffer decompressBuffer(const Buffer &aBuffer, bool resizeResult, bool useGZip) {
         int err;
         z_stream strm;
 
@@ -115,8 +107,8 @@ namespace mural {
         strm.opaque = Z_NULL;
         strm.avail_in = 0;
         strm.next_in = Z_NULL;
-        err = useGZip ? inflateInit2( &strm, 16 + MAX_WBITS ) : inflateInit( &strm );
-        if( err != Z_OK ) {
+        err = useGZip ? inflateInit2(&strm, 16 + MAX_WBITS) : inflateInit(&strm);
+        if (err != Z_OK) {
             //cleanup stream
             (void)inflateEnd(&strm);
             //throw
@@ -129,33 +121,33 @@ namespace mural {
 
         size_t outBufferSize = chunkSize;
         size_t outOffset = 0;
-        Buffer outBuffer = Buffer( outBufferSize );
+        Buffer outBuffer = Buffer(outBufferSize);
         uint8_t * outPtr = (uint8_t *)outBuffer.getData();
 
         do {
             strm.avail_in = chunkSize;
-            if( inOffset + chunkSize > inBufferSize ) {
+            if (inOffset + chunkSize > inBufferSize) {
                 strm.avail_in = inBufferSize - inOffset;
             }
 
-            if( strm.avail_in == 0 ) break;
+            if (strm.avail_in == 0) break;
 
             strm.next_in = &inPtr[inOffset];
             inOffset += strm.avail_in;
 
             do {
                 //expand the output buffer if neccessary
-                if( outOffset + chunkSize > outBufferSize ) {
+                if (outOffset + chunkSize > outBufferSize) {
                     // increase the size of the buffer by 50%
-                    while( outBufferSize < outOffset + chunkSize )
+                    while (outBufferSize < outOffset + chunkSize)
                         outBufferSize = (size_t)(outBufferSize * 1.5f + 1);
-                    outBuffer.resize( outBufferSize );
+                    outBuffer.resize(outBufferSize);
                     outPtr = (uint8_t *)outBuffer.getData();
                 }
                 strm.avail_out = chunkSize;
                 strm.next_out = &outPtr[outOffset];
-                err = inflate( &strm, Z_NO_FLUSH );
-                switch( err ) {
+                err = inflate(&strm, Z_NO_FLUSH);
+                switch (err) {
                     case Z_NEED_DICT:
                     case Z_DATA_ERROR:
                     case Z_MEM_ERROR:
@@ -164,16 +156,16 @@ namespace mural {
                 }
 
                 outOffset += (chunkSize - strm.avail_out);
-            } while( strm.avail_out == 0 );
+            } while (strm.avail_out == 0);
 
 
-        } while( err != Z_STREAM_END );
+        } while(err != Z_STREAM_END);
 
         (void)inflateEnd(&strm);
 
-        outBuffer.setDataSize( outOffset );
-        if( resizeResult ) {
-            outBuffer.resize( outOffset );
+        outBuffer.setDataSize(outOffset);
+        if (resizeResult) {
+            outBuffer.resize(outOffset);
         }
 
         return outBuffer;

@@ -38,114 +38,133 @@
 namespace mural {
 
     class StreamBase : private boost::noncopyable {
-     public:
-        virtual ~StreamBase() {}
+        public:
+            virtual ~StreamBase() {}
 
-        enum Endianness { STREAM_BIG_ENDIAN, STREAM_LITTLE_ENDIAN };
+            enum Endianness { STREAM_BIG_ENDIAN, STREAM_LITTLE_ENDIAN };
 
-        //! Returns the platform's endianness as a StreamBase::Endianness
-        static uint8_t      getNativeEndianness()
-        {
+            //! Returns the platform's endianness as a StreamBase::Endianness
+            static uint8_t      getNativeEndianness() {
 #ifdef MURAL_LITTLE_ENDIAN
-             return STREAM_LITTLE_ENDIAN;
+                return STREAM_LITTLE_ENDIAN;
 #else
-             return STREAM_BIG_ENDIAN;
+                return STREAM_BIG_ENDIAN;
 #endif
-        }
+            }
 
-        //! Returns the file name of the path from which a Stream originated when relevant. Empty string when undefined.
-        const fs::path&     getFileName() const { return mFileName; }
-        //! Sets the file name of the path from which a Stream originated when relevant. Empty string when undefined.
-        void                setFileName( const fs::path &aFileName ) { mFileName = aFileName; }
+            //! Returns the file name of the path from which a Stream originated when relevant. Empty string when undefined.
+            const fs::path     &getFileName() const {
+                return mFileName;
+            }
+            //! Sets the file name of the path from which a Stream originated when relevant. Empty string when undefined.
+            void                setFileName(const fs::path &aFileName) {
+                mFileName = aFileName;
+            }
 
-        //! Returns whether the Stream has been requested to destroy its source upon its own destruction. For example, IStreamFile will delete its source file. Ignored in some types of streams. Defaults to \c false.
-        bool        getDeleteOnDestroy() const { return mDeleteOnDestroy; }
-        //! Sets whether the Stream has been requested to destroy its source upon its own destruction. For example, IStreamFile will delete its source file. Ignored in some types of streams. Defaults to \c false.
-        void        setDeleteOnDestroy( bool enable = true ) { mDeleteOnDestroy = enable; }
+            //! Returns whether the Stream has been requested to destroy its source upon its own destruction. For example, IStreamFile will delete its source file. Ignored in some types of streams. Defaults to \c false.
+            bool        getDeleteOnDestroy() const {
+                return mDeleteOnDestroy;
+            }
+            //! Sets whether the Stream has been requested to destroy its source upon its own destruction. For example, IStreamFile will delete its source file. Ignored in some types of streams. Defaults to \c false.
+            void        setDeleteOnDestroy(bool enable = true) {
+                mDeleteOnDestroy = enable;
+            }
 
-        //! Returns the current position of the stream measured in bytes **/
-        virtual off_t       tell() const = 0;
+            //! Returns the current position of the stream measured in bytes **/
+            virtual off_t       tell() const = 0;
 
-        //! Sets the current position of the stream to byte \a absoluteOffset. A negative offset is relative to the end of the file.
-        virtual void        seekAbsolute( off_t absoluteOffset ) = 0;
+            //! Sets the current position of the stream to byte \a absoluteOffset. A negative offset is relative to the end of the file.
+            virtual void        seekAbsolute(off_t absoluteOffset) = 0;
 
-        //! Moves the current position of the stream by \a relativeOffset bytes
-        virtual void        seekRelative( off_t relativeOffset ) = 0;
+            //! Moves the current position of the stream by \a relativeOffset bytes
+            virtual void        seekRelative(off_t relativeOffset) = 0;
 
-     protected:
-        StreamBase() : mDeleteOnDestroy( false ) {}
+        protected:
+            StreamBase() : mDeleteOnDestroy(false) {}
 
-        fs::path                mFileName;
-        bool                    mDeleteOnDestroy;
+            fs::path                mFileName;
+            bool                    mDeleteOnDestroy;
     };
 
     class OStream : public virtual StreamBase {
-     public:
-        virtual ~OStream() {}
+        public:
+            virtual ~OStream() {}
 
-        //! Writes null-terminated string, including terminator
-        void        write( const std::string &s ) { writeData( s.c_str(), s.length() + 1 ); }
-        template<typename T>
-        void        write( T t ) { IOWrite( &t, sizeof(T) ); }
-        template<typename T>
-        void        writeEndian( T t, uint8_t endian ) { if ( endian == STREAM_BIG_ENDIAN ) writeBig( t ); else writeLittle( t ); }
-        template<typename T>
-        void        writeBig( T t );
-        template<typename T>
-        void        writeLittle( T t );
+            //! Writes null-terminated string, including terminator
+            void        write(const std::string &s) {
+                writeData(s.c_str(), s.length() + 1);
+            }
+            template<typename T>
+            void        write(T t) {
+                IOWrite(&t, sizeof(T));
+            }
+            template<typename T>
+            void        writeEndian(T t, uint8_t endian) {
+                if (endian == STREAM_BIG_ENDIAN) writeBig(t);
+                else writeLittle(t);
+            }
+            template<typename T>
+            void        writeBig(T t);
+            template<typename T>
+            void        writeLittle(T t);
 
-        void        write( const Buffer &buffer );
-        void        writeData( const void *src, size_t size );
+            void        write(const Buffer &buffer);
+            void        writeData(const void *src, size_t size);
 
-     protected:
-        OStream() : StreamBase() {}
+        protected:
+            OStream() : StreamBase() {}
 
-        virtual void        IOWrite( const void *t, size_t size ) = 0;
+            virtual void        IOWrite(const void *t, size_t size) = 0;
     };
 
 
     typedef std::shared_ptr<class OStream>  OStreamRef;
 
     class IStreamCinder : public virtual StreamBase {
-     public:
-        virtual ~IStreamCinder() {};
+        public:
+            virtual ~IStreamCinder() {};
 
-        template<typename T>
-        void        read( T *t ) { IORead( t, sizeof(T) ); }
-        template<typename T>
-        void        readEndian( T *t, uint8_t endian ) { if ( endian == STREAM_BIG_ENDIAN ) readBig( t ); else readLittle( t ); }
-        template<typename T>
-        void        readBig( T *t );
-        template<typename T>
-        void        readLittle( T *t );
+            template<typename T>
+            void        read(T *t) {
+                IORead(t, sizeof(T));
+            }
+            template<typename T>
+            void        readEndian(T *t, uint8_t endian) {
+                if (endian == STREAM_BIG_ENDIAN) readBig(t);
+                else readLittle(t);
+            }
+            template<typename T>
+            void        readBig(T *t);
+            template<typename T>
+            void        readLittle(T *t);
 
-        //! Reads characters until a null terminator
-        void        read( std::string *s );
-        void        read( fs::path *p );
-        void        readFixedString( char *t, size_t maxSize, bool nullTerminate );
-        void        readFixedString( std::string *t, size_t size );
-        std::string readLine();
+            //! Reads characters until a null terminator
+            void        read(std::string *s);
+            void        read(fs::path *p);
+            void        readFixedString(char *t, size_t maxSize, bool nullTerminate);
+            void        readFixedString(std::string *t, size_t size);
+            std::string readLine();
 
-        void            readData( void *dest, size_t size );
-        virtual size_t  readDataAvailable( void *dest, size_t maxSize ) = 0;
+            void            readData(void *dest, size_t size);
+            virtual size_t  readDataAvailable(void *dest, size_t maxSize) = 0;
 
-        virtual off_t       size() const = 0;
-        virtual bool        isEof() const = 0;
+            virtual off_t       size() const = 0;
+            virtual bool        isEof() const = 0;
 
-     protected:
-        IStreamCinder() : StreamBase() {}
+        protected:
+            IStreamCinder() : StreamBase() {}
 
-        virtual void        IORead( void *t, size_t size ) = 0;
+            virtual void        IORead(void *t, size_t size) = 0;
 
-        static const int    MINIMUM_BUFFER_SIZE = 8; // minimum bytes of random access a stream must offer relative to the file start
+            static const int    MINIMUM_BUFFER_SIZE = 8; // minimum bytes of random access a stream must offer relative to the file start
     };
     typedef std::shared_ptr<IStreamCinder>      IStreamRef;
 
 
     class IoStream : public IStreamCinder, public OStream {
-     public:
-        IoStream() : IStreamCinder(), OStream() {}
-        virtual ~IoStream() {}
+        public:
+            IoStream() : IStreamCinder(), OStream() {}
+            virtual ~IoStream() {}
     };
     typedef std::shared_ptr<IoStream>       IoStreamRef;
 
@@ -153,184 +172,199 @@ namespace mural {
     typedef std::shared_ptr<class IStreamFile>  IStreamFileRef;
 
     class IStreamFile : public IStreamCinder {
-     public:
-        //! Creates a new IStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
-        static IStreamFileRef create( FILE *file, bool ownsFile = true, int32_t defaultBufferSize = 2048 );
-        ~IStreamFile();
+        public:
+            //! Creates a new IStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
+            static IStreamFileRef create(FILE *file, bool ownsFile = true, int32_t defaultBufferSize = 2048);
+            ~IStreamFile();
 
-        size_t      readDataAvailable( void *dest, size_t maxSize );
+            size_t      readDataAvailable(void *dest, size_t maxSize);
 
-        void        seekAbsolute( off_t absoluteOffset );
-        void        seekRelative( off_t relativeOffset );
-        off_t       tell() const;
-        off_t       size() const;
+            void        seekAbsolute(off_t absoluteOffset);
+            void        seekRelative(off_t relativeOffset);
+            off_t       tell() const;
+            off_t       size() const;
 
-        bool        isEof() const;
+            bool        isEof() const;
 
-        FILE*       getFILE() { return mFile; }
+            FILE       *getFILE() {
+                return mFile;
+            }
 
-     protected:
-        IStreamFile( FILE *aFile, bool aOwnsFile = true, int32_t aDefaultBufferSize = 2048 );
+        protected:
+            IStreamFile(FILE *aFile, bool aOwnsFile = true, int32_t aDefaultBufferSize = 2048);
 
-        virtual void        IORead( void *t, size_t size );
-        size_t              readDataImpl( void *dest, size_t maxSize );
+            virtual void        IORead(void *t, size_t size);
+            size_t              readDataImpl(void *dest, size_t maxSize);
 
-        FILE                        *mFile;
-        bool                        mOwnsFile;
-        size_t                      mBufferSize, mDefaultBufferSize;
-        std::shared_ptr<uint8_t>    mBuffer;
-        off_t                       mBufferOffset; // actual offset to do IO from; incremented by IO
-        off_t                       mBufferFileOffset; // beginning of the buffer in the file
-        mutable off_t               mSize;
-        mutable bool                mSizeCached;
+            FILE                        *mFile;
+            bool                        mOwnsFile;
+            size_t                      mBufferSize, mDefaultBufferSize;
+            std::shared_ptr<uint8_t>    mBuffer;
+            off_t                       mBufferOffset; // actual offset to do IO from; incremented by IO
+            off_t                       mBufferFileOffset; // beginning of the buffer in the file
+            mutable off_t               mSize;
+            mutable bool                mSizeCached;
     };
 
 
     typedef std::shared_ptr<class OStreamFile>  OStreamFileRef;
 
     class OStreamFile : public OStream {
-      public:
-        //! Creates a new OStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
-        static OStreamFileRef   create( FILE *file, bool ownsFile = true );
-        ~OStreamFile();
+        public:
+            //! Creates a new OStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
+            static OStreamFileRef   create(FILE *file, bool ownsFile = true);
+            ~OStreamFile();
 
-        virtual off_t       tell() const;
-        virtual void        seekAbsolute( off_t absoluteOffset );
-        virtual void        seekRelative( off_t relativeOffset );
+            virtual off_t       tell() const;
+            virtual void        seekAbsolute(off_t absoluteOffset);
+            virtual void        seekRelative(off_t relativeOffset);
 
-        FILE*               getFILE() { return mFile; }
+            FILE               *getFILE() {
+                return mFile;
+            }
 
 
-      protected:
-        OStreamFile( FILE *aFile, bool aOwnsFile = true );
+        protected:
+            OStreamFile(FILE *aFile, bool aOwnsFile = true);
 
-        virtual void        IOWrite( const void *t, size_t size );
+            virtual void        IOWrite(const void *t, size_t size);
 
-        FILE*               mFile;
-        bool                mOwnsFile;
+            FILE               *mFile;
+            bool                mOwnsFile;
     };
 
 
     typedef std::shared_ptr<class IoStreamFile>     IoStreamFileRef;
 
     class IoStreamFile : public IoStream {
-     public:
-        //! Creates a new IoStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
-        static IoStreamFileRef create( FILE *file, bool ownsFile = true, int32_t defaultBufferSize = 2048 );
-        ~IoStreamFile();
+        public:
+            //! Creates a new IoStreamFileRef from a C-style file pointer \a FILE as returned by fopen(). If \a ownsFile the returned stream will destroy the stream upon its own destruction.
+            static IoStreamFileRef create(FILE *file, bool ownsFile = true, int32_t defaultBufferSize = 2048);
+            ~IoStreamFile();
 
-        size_t      readDataAvailable( void *dest, size_t maxSize );
+            size_t      readDataAvailable(void *dest, size_t maxSize);
 
-        void        seekAbsolute( off_t absoluteOffset );
-        void        seekRelative( off_t relativeOffset );
-        off_t       tell() const;
-        off_t       size() const;
+            void        seekAbsolute(off_t absoluteOffset);
+            void        seekRelative(off_t relativeOffset);
+            off_t       tell() const;
+            off_t       size() const;
 
-        bool        isEof() const;
+            bool        isEof() const;
 
-        FILE*       getFILE() { return mFile; }
+            FILE       *getFILE() {
+                return mFile;
+            }
 
-     protected:
-        IoStreamFile( FILE *aFile, bool aOwnsFile = true, int32_t aDefaultBufferSize = 2048 );
+        protected:
+            IoStreamFile(FILE *aFile, bool aOwnsFile = true, int32_t aDefaultBufferSize = 2048);
 
-        virtual void        IORead( void *t, size_t size );
-        size_t              readDataImpl( void *dest, size_t maxSize );
-        virtual void        IOWrite( const void *t, size_t size );
+            virtual void        IORead(void *t, size_t size);
+            size_t              readDataImpl(void *dest, size_t maxSize);
+            virtual void        IOWrite(const void *t, size_t size);
 
-        FILE                        *mFile;
-        bool                        mOwnsFile;
-        int32_t                     mBufferSize, mDefaultBufferSize;
-        std::shared_ptr<uint8_t>    mBuffer;
-        off_t                       mBufferOffset; // actual offset to do IO from; incremented by IO
-        off_t                       mBufferFileOffset; // beginning of the buffer in the file
-        mutable off_t               mSize;
-        mutable bool                mSizeCached;
+            FILE                        *mFile;
+            bool                        mOwnsFile;
+            int32_t                     mBufferSize, mDefaultBufferSize;
+            std::shared_ptr<uint8_t>    mBuffer;
+            off_t                       mBufferOffset; // actual offset to do IO from; incremented by IO
+            off_t                       mBufferFileOffset; // beginning of the buffer in the file
+            mutable off_t               mSize;
+            mutable bool                mSizeCached;
     };
 
 
     typedef std::shared_ptr<class IStreamMem>   IStreamMemRef;
     class IStreamMem : public IStreamCinder {
-     public:
-        //! Creates a new IStreamMemRef from the memory pointed to by \a data which is of size \a size bytes.
-        static IStreamMemRef        create( const void *data, size_t size );
-        ~IStreamMem();
+        public:
+            //! Creates a new IStreamMemRef from the memory pointed to by \a data which is of size \a size bytes.
+            static IStreamMemRef        create(const void *data, size_t size);
+            ~IStreamMem();
 
-        size_t      readDataAvailable( void *dest, size_t maxSize );
+            size_t      readDataAvailable(void *dest, size_t maxSize);
 
-        void        seekAbsolute( off_t absoluteOffset );
-        void        seekRelative( off_t relativeOffset );
-        //! Returns the current offset into the stream in bytes
-        off_t       tell() const;
-        //! Returns the total length of stream in bytes
-        off_t       size() const { return static_cast<off_t>( mDataSize ); }
+            void        seekAbsolute(off_t absoluteOffset);
+            void        seekRelative(off_t relativeOffset);
+            //! Returns the current offset into the stream in bytes
+            off_t       tell() const;
+            //! Returns the total length of stream in bytes
+            off_t       size() const {
+                return static_cast<off_t>(mDataSize);
+            }
 
-        //! Returns whether the stream is currently pointed at the end of the file
-        bool        isEof() const;
+            //! Returns whether the stream is currently pointed at the end of the file
+            bool        isEof() const;
 
-        //! Returns a pointer to the data which the stream wraps
-        const void* getData() { return reinterpret_cast<const void*>( mData ); }
+            //! Returns a pointer to the data which the stream wraps
+            const void *getData() {
+                return reinterpret_cast<const void *>(mData);
+            }
 
-     protected:
-        IStreamMem( const void *aData, size_t aDataSize );
+        protected:
+            IStreamMem(const void *aData, size_t aDataSize);
 
-        virtual void    IORead( void *t, size_t size );
+            virtual void    IORead(void *t, size_t size);
 
-        const uint8_t   *mData;
-        size_t          mDataSize;
-        size_t          mOffset;
+            const uint8_t   *mData;
+            size_t          mDataSize;
+            size_t          mOffset;
     };
 
 
     typedef std::shared_ptr<class OStreamMem>       OStreamMemRef;
 
     class OStreamMem : public OStream {
-     public:
-        static OStreamMemRef        create( size_t bufferSizeHint = 4096 ) { return std::shared_ptr<OStreamMem>( new OStreamMem( bufferSizeHint ) ); }
+        public:
+            static OStreamMemRef        create(size_t bufferSizeHint = 4096) {
+                return std::shared_ptr<OStreamMem>(new OStreamMem(bufferSizeHint));
+            }
 
-        ~OStreamMem();
+            ~OStreamMem();
 
-        virtual off_t       tell() const { return static_cast<off_t>( mOffset ); }
-        virtual void        seekAbsolute( off_t absoluteOffset );
-        virtual void        seekRelative( off_t relativeOffset );
+            virtual off_t       tell() const {
+                return static_cast<off_t>(mOffset);
+            }
+            virtual void        seekAbsolute(off_t absoluteOffset);
+            virtual void        seekRelative(off_t relativeOffset);
 
-        void*               getBuffer() { return mBuffer; }
+            void               *getBuffer() {
+                return mBuffer;
+            }
 
-     protected:
-        OStreamMem( size_t bufferSizeHint );
+        protected:
+            OStreamMem(size_t bufferSizeHint);
 
-        virtual void        IOWrite( const void *t, size_t size );
+            virtual void        IOWrite(const void *t, size_t size);
 
-        void*           mBuffer;
-        size_t          mDataSize;
-        size_t          mOffset;
+            void           *mBuffer;
+            size_t          mDataSize;
+            size_t          mOffset;
     };
 
 
     // This class is a utility to save and restore a stream's state
     class IStreamStateRestore {
-     public:
-        IStreamStateRestore( IStreamCinder &aStream ) : mStream( aStream ), mOffset( aStream.tell() ) {}
-        ~IStreamStateRestore()
-        {
-            mStream.seekAbsolute( mOffset );
-        }
+        public:
+            IStreamStateRestore(IStreamCinder &aStream) : mStream(aStream), mOffset(aStream.tell()) {}
+            ~IStreamStateRestore() {
+                mStream.seekAbsolute(mOffset);
+            }
 
-     private:
-        IStreamCinder&  mStream;
-        off_t           mOffset;
+        private:
+            IStreamCinder  &mStream;
+            off_t           mOffset;
     };
 
     //! Opens the file lcoated at \a path for read access as a stream.
-    IStreamFileRef  loadFileStream( const fs::path &path );
+    IStreamFileRef  loadFileStream(const fs::path &path);
     //! Opens the file located at \a path for write access as a stream, and creates it if it does not exist. Optionally creates any intermediate directories when \a createParents is true.
-    OStreamFileRef  writeFileStream( const fs::path &path, bool createParents = true );
+    OStreamFileRef  writeFileStream(const fs::path &path, bool createParents = true);
     //! Opens a path for read-write access as a stream.
-    IoStreamFileRef readWriteFileStream( const fs::path &path );
+    IoStreamFileRef readWriteFileStream(const fs::path &path);
 
     //! Loads the contents of a stream into a contiguous block of memory, pointed to by \a resultData. The size of this block is stored in \a resultDataSize.
-    void loadStreamMemory( IStreamRef is, std::shared_ptr<uint8_t> *resultData, size_t *resultDataSize );
+    void loadStreamMemory(IStreamRef is, std::shared_ptr<uint8_t> *resultData, size_t *resultDataSize);
     //! Loads the contents of a stream into a Buffer
-    Buffer loadStreamBuffer( IStreamRef is );
+    Buffer loadStreamBuffer(IStreamRef is);
 
 
     // Stream exception
@@ -340,85 +374,78 @@ namespace mural {
     class StreamExcOutOfMemory : public StreamExc {
     };
 
-    #ifndef __OBJC__
+#ifndef __OBJC__
     class cinder_stream_source {
-     public:
-        typedef char char_type;
-        typedef boost::iostreams::source_tag category;
+        public:
+            typedef char char_type;
+            typedef boost::iostreams::source_tag category;
 
-        cinder_stream_source( mural::IStreamRef aStream ) : mStream( aStream ) {}
+            cinder_stream_source(mural::IStreamRef aStream) : mStream(aStream) {}
 
-        std::streamsize read( char *s, std::streamsize n )
-        {
-            if( mStream->isEof() )
-                return -1;
+            std::streamsize read(char *s, std::streamsize n) {
+                if (mStream->isEof())
+                    return -1;
 
-            return (std::streamsize)mStream->readDataAvailable( s, (size_t)n );
-        }
+                return (std::streamsize)mStream->readDataAvailable(s, (size_t)n);
+            }
 
-     protected:
-        IStreamRef      mStream; // a little kludgy but this is for convenience
+        protected:
+            IStreamRef      mStream; // a little kludgy but this is for convenience
     };
 
     typedef boost::iostreams::stream<cinder_stream_source> cinder_istream;
 
     class cinder_stream_sink {
-     public:
-        typedef char char_type;
-        typedef boost::iostreams::sink_tag category;
+        public:
+            typedef char char_type;
+            typedef boost::iostreams::sink_tag category;
 
-        cinder_stream_sink( OStreamRef aStream ) : mStream( aStream ) {}
+            cinder_stream_sink(OStreamRef aStream) : mStream(aStream) {}
 
-        std::streamsize write( const char *s, std::streamsize n )
-        {
-            mStream->writeData( s, (size_t)n );
-            return n;
-        }
+            std::streamsize write(const char *s, std::streamsize n) {
+                mStream->writeData(s, (size_t)n);
+                return n;
+            }
 
-     protected:
-        OStreamRef      mStream;
+        protected:
+            OStreamRef      mStream;
     };
 
     typedef boost::iostreams::stream<cinder_stream_sink> cinder_ostream;
 
     class cinder_stream_bidirectional_device {
-     public:
-        typedef char char_type;
-        typedef boost::iostreams::seekable_device_tag category;
+        public:
+            typedef char char_type;
+            typedef boost::iostreams::seekable_device_tag category;
 
-        cinder_stream_bidirectional_device( mural::IoStreamRef aStream ) : mStream( aStream ) {}
+            cinder_stream_bidirectional_device(mural::IoStreamRef aStream) : mStream(aStream) {}
 
-        std::streamsize read( char *s, std::streamsize n )
-        {
-            return static_cast<std::streamsize>( mStream->readDataAvailable( s, (size_t)n ) );
-        }
-
-        std::streamsize write( const char *s, std::streamsize n )
-        {
-            mStream->writeData( s, (size_t)n );
-            return n;
-        }
-
-        boost::iostreams::stream_offset seek( boost::iostreams::stream_offset off, std::ios_base::seekdir way)
-        {
-            if( way == std::ios_base::beg ) {
-                mStream->seekAbsolute( (off_t)off );
+            std::streamsize read(char *s, std::streamsize n) {
+                return static_cast<std::streamsize>(mStream->readDataAvailable(s, (size_t)n));
             }
-            else if( way == std::ios_base::cur ) {
-                mStream->seekRelative( (off_t)off );
-            }
-            else { // way == std::ios_base::end
-                mStream->seekAbsolute( -(off_t)off );
-            }
-            return mStream->tell();
-        }
 
-     protected:
-        IoStreamRef     mStream;
+            std::streamsize write(const char *s, std::streamsize n) {
+                mStream->writeData(s, (size_t)n);
+                return n;
+            }
+
+            boost::iostreams::stream_offset seek(boost::iostreams::stream_offset off, std::ios_base::seekdir way) {
+                if (way == std::ios_base::beg) {
+                    mStream->seekAbsolute((off_t)off);
+                } else if (way == std::ios_base::cur) {
+                    mStream->seekRelative((off_t)off);
+                } else { // way == std::ios_base::end
+                    mStream->seekAbsolute(-(off_t)off);
+                }
+                return mStream->tell();
+            }
+
+        protected:
+            IoStreamRef     mStream;
     };
 
     typedef boost::iostreams::stream<cinder_stream_bidirectional_device> cinder_iostream;
 
-    #endif // ! __OBJC__
+#endif // ! __OBJC__
 
 }

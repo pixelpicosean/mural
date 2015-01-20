@@ -30,70 +30,70 @@
 
 namespace mural {
 
-    typedef std::shared_ptr<class DataTarget>   DataTargetRef;
+    typedef std::shared_ptr<class DataTarget> DataTargetRef;
 
-    class DataTarget {
-      public:
-        virtual bool    providesFilePath() = 0;
-        virtual bool    providesUrl() = 0;
+    class DataTarget : public MuObject {
+        public:
+            virtual bool providesFilePath() = 0;
+            virtual bool providesUrl() = 0;
 
-        const fs::path&         getFilePath() const;
-        const Url&              getUrl() const;
-        const fs::path&         getFilePathHint() const;
+            const fs::path& getFilePath() const;
+            const Url& getUrl() const;
+            const fs::path& getFilePathHint() const;
 
-        virtual OStreamRef      getStream() = 0;
+            virtual OStreamRef getStream() = 0;
 
-      protected:
-        DataTarget( const fs::path &aFilePath, const Url &aUrl )
-            : mFilePath( aFilePath ), mUrl( aUrl )
-        {}
-        virtual ~DataTarget() {}
+        protected:
+            DataTarget(const fs::path &aFilePath, const Url &aUrl):
+                mFilePath(aFilePath), mUrl(aUrl)
+            {}
+            virtual ~DataTarget() {}
 
-        void    setFilePathHint( const fs::path &aFilePathHint );
+            void setFilePathHint(const fs::path &aFilePathHint);
 
-        Buffer              mBuffer;
-        fs::path            mFilePath;
-        fs::path            mFilePathHint;
-        Url                 mUrl;
+            Buffer mBuffer;
+            fs::path mFilePath;
+            fs::path mFilePathHint;
+            Url mUrl;
     };
 
 
     typedef std::shared_ptr<class DataTargetPath>   DataTargetPathRef;
 
     class DataTargetPath : public DataTarget {
-      public:
-        static DataTargetPathRef    createRef( const fs::path &path );
+            public:
+            static DataTargetPathRef createRef(const fs::path &path);
 
-        virtual bool    providesFilePath() { return true; }
-        virtual bool    providesUrl() { return false; }
+            virtual bool providesFilePath() { return true; }
+            virtual bool providesUrl() { return false; }
 
-        virtual OStreamRef      getStream();
+            virtual OStreamRef getStream();
 
-      protected:
-        explicit DataTargetPath( const fs::path &path );
+        protected:
+            explicit DataTargetPath(const fs::path &path);
 
-        OStreamFileRef  mStream;
+            OStreamFileRef mStream;
     };
 
 
     typedef std::shared_ptr<class DataTargetStream> DataTargetStreamRef;
 
     class DataTargetStream : public DataTarget {
-      public:
-        static DataTargetStreamRef  createRef( OStreamRef stream );
+            public:
+            static DataTargetStreamRef  createRef(OStreamRef stream);
 
-        virtual bool    providesFilePath() { return false; }
-        virtual bool    providesUrl() { return false; }
+            virtual bool providesFilePath() { return false; }
+            virtual bool providesUrl() { return false; }
 
-        virtual OStreamRef      getStream() { return mStream; }
+            virtual OStreamRef getStream() { return mStream; }
 
-      protected:
-        DataTargetStream( OStreamRef stream );
+        protected:
+            DataTargetStream(OStreamRef stream);
 
-        OStreamRef  mStream;
+            OStreamRef mStream;
     };
 
     //! Returns a DataTarget to file path \a path, and optionally creates any necessary directories when \a createParents is \c true.
-    DataTargetPathRef writeFile( const fs::path &path, bool createParents = true );
+    DataTargetPathRef writeFile(const fs::path &path, bool createParents = true);
 
 }

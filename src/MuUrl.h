@@ -30,57 +30,58 @@
 
 namespace mural {
 
+    /**
+     * The Url class is not completed and should NOT be used anywhere!
+     */
     class Url : public MuObject {
-     public:
-        Url() {}
-        //! Constructs a URL from a string. If \a isEscaped is false, automatically calls Url::encode(). Assumes UTF-8 input.
-        explicit Url( const std::string &urlString, bool isEscaped = false );
+        public:
+            Url() {}
+            //! Constructs a URL from a string. If \a isEscaped is false, automatically calls Url::encode(). Assumes UTF-8 input.
+            explicit Url(const std::string &urlString, bool isEscaped = false);
 
-        //! Returns the string representation of the URL as std::string. Encoded as UTF-8.
-        std::string str() const { return mStr; }
-        //! Returns the string representation of the URL as char*. Encoded as UTF-8.
-        const char* c_str() const { return mStr.c_str(); }
+            //! Returns the string representation of the URL as std::string. Encoded as UTF-8.
+            std::string str() const { return mStr; }
+            //! Returns the string representation of the URL as char*. Encoded as UTF-8.
+            const char* c_str() const { return mStr.c_str(); }
 
-        //! Replaces illegal URL characters as defined by RFC 2396 with their escaped equivalents and returns a copy of \a unescaped. Assumes UTF-8 input.
-        static std::string encode( const std::string &unescaped );
+            //! Replaces illegal URL characters as defined by RFC 2396 with their escaped equivalents and returns a copy of \a unescaped. Assumes UTF-8 input.
+            static std::string encode(const std::string &unescaped);
 
-     private:
-        std::string     mStr;
+        private:
+            std::string mStr;
     };
 
-    inline std::ostream& operator<<( std::ostream &out, const Url &url )
-    {
+    inline std::ostream& operator<<(std::ostream &out, const Url &url) {
         out << url.str();
         return out;
     }
 
-    inline std::istream& operator>>( std::istream &is, Url &url )
-    {
+    inline std::istream& operator>>(std::istream &is, Url &url) {
         std::string temp;
         is >> temp;
-        url = Url( temp );
+        url = Url(temp);
         return is;
     }
 
     //! Options for loadUrl() to dictate caching and timeout behavior
-    class UrlOptions {
-      public:
-        UrlOptions( bool ignoreCache = false, float timeoutSeconds = 30.0f )
-            : mIgnoreCache( ignoreCache ), mTimeout( timeoutSeconds )
-        {}
+    class UrlOptions : public MuObject {
+        public:
+            UrlOptions(bool ignoreCache = false, float timeoutSeconds = 30.0f):
+                mIgnoreCache(ignoreCache),
+                mTimeout(timeoutSeconds)
+            {}
 
-        UrlOptions&     ignoreCache( bool ignore = true ) { mIgnoreCache = ignore; return *this; }
-        bool            getIgnoreCache() const { return mIgnoreCache; }
-        void            setIgnoreCache( bool ignore = true ) { mIgnoreCache = ignore; }
+            UrlOptions& ignoreCache(bool ignore = true) { mIgnoreCache = ignore; return *this; }
+            bool getIgnoreCache() const { return mIgnoreCache; }
+            void setIgnoreCache(bool ignore = true) { mIgnoreCache = ignore; }
 
-        UrlOptions&     timeout( float seconds ) { mTimeout = seconds; return *this; }
-        float           getTimeout() const { return mTimeout; }
-        void            setTimeout( float seconds ) { mTimeout = seconds; }
+            UrlOptions& timeout(float seconds) { mTimeout = seconds; return *this; }
+            float getTimeout() const { return mTimeout; }
+            void setTimeout(float seconds) { mTimeout = seconds; }
 
-      private:
-        bool            mIgnoreCache;
-        float           mTimeout;
-
+        private:
+            bool mIgnoreCache;
+            float mTimeout;
     };
 
 }
