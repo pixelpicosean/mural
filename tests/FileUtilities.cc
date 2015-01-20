@@ -8,6 +8,7 @@ int main(int argc, char const *argv[]) {
     printf("getAppPath: %s\n", getAppPath().c_str());
     printf("getHomeDirectory: %s\n", getHomeDirectory().c_str());
     printf("getDocumentsDirectory: %s\n", getDocumentsDirectory().c_str());
+    printf("expandPath(app path): %s\n", expandPath(getAppPath()).c_str());
 
     return 0;
 }

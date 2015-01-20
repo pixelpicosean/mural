@@ -72,11 +72,11 @@ namespace mural {
         exePath = split(exePath, splitChars)[0];
     #endif
 
-        return exePath;
+        return expandPath(exePath);
     }
 
     fs::path expandPath(const fs::path &path) {
-        return path;
+        return fs::canonical(path);
     }
 
     fs::path getHomeDirectory() {
