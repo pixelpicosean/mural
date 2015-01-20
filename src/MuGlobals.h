@@ -22,7 +22,16 @@ THE SOFTWARE.
 
 #pragma once
 
+#define MURAL_VERSION        020
 #define MURAL_VERSION_STRING "0.2.0a"
+
+/**
+ * Dependencies
+ */
+#include <boost/version.hpp>
+#if BOOST_VERSION < 105500
+    #error "Cinder requires Boost version 1.55 or later"
+#endif
 
 /**
  * Shims

@@ -22,6 +22,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include "MuGlobals.h"
+
 #include <map>
 #include <vector>
 #include <functional>
@@ -48,16 +50,16 @@ namespace mural {
             MuTimerCollection();
             ~MuTimerCollection();
 
-            unsigned int scheduleCallback(std::function<void()> callback, double interval, bool repeat);
-            void cancelId(unsigned int id);
+            uint64_t scheduleCallback(std::function<void()> callback, double interval, bool repeat);
+            void cancelId(uint64_t id);
             void update();
 
         private:
-            std::map<unsigned int, MuTimer> timerListA;
-            std::map<unsigned int, MuTimer> timerListB;
+            std::map<uint64_t, MuTimer> timerListA;
+            std::map<uint64_t, MuTimer> timerListB;
             std::vector<MuTimer> timersToBeRemoved;
             int currListIdx;
-            unsigned int lastId;
+            uint64_t lastId;
     };
 
 }
