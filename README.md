@@ -6,6 +6,9 @@ Mural *NanoVG* branch (experimental)
 ## Dependence information
 - Boost: [CinderBoost](https://github.com/cinder/Cinder-Boost/tree/dev)
 
+## Notes
+- Since MinGW for OSX does not has C++11 thread support, the cross-compiling from OSX is going to be deprecated. A new build setting for Mingw-w64 will be created and use ONLY in Windows.
+
 ## Progress
 
 - [x] SCons building system
@@ -20,6 +23,7 @@ Mural *NanoVG* branch (experimental)
 - [ ] AssetManager for file io
 - [ ] Use a config to compile tests instead of each time
 - [ ] Build file for Linux x86 and x64
+- [ ] Build file for native Mingw-w64 instead of cross-compiling
 - [ ] Separate source and build directory
 - [ ] FBO based CanvasContext
 - [ ] Use `\`` to toggle CPU & FrameTime Graph
