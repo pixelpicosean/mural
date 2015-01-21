@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include "MuAssetManager.h"
+
 #include "MuCore.h"
 
 #define NANOVG_GL3_IMPLEMENTATION
@@ -226,6 +228,9 @@ namespace mural {
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
         // Calculate pixel ration for hi-dpi devices.
         ratio = (float)fbWidth / (float)winWidth;
+
+        // Initialize AssetManager
+        assetsManager;
 
         // Load default font for performance rendering
         defaultFont = nvgCreateFont(renderer, "sans", "assets/Roboto-Regular.ttf");
