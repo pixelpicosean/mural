@@ -43,6 +43,7 @@ THE SOFTWARE.
 #include "MuGlobals.h"
 #include "MuEventDispatcher.h"
 
+#include <functional>
 #include <vector>
 
 namespace mural {
@@ -60,6 +61,9 @@ namespace mural {
             void setController(MuAppController *ac) {
                 appController = ac;
             }
+
+            uint64_t scheduleMessage(std::function<void()> callback, double interval, bool repeat);
+            void cancelMessage(uint64_t id);
 
             void tickAndRender();
 

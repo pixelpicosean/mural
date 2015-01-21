@@ -50,11 +50,17 @@ namespace mural {
             MuTimerCollection();
             ~MuTimerCollection();
 
-            uint64_t scheduleCallback(std::function<void()> callback, double interval, bool repeat);
-            void cancelId(uint64_t id);
+            uint64_t scheduleMessage(std::function<void()> callback, double interval, bool repeat);
+            void cancelMessage(uint64_t id);
             void update();
 
+            static MuTimerCollection &defaultCollection() {
+                static MuTimerCollection instance;
+                return instance;
+            }
+
         private:
+            // TODO: make this thread safe
             std::map<uint64_t, MuTimer> timerListA;
             std::map<uint64_t, MuTimer> timerListB;
             std::vector<MuTimer> timersToBeRemoved;
@@ -63,3 +69,5 @@ namespace mural {
     };
 
 }
+
+#define theScheduler mural::MuTimerCollection::defaultCollection()

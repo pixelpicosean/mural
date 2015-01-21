@@ -11,30 +11,30 @@ class GameController : public mural::MuAppController {
     public:
         GameController() {
             // Timeout
-            timers.scheduleCallback([] {
+            timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 100);
             }, 100, false);
-            timers.scheduleCallback([] {
+            timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 200);
             }, 200, false);
-            timers.scheduleCallback([] {
+            timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 300);
             }, 300, false);
-            timers.scheduleCallback([] {
+            timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 400);
             }, 400, false);
-            timers.scheduleCallback([] {
+            timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 500);
             }, 500, false);
             // Interval
             static int count = 0;
-            int timeId = timers.scheduleCallback([&] {
+            int timeId = timers.scheduleMessage([&] {
                 count++;
                 printf("Action: interval repeat %d times\n", count);
             }, 80, true);
             // Clear interval
-            timers.scheduleCallback([=] {
-                timers.cancelId(timeId);
+            timers.scheduleMessage([=] {
+                timers.cancelMessage(timeId);
             }, 800, false);
         }
         ~GameController() {}

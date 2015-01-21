@@ -74,7 +74,7 @@ namespace mural {
         timerListB.clear();
     }
 
-    uint64_t MuTimerCollection::scheduleCallback(std::function<void()> callback, double interval, bool repeat) {
+    uint64_t MuTimerCollection::scheduleMessage(std::function<void()> callback, double interval, bool repeat) {
         lastId++;
 
         MuTimer timer(callback, interval, repeat);
@@ -89,7 +89,7 @@ namespace mural {
         return lastId;
     }
 
-    void MuTimerCollection::cancelId(uint64_t id) {
+    void MuTimerCollection::cancelMessage(uint64_t id) {
         auto it = timerListA.find(id);
         if (it != timerListA.end()) {
             timersToBeRemoved.push_back(std::move(it->second));

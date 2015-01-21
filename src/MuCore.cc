@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "MuAssetManager.h"
+#include "MuAssetsManager.h"
 
 #include "MuCore.h"
 
@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "MuAppController.h"
 #include "MuInputEvent.h"
 #include "MuInputKeys.h"
+#include "MuTimer.h"
 
 #include <cstdio>
 
@@ -300,12 +301,24 @@ namespace mural {
         }
     }
 
+    uint64_t MuCore::scheduleMessage(std::function<void()> callback, double interval, bool repeat) {
+        return theScheduler.scheduleMessage(callback, interval, repeat);
+    }
+
+    void MuCore::cancelMessage(uint64_t id) {
+        theScheduler.cancelMessage(id);
+    }
+
     void MuCore::tickAndRender() {
         update();
         render();
     }
 
     void MuCore::update() {
+        // Update scheduled messages
+        theScheduler.update();
+
+        // Update controller (main logic goes here)
         if (appController) {
             appController->update(dt);
         }
