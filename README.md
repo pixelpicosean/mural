@@ -20,8 +20,8 @@ Mural *NanoVG* branch (experimental)
 - [x] Keyboard event
 - [x] Active class for async operations
 - [x] Import Cinder specific Boost as dependence
-- [ ] Cinder like file system
-- [ ] AssetManager for async file io
+- [x] Cinder like file system
+- [x] AssetManager for async file io
 - [ ] Use a config to compile tests instead of each time
 - [ ] Build file for Linux x86 and x64
 - [ ] Build file for native Mingw-w64 instead of cross-compiling

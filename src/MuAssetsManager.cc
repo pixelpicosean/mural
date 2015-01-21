@@ -20,8 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "MuAssetManager.h"
+#include "MuAssetsManager.h"
 #include "MuUtilities.h"
+
+#include <functional>
 
 namespace mural {
 
@@ -29,13 +31,13 @@ namespace mural {
         Exception(relativePath.string())
     {}
 
-    AssetManager::AssetManager():
+    AssetsManager::AssetsManager():
         assetDirectoriesInitialized(false)
     {}
 
-    AssetManager::~AssetManager() {}
+    AssetsManager::~AssetsManager() {}
 
-    DataSourceRef AssetManager::loadAsset(const fs::path &relativePath) {
+    DataSourceRef AssetsManager::loadAssetSync(const fs::path &relativePath) {
         fs::path assetPath = findAssetPath(relativePath);
         if (!assetPath.empty())
             return DataSourcePath::create(assetPath.string());
@@ -43,15 +45,15 @@ namespace mural {
             throw AssetLoadExc(relativePath);
     }
 
-    fs::path AssetManager::getAssetPath(const fs::path &relativePath) {
+    fs::path AssetsManager::getAssetPath(const fs::path &relativePath) {
         return findAssetPath(relativePath);
     }
 
-    void AssetManager::addAssetDirectory(const fs::path &dirPath) {
+    void AssetsManager::addAssetDirectory(const fs::path &dirPath) {
         assetDirectories.push_back(dirPath);
     }
 
-    void AssetManager::prepareAssetLoading() {
+    void AssetsManager::prepareAssetLoading() {
         if (!assetDirectoriesInitialized) {
             // first search the local directory, then its parent, up to 5 levels up
             int parentCt = 0;
@@ -72,7 +74,7 @@ namespace mural {
         }
     }
 
-    fs::path AssetManager::findAssetPath(const fs::path &relativePath) {
+    fs::path AssetsManager::findAssetPath(const fs::path &relativePath) {
         prepareAssetLoading();
         for (std::vector<fs::path>::const_iterator assetDirIt = assetDirectories.begin(); assetDirIt != assetDirectories.end(); ++assetDirIt) {
             if (fs::exists(*assetDirIt / relativePath))

@@ -26,8 +26,11 @@ THE SOFTWARE.
 #include "MuFilesystem.h"
 #include "MuDataSource.h"
 #include "MuException.h"
+#include "MuActive.h"
+#include "MuTimer.h"
 
 #include <vector>
+#include <deque>
 
 namespace mural {
 
@@ -43,26 +46,31 @@ namespace mural {
             char mMessage[4096];
     };
 
-    class AssetManager : public MuObject {
+    class AssetsManager : public MuObject {
         public:
-            static AssetManager &getInstance() {
-                static AssetManager instance;
+            static AssetsManager &getInstance() {
+                static AssetsManager instance;
                 return instance;
             }
 
-            //! Returns a DataSourceRef to the active App's's asset. Throws a AssetLoadExc on failure.
-            DataSourceRef loadAsset(const fs::path &relativePath);
+            //! Load an asset synchronously. Returns a DataSourceRef to the active App's's asset. Throws a AssetLoadExc on failure.
+            DataSourceRef loadAssetSync(const fs::path &relativePath);
+
+            //! Load an asset asynchronously. Throws a AssetLoadExc on failure.
+            template<typename T>
+            void loadAsset(const fs::path &relativePath, std::function<T(DataSourceRef)> asyncCallback, std::function<void(T)> mainThreadCallback);
+
             //! Returns a fs::path to the active App's asset. Returns an empty path on failure.
             fs::path getAssetPath(const fs::path &relativePath);
             //! Adds an absolute path \a dirPath to the active App's list of directories which are searched for assets.
             void addAssetDirectory(const fs::path &dirPath);
 
         private:
-            AssetManager();
-            AssetManager(AssetManager const &) {}
-            void operator=(AssetManager const &) {}
+            AssetsManager();
+            AssetsManager(AssetsManager const &) {}
+            void operator=(AssetsManager const &) {}
 
-            ~AssetManager();
+            ~AssetsManager();
 
             void prepareAssetLoading();
             fs::path findAssetPath(const fs::path &relativePath);
@@ -72,8 +80,23 @@ namespace mural {
 
             fs::path appPath;
             std::vector<fs::path> assetDirectories;
+
+            MuActive worker;
     };
+
+    template<typename T>
+    void AssetsManager::loadAsset(const fs::path &relativePath, std::function<T(DataSourceRef)> asyncCallback, std::function<void(T)> mainThreadCallback) {
+        worker.send([=] {
+            DataSourceRef source = loadAssetSync(relativePath);
+            auto data = asyncCallback(source);
+            theScheduler.scheduleMessage(
+                std::bind(mainThreadCallback, data),
+                0.0,
+                false
+            );
+        });
+    }
 
 }
 
-#define assetsManager mural::AssetManager::getInstance()
+#define assetsManager mural::AssetsManager::getInstance()

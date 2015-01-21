@@ -16,7 +16,7 @@ SOURCES = [
     'src/linebreak/linebreakdef.c',
     'src/nanovg/nanovg.c',
 
-    'src/MuAssetManager.cc',
+    'src/MuAssetsManager.cc',
     'src/MuBuffer.cc',
     'src/MuCore.cc',
     'src/MuDataSource.cc',
