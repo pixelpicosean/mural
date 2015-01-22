@@ -16,6 +16,7 @@ SOURCES = [
     'src/linebreak/linebreakdef.c',
     'src/nanovg/nanovg.c',
 
+    'src/MuArea.cc',
     'src/MuAssetsManager.cc',
     'src/MuBuffer.cc',
     'src/MuCore.cc',
@@ -24,7 +25,9 @@ SOURCES = [
     'src/MuEvent.cc',
     'src/MuEventDispatcher.cc',
     'src/MuInputEvent.cc',
+    'src/MuRect.cc',
     'src/MuStream.cc',
+    'src/MuSurface.cc',
     'src/MuTimer.cc',
     'src/MuUnicode.cc',
     'src/MuUrl.cc',
