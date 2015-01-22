@@ -79,8 +79,8 @@ enum NVGalign {
 	// Vertical align
 	NVG_ALIGN_TOP 		= 1<<3,	// Align text vertically to top.
 	NVG_ALIGN_MIDDLE	= 1<<4,	// Align text vertically to middle.
-	NVG_ALIGN_BOTTOM	= 1<<5,	// Align text vertically to bottom. 
-	NVG_ALIGN_BASELINE	= 1<<6, // Default, align text vertically to baseline. 
+	NVG_ALIGN_BOTTOM	= 1<<5,	// Align text vertically to bottom.
+	NVG_ALIGN_BASELINE	= 1<<6, // Default, align text vertically to baseline.
 };
 
 struct NVGglyphPosition {
@@ -183,7 +183,7 @@ void nvgReset(NVGcontext* ctx);
 // Solid color is simply defined as a color value, different kinds of paints can be created
 // using nvgLinearGradient(), nvgBoxGradient(), nvgRadialGradient() and nvgImagePattern().
 //
-// Current render style can be saved and restored using nvgSave() and nvgRestore(). 
+// Current render style can be saved and restored using nvgSave() and nvgRestore().
 
 // Sets current stroke style to a solid color.
 void nvgStrokeColor(NVGcontext* ctx, NVGcolor color);
@@ -231,7 +231,7 @@ void nvgGlobalAlpha(NVGcontext* ctx, float alpha);
 // Apart from nvgResetTransform(), each transformation function first creates
 // specific transformation matrix and pre-multiplies the current transformation by it.
 //
-// Current coordinate system (transformation) can be saved and restored using nvgSave() and nvgRestore(). 
+// Current coordinate system (transformation) can be saved and restored using nvgSave() and nvgRestore().
 
 // Resets current transform to a identity matrix.
 void nvgResetTransform(NVGcontext* ctx);
@@ -332,6 +332,8 @@ void nvgImageSize(NVGcontext* ctx, int image, int* w, int* h);
 // Deletes created image.
 void nvgDeleteImage(NVGcontext* ctx, int image);
 
+unsigned char *nvgLoadImageFromMem(unsigned char const *buffer, int len, int *x, int *y, int *comp, int req_comp);
+
 //
 // Paints
 //
@@ -368,7 +370,7 @@ NVGpaint nvgImagePattern(NVGcontext* ctx, float ox, float oy, float ex, float ey
 // Scissoring
 //
 // Scissoring allows you to clip the rendering into a rectangle. This is useful for varius
-// user interface cases like rendering a text edit or a timeline. 
+// user interface cases like rendering a text edit or a timeline.
 
 // Sets the current scissor rectangle.
 // The scissor rectangle is transformed by the current transform.
@@ -423,7 +425,7 @@ void nvgArcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float rad
 // Closes current sub-path with a line segment.
 void nvgClosePath(NVGcontext* ctx);
 
-// Sets the current sub-path winding, see NVGwinding and NVGsolidity. 
+// Sets the current sub-path winding, see NVGwinding and NVGsolidity.
 void nvgPathWinding(NVGcontext* ctx, int dir);
 
 // Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
@@ -440,7 +442,7 @@ void nvgRoundedRect(NVGcontext* ctx, float x, float y, float w, float h, float r
 // Creates new ellipse shaped sub-path.
 void nvgEllipse(NVGcontext* ctx, float cx, float cy, float rx, float ry);
 
-// Creates new circle shaped sub-path. 
+// Creates new circle shaped sub-path.
 void nvgCircle(NVGcontext* ctx, float cx, float cy, float r);
 
 // Fills the current path with current fill style.
@@ -503,7 +505,7 @@ void nvgFontBlur(NVGcontext* ctx, float blur);
 // Sets the letter spacing of current text style.
 void nvgTextLetterSpacing(NVGcontext* ctx, float spacing);
 
-// Sets the proportional line height of current text style. The line height is specified as multiple of font size. 
+// Sets the proportional line height of current text style. The line height is specified as multiple of font size.
 void nvgTextLineHeight(NVGcontext* ctx, float lineHeight);
 
 // Sets the text align of current text style, see NVGaling for options.

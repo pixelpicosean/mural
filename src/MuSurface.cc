@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 
 #include "MuSurface.h"
-#include "nanovg/stb_image.h"
+#include "nanovg/nanovg.h"
 
 #include <memory>
 
@@ -51,9 +51,7 @@ namespace mural {
         size_t dataSize = buffer.getDataSize();
 
         int n;
-        stbi_set_unpremultiply_on_load(1);
-        stbi_convert_iphone_png_to_rgb(1);
-        dataStore = std::shared_ptr<PixelFormat>(stbi_load_from_memory(static_cast<PixelFormat *>(buffer.getData()), dataSize, &width, &height, &n, 4)); // RGBA
+        dataStore = std::shared_ptr<PixelFormat>(nvgLoadImageFromMem(static_cast<PixelFormat *>(buffer.getData()), dataSize, &width, &height, &n, 4)); // RGBA
         data = dataStore.get();
 
         rowBytes = width * sizeof(PixelFormat) * 4; // RGBA
