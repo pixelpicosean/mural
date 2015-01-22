@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "MuGlobals.h"
 #include "MuArea.h"
+#include "MuDataSource.h"
 
 namespace mural {
 
@@ -40,6 +41,8 @@ namespace mural {
             Surface(int32_t width, int32_t height);
             //! Constructs a surface from the memory pointed to by \a data. Does not assume ownership of the memory in \a data, which consequently should not be freed while the Surface is still in use.
             Surface(PixelFormat *data, int32_t width, int32_t height, int32_t rowBytes);
+            //! Constructs a surface from a dataSource
+            Surface(DataSourceRef dataSource);
             //! Creates a clone of \a rhs. Matches rowBytes and channel order of \a rhs, but creates its own dataStore.
             Surface(const Surface &rhs);
             //! Surface move constructor.
@@ -52,6 +55,10 @@ namespace mural {
             //! Creates a SurfaceRef from the memory pointed to by \a data. Does not assume ownership of the memory in \a data, which consequently should not be freed while the Surface is still in use.
             static std::shared_ptr<Surface> create(PixelFormat *data, int32_t width, int32_t height, int32_t rowBytes) {
                 return std::make_shared<Surface>(data, width, height, rowBytes);
+            }
+            //! Creates a SurfaceRef from a dataSource
+            static std::shared_ptr<Surface> create(DataSourceRef dataSource) {
+                return std::make_shared<Surface>(dataSource);
             }
             //! Creates s SurfaceRef which is a clone of the Surface \a surface, and with its own dataStore
             static std::shared_ptr<Surface> create(const Surface &surface) {
