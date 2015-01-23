@@ -22,12 +22,13 @@ Mural *NanoVG* branch (experimental)
 - [x] Import Cinder specific Boost as dependence
 - [x] Cinder like file system
 - [x] AssetManager for async file io
+- [ ] FBO to cache drawings as textures
+- [ ] FBO based CanvasContext
 - [ ] Add some signals to MuCore so that MuCore will not need to be modified when new module added
 - [ ] Use a config to compile tests instead of each time
 - [ ] Build file for Linux x86 and x64
 - [ ] Build file for native Mingw-w64 instead of cross-compiling
 - [ ] Separate source and build directory
-- [ ] FBO based CanvasContext
 - [ ] Use \` to toggle CPU & FrameTime Graph
 - [ ] JavaScript bindings
 - [ ] Include GLEW source with SCons build file for Windows(MinGW)
