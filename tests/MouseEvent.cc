@@ -71,16 +71,18 @@ class GameController : public mural::MuAppController {
         void handleEvent(mural::Event *evt) {
             mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);
 
-            leftBtn = mouse->buttons & 1;
-            rightBtn = mouse->buttons & 2;
+            if (mouse) {
+                leftBtn = mouse->buttons & 1;
+                rightBtn = mouse->buttons & 2;
 
-            mouseX = mouse->x;
-            mouseY = mouse->y;
+                mouseX = mouse->x;
+                mouseY = mouse->y;
 
-            alt = mouse->altDown;
-            ctrl = mouse->ctrlDown;
-            meta = mouse->metaDown;
-            shift = mouse->shiftDown;
+                alt = mouse->altDown;
+                ctrl = mouse->ctrlDown;
+                meta = mouse->metaDown;
+                shift = mouse->shiftDown;
+            }
         }
 };
 
