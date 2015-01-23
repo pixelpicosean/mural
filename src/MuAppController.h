@@ -33,8 +33,25 @@ namespace mural {
             MuAppController() {}
             virtual ~MuAppController() {}
 
-            virtual void update(Number dt) = 0;
-            virtual void render(NVGcontext *ctx) = 0;
+            /**
+             * Setup controller.
+             * ONLY system setup things should go here.
+             */
+            virtual void setup(NVGcontext *renderer) {
+                this->g = renderer;
+            }
+            /**
+             * Initialize before start.
+             * Everything is ready to use now.
+             */
+            virtual void init() {}
+            virtual void update(Number dt) {}
+            virtual void render() {}
+        protected:
+            /**
+             * NanoVG context for drawing
+             */
+            NVGcontext *g;
     };
 
 }

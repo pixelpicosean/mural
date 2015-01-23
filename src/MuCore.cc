@@ -166,6 +166,11 @@ namespace mural {
         printf("Quit Mural\n");
     }
 
+    void MuCore::setController(MuAppController *ac) {
+        appController = ac;
+        appController->setup(renderer);
+    }
+
     bool MuCore::init() {
         if (!glfwInit()) {
             printf("Failed to init GLFW.");
@@ -247,6 +252,10 @@ namespace mural {
     }
 
     void MuCore::start() {
+        if (appController) {
+            appController->init();
+        }
+
         // Run loop
         while (!glfwWindowShouldClose(window)) {
             Number mx, my, t;
@@ -326,7 +335,7 @@ namespace mural {
 
     void MuCore::render() {
         if (appController) {
-            appController->render(renderer);
+            appController->render();
         }
     }
 

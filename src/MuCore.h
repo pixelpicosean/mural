@@ -58,9 +58,7 @@ namespace mural {
 
             bool init();
             void start();
-            void setController(MuAppController *ac) {
-                appController = ac;
-            }
+            void setController(MuAppController *ac);
 
             uint64_t scheduleMessage(std::function<void()> callback, double interval, bool repeat);
             void cancelMessage(uint64_t id);

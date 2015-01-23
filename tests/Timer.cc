@@ -9,7 +9,8 @@
 // Create a controller class for testing
 class GameController : public mural::MuAppController {
     public:
-        GameController() {
+        GameController() {}
+        void init() {
             // Timeout
             timers.scheduleMessage([] {
                 printf("Action: timeout after %d ms\n", 100);
@@ -37,12 +38,9 @@ class GameController : public mural::MuAppController {
                 timers.cancelMessage(timeId);
             }, 800, false);
         }
-        ~GameController() {}
         void update(Number dt) {
             timers.update();
         }
-        void render(NVGcontext *ctx) {}
-        void handleEvent(mural::Event *evt) {}
     private:
         mural::MuTimerCollection timers;
 };

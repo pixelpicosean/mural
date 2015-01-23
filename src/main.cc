@@ -11,27 +11,25 @@ class GameController : public mural::MuAppController {
         GameController() {
             app.addEventListener(this, mural::MouseEvent::MOUSE_DOWN);
         }
-        ~GameController() {}
-        void update(Number dt) {}
-        void render(NVGcontext *ctx) {
+        void render() {
             Number radius = 64.0f;
-            nvgFillColor(ctx, nvgRGBA(220, 160, 0, 200));
+            nvgFillColor(g, nvgRGBA(220, 160, 0, 200));
 
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, radius, radius, radius);
-            nvgFill(ctx);
+            nvgBeginPath(g);
+            nvgCircle(g, radius, radius, radius);
+            nvgFill(g);
 
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, 960.0f - radius, radius, radius);
-            nvgFill(ctx);
+            nvgBeginPath(g);
+            nvgCircle(g, 960.0f - radius, radius, radius);
+            nvgFill(g);
 
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, radius, 640.0f - radius, radius);
-            nvgFill(ctx);
+            nvgBeginPath(g);
+            nvgCircle(g, radius, 640.0f - radius, radius);
+            nvgFill(g);
 
-            nvgBeginPath(ctx);
-            nvgCircle(ctx, 960.0f - radius, 640.0f - radius, radius);
-            nvgFill(ctx);
+            nvgBeginPath(g);
+            nvgCircle(g, 960.0f - radius, 640.0f - radius, radius);
+            nvgFill(g);
         }
         void handleEvent(mural::Event *evt) {
             mural::MouseEvent *mouse = dynamic_cast<mural::MouseEvent *>(evt);

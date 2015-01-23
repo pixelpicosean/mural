@@ -17,17 +17,16 @@ class GameController : public mural::MuAppController {
             leftBtn(false), rightBtn(false),
             alt(false), ctrl(false), meta(false), shift(false),
             mouseX(0), mouseY(0)
-        {
+        {}
+        void init() {
             app.addEventListener(this, mural::MouseEvent::MOUSE_DOWN);
             app.addEventListener(this, mural::MouseEvent::MOUSE_UP);
             app.addEventListener(this, mural::MouseEvent::MOUSE_MOVE);
         }
-        ~GameController() {}
-        void update(Number dt) {}
-        void render(NVGcontext *ctx) {
+        void render() {
             float strokeWidth = 6.0f;
-            nvgStrokeWidth(ctx, strokeWidth);
-            nvgStrokeColor(ctx, nvgRGB(255, 255, 255));
+            nvgStrokeWidth(g, strokeWidth);
+            nvgStrokeColor(g, nvgRGB(255, 255, 255));
 
             float marginLeft = 100.0f, marginTop = 100.0f;
             float w = 240.0f, h = 340.0f;
@@ -35,38 +34,38 @@ class GameController : public mural::MuAppController {
 
             // Left button
             if (leftBtn) {
-                nvgBeginPath(ctx);
-                nvgRect(ctx, marginLeft + strokeWidth / 2, marginTop, w / 2 - strokeWidth, btnHeight - strokeWidth);
-                nvgFillColor(ctx, nvgRGB(0, 255, 255));
-                nvgFill(ctx);
+                nvgBeginPath(g);
+                nvgRect(g, marginLeft + strokeWidth / 2, marginTop, w / 2 - strokeWidth, btnHeight - strokeWidth);
+                nvgFillColor(g, nvgRGB(0, 255, 255));
+                nvgFill(g);
             }
             // Right button
             if (rightBtn) {
-                nvgBeginPath(ctx);
-                nvgRect(ctx, marginLeft + w / 2 + strokeWidth / 2, marginTop, w / 2 - strokeWidth, btnHeight - strokeWidth);
-                nvgFillColor(ctx, nvgRGB(0, 255, 255));
-                nvgFill(ctx);
+                nvgBeginPath(g);
+                nvgRect(g, marginLeft + w / 2 + strokeWidth / 2, marginTop, w / 2 - strokeWidth, btnHeight - strokeWidth);
+                nvgFillColor(g, nvgRGB(0, 255, 255));
+                nvgFill(g);
             }
 
             // Mouse body
-            nvgBeginPath(ctx);
-            nvgRoundedRect(ctx, marginLeft, marginTop, w, h, 12.0f);
-            nvgStroke(ctx);
-            nvgBeginPath(ctx);
-            nvgMoveTo(ctx, marginLeft + w / 2, marginTop + strokeWidth / 2);
-            nvgLineTo(ctx, marginLeft + w / 2, marginTop + btnHeight);
-            nvgMoveTo(ctx, marginLeft, marginTop + btnHeight - strokeWidth / 2);
-            nvgLineTo(ctx, marginLeft + w, marginTop + btnHeight - strokeWidth / 2);
-            nvgStroke(ctx);
+            nvgBeginPath(g);
+            nvgRoundedRect(g, marginLeft, marginTop, w, h, 12.0f);
+            nvgStroke(g);
+            nvgBeginPath(g);
+            nvgMoveTo(g, marginLeft + w / 2, marginTop + strokeWidth / 2);
+            nvgLineTo(g, marginLeft + w / 2, marginTop + btnHeight);
+            nvgMoveTo(g, marginLeft, marginTop + btnHeight - strokeWidth / 2);
+            nvgLineTo(g, marginLeft + w, marginTop + btnHeight - strokeWidth / 2);
+            nvgStroke(g);
 
-            nvgFontSize(ctx, 32);
-            nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+            nvgFontSize(g, 32);
+            nvgTextAlign(g, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
             std::string text("Position: (");
             text += std::to_string(mouseX); text += ", ";
             text += std::to_string(mouseY); text += ")";
-            nvgText(ctx, 110.0f, 70.0f, text.c_str(), NULL);
+            nvgText(g, 110.0f, 70.0f, text.c_str(), NULL);
 
-            nvgBeginPath(ctx);
+            nvgBeginPath(g);
             // TODO: draw buttons
         }
         void handleEvent(mural::Event *evt) {

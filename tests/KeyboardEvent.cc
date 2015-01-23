@@ -8,14 +8,12 @@
 // Create a controller class for testing
 class GameController : public mural::MuAppController {
     public:
-        GameController() {
+        GameController() {}
+        void init() {
             app.addEventListener(this, mural::KeyboardEvent::KEY_DOWN);
             app.addEventListener(this, mural::KeyboardEvent::KEY_PRESS);
             app.addEventListener(this, mural::KeyboardEvent::KEY_UP);
         }
-        ~GameController() {}
-        void update(Number dt) {}
-        void render(NVGcontext *ctx) {}
         void handleEvent(mural::Event *evt) {
             mural::KeyboardEvent *key = dynamic_cast<mural::KeyboardEvent *>(evt);
             if (!key) {
