@@ -22,7 +22,7 @@ Mural *NanoVG* branch (experimental)
 - [x] Import Cinder specific Boost as dependence
 - [x] Cinder like file system
 - [x] AssetManager for async file io
-- [ ] FBO to cache drawings as textures
+- [x] FBO to cache drawings as textures
 - [ ] FBO based CanvasContext
 - [ ] Add some signals to MuCore so that MuCore will not need to be modified when new module added
 - [ ] Use a config to compile tests instead of each time

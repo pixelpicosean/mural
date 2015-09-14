@@ -22,21 +22,7 @@ THE SOFTWARE.
 
 #pragma once
 
-// ONLY include GLEW for non-Apple platforms
-#ifndef __APPLE__
-#define NANOVG_GLEW
-#endif
-
-#ifdef NANOVG_GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-#endif
-
-#ifdef __APPLE__
-#   define GLFW_INCLUDE_GLCOREARB
-#endif
-#include <GLFW/glfw3.h>
-#include "nanovg/nanovg.h"
+#include "MuNanoVG.h"
 
 #include "perf.h"
 
@@ -69,6 +55,19 @@ namespace mural {
             void render();
 
             void terminate();
+
+            int getWindowWidth() const {
+                return winWidth;
+            }
+            int getWindowHeight() const {
+                return winHeight;
+            }
+            Number getRatio() const {
+                return ratio;
+            }
+            NVGcontext *getRenderContext() {
+                return renderer;
+            }
         private:
             MuCore();
             MuCore(MuCore const&) {}

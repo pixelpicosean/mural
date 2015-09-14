@@ -24,7 +24,9 @@ SOURCES = [
     'src/MuDataTarget.cc',
     'src/MuEvent.cc',
     'src/MuEventDispatcher.cc',
+    'src/MuFbo.cc',
     'src/MuInputEvent.cc',
+    'src/MuNanoVG.cc',
     'src/MuRect.cc',
     'src/MuStream.cc',
     'src/MuSurface.cc',
@@ -92,7 +94,8 @@ TESTS = [
     'Active',
     'Timer',
     'FileUtilities',
-    'AssetManager'
+    'AssetManager',
+    'Fbo'
 ]
 
 for t in TESTS:

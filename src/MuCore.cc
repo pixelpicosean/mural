@@ -21,17 +21,12 @@ THE SOFTWARE.
 */
 
 #include "MuAssetsManager.h"
-
-#include "MuCore.h"
-
-#define NANOVG_GL3_IMPLEMENTATION
-#include "nanovg/nanovg_gl.h"
-#include "nanovg/nanovg_gl_utils.h"
-
 #include "MuAppController.h"
 #include "MuInputEvent.h"
 #include "MuInputKeys.h"
 #include "MuTimer.h"
+
+#include "MuCore.h"
 
 #include <cstdio>
 
@@ -218,12 +213,8 @@ namespace mural {
         glGetError();
 #endif
 
-    // TODO: Set MSAA from script or enable by default
-#ifdef MURAL_MSAA
-        renderer = nvgCreateGL3(NVG_DEBUG);
-#else
-        renderer = nvgCreateGL3(NVG_ANTIALIAS | NVG_DEBUG);
-#endif
+        // TODO: Set MSAA from script or enable by default
+        renderer = nvg::createGLContext();
         if (renderer == NULL) {
             printf("Could not init nanovg.\n");
             return -1;
@@ -342,7 +333,7 @@ namespace mural {
     void MuCore::terminate() {
         delete appController;
 
-        nvgDeleteGL3(renderer);
+        nvg::deleteGLContext(renderer);
         glfwTerminate();
     }
 
