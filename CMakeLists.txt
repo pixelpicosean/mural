@@ -34,13 +34,19 @@ if (NOT Z_LIB)
   message(FATAL_ERROR "Z lib not found")
 endif()
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/dep/glfw-3.1.1)
-include_directories(${PROJECT_SOURCE_DIR}/dep/glfw-3.1.1/include)
+find_library(GLFW_LIB glfw3 ${PROJECT_SOURCE_DIR}/lib/${CMAKE_SYSTEM_NAME})
+if (NOT GLFW_LIB)
+  message(FATAL_ERROR "GLFW lib not found")
+endif()
+find_library(Cocoa_FRAMEWORK Cocoa)
+find_library(OpenGL_FRAMEWORK OpenGL)
+find_library(IOKit_FRAMEWORK IOKit)
+find_library(CoreVideo_FRAMEWORK CoreVideo)
 
 set(Mural_LIBS
   ${BOOST_LIB}
   ${Z_LIB}
-  glfw ${GLFW_LIBRARIES}
+  ${GLFW_LIB} ${Cocoa_FRAMEWORK} ${OpenGL_FRAMEWORK} ${IOKit_FRAMEWORK} ${CoreVideo_FRAMEWORK}
 )
 
 # - Sources
