@@ -30,7 +30,7 @@ namespace mural {
     return glProgram2DPattern;
   }
 
-  MuGLProgram2D *MuSharedOpenGLContext::getGLProgram2DRadialGradient() {
+  MuGLProgram2DRadialGradient *MuSharedOpenGLContext::getGLProgram2DRadialGradient() {
     if (!glProgram2DRadialGradient) {
       glProgram2DRadialGradient = new MuGLProgram2DRadialGradient(MuShaderVertex, MuShaderRadialGradient);
     }

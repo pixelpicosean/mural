@@ -16,7 +16,7 @@ namespace mural {
       MuGLProgram2D *getGLProgram2DTexture();
       MuGLProgram2D *getGLProgram2DAlphaTexture();
       MuGLProgram2D *getGLProgram2DPattern();
-      MuGLProgram2D *getGLProgram2DRadialGradient();
+      MuGLProgram2DRadialGradient *getGLProgram2DRadialGradient();
 
       unsigned char *getVertexBuffer();
 
