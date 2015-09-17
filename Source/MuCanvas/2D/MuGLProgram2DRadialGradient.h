@@ -3,15 +3,19 @@
 
 #include "MuGLProgram2D.h"
 
-struct MuGLProgram2DRadialGradient : public MuGLProgram2D {
-  GLuint inner, diff;
+namespace mural {
 
-  void getUniforms() {
-    MuGLProgram2D::getUniforms();
+  struct MuGLProgram2DRadialGradient : public MuGLProgram2D {
+    GLuint inner, diff;
 
-    inner = glGetUniformLocation(program, "inner");
-    diff = glGetUniformLocation(program, "diff");
-  }
-};
+    void getUniforms() {
+      MuGLProgram2D::getUniforms();
+
+      inner = glGetUniformLocation(program, "inner");
+      diff = glGetUniformLocation(program, "diff");
+    }
+  };
+
+}
 
 #endif

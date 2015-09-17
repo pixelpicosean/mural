@@ -5,23 +5,27 @@
 
 #include "./MuCanvas2DTypes.h"
 
-enum {
-  kMuGLProgram2DAttributePos,
-  kMuGLProgram2DAttributeUV,
-  kMuGLProgram2DAttributeColor,
-};
+namespace mural {
 
-struct MuGLProgram2D {
-  GLuint program;
-  GLuint screen;
+  enum {
+    kMuGLProgram2DAttributePos,
+    kMuGLProgram2DAttributeUV,
+    kMuGLProgram2DAttributeColor,
+  };
 
-  MuGLProgram2D(const char *vertexShaderSource, const char *fragmentShaderSource);
-  ~MuGLProgram2D();
-  void bindAttributeLocations();
-  void getUniforms();
+  struct MuGLProgram2D {
+    GLuint program;
+    GLuint screen;
 
-  static GLint compileShaderSource(const char *source, GLenum type);
-  static void linkProgram(GLuint program);
-};
+    MuGLProgram2D(const char *vertexShaderSource, const char *fragmentShaderSource);
+    ~MuGLProgram2D();
+    void bindAttributeLocations();
+    void getUniforms();
+
+    static GLint compileShaderSource(const char *source, GLenum type);
+    static void linkProgram(GLuint program);
+  };
+
+}
 
 #endif
