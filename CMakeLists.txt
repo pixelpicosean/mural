@@ -48,10 +48,19 @@ set(Mural_LIBS
 
 # Core sources
 set(Mural_SOURCES
+  Source/AppController.cc
+  Source/MuSharedOpenGLContext.cc
+  Source/MuTimer.cc
+
+  Source/MuCanvas/2D/MuGLProgram2D.cc
+
   Source/main.cc
 )
 
 # Program
-include_directories(${PROJECT_SOURCE_DIR}/Source)
+include_directories(
+  ${PROJECT_SOURCE_DIR}/Source
+  ${PROJECT_SOURCE_DIR}/Source/glm
+)
 add_executable(mural ${Mural_SOURCES})
 target_link_libraries(mural ${Mural_LIBS})
