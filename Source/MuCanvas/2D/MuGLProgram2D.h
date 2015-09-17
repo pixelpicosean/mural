@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "MuCanvas2DTypes.h"
+#include "./MuCanvas2DTypes.h"
 
 enum {
   kMuGLProgram2DAttributePos,
