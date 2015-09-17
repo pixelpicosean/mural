@@ -1,4 +1,4 @@
-Mural *NanoVG* branch (experimental)
+Mural *Ejecta* branch (experimental)
 ----
 
-[NanoVG](https://github.com/memononen/nanovg) has very great Canvas API support.
+Experiment porting Ejecta source code to C++.
