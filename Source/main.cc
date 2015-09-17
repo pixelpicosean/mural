@@ -4,6 +4,12 @@
 
 #include <cstdio>
 
+#include "AppController.h"
+
+// TODO: set width and height from script instead
+const int WIDTH = 640;
+const int HEIGHT = 400;
+
 int main(int argc, char const *argv[]) {
   if (!glfwInit()) {
     printf("Failed to initialize GLFW\n");
@@ -17,7 +23,7 @@ int main(int argc, char const *argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  GLFWwindow* window = glfwCreateWindow(640, 400, "Mural", nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Mural", nullptr, nullptr);
   if (!window) {
     printf("Failed to create window\n");
     glfwTerminate();
@@ -33,8 +39,14 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
+  app.init(WIDTH, HEIGHT);
+
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
+
+    app.update();
+    app.draw();
+
     glfwSwapBuffers(window);
   }
 
