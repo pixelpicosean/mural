@@ -1,4 +1,7 @@
-[submodule "src/boost"]
-	path = src/boost
+[submodule "Source/boost"]
+	path = Source/boost
 	url = https://github.com/cinder/Cinder-Boost.git
-	branch = dev
+	branch = boost_1_58
+[submodule "Source/glm"]
+	path = Source/glm
+	url = https://github.com/g-truc/glm.git

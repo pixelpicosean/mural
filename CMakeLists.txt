@@ -29,11 +29,6 @@ set(BOOST_LIB
   ${BOOST_DATE_TIME_LIB}
 )
 
-find_library(Z_LIB z ${PROJECT_SOURCE_DIR}/lib/${CMAKE_SYSTEM_NAME})
-if (NOT Z_LIB)
-  message(FATAL_ERROR "Z lib not found")
-endif()
-
 find_library(GLFW_LIB glfw3 ${PROJECT_SOURCE_DIR}/lib/${CMAKE_SYSTEM_NAME})
 if (NOT GLFW_LIB)
   message(FATAL_ERROR "GLFW lib not found")
@@ -43,52 +38,20 @@ find_library(OpenGL_FRAMEWORK OpenGL)
 find_library(IOKit_FRAMEWORK IOKit)
 find_library(CoreVideo_FRAMEWORK CoreVideo)
 
+add_library(glew STATIC ${PROJECT_SOURCE_DIR}/Source/glew.c)
+
 set(Mural_LIBS
   ${BOOST_LIB}
-  ${Z_LIB}
   ${GLFW_LIB} ${Cocoa_FRAMEWORK} ${OpenGL_FRAMEWORK} ${IOKit_FRAMEWORK} ${CoreVideo_FRAMEWORK}
-)
-
-# - Sources
-set(Linebreak_SOURCES
-  src/linebreak/linebreak.c
-  src/linebreak/linebreakdata.c
-  src/linebreak/linebreakdef.c
-)
-
-set(NanoVG_SOURCES
-  src/nanovg/nanovg.c
+  glew
 )
 
 # Core sources
 set(Mural_SOURCES
-  ${Linebreak_SOURCES}
-  ${NanoVG_SOURCES}
-
-  src/MuArea.cc
-  src/MuAssetsManager.cc
-  src/MuBuffer.cc
-  src/MuCore.cc
-  src/MuDataSource.cc
-  src/MuDataTarget.cc
-  src/MuEvent.cc
-  src/MuEventDispatcher.cc
-  src/MuFbo.cc
-  src/MuInputEvent.cc
-  src/MuNanoVG.cc
-  src/MuRect.cc
-  src/MuStream.cc
-  src/MuSurface.cc
-  src/MuTimer.cc
-  src/MuUnicode.cc
-  src/MuUrl.cc
-  src/MuUtilities.cc
-  src/perf.c
-
-  src/main.cc
+  Source/main.cc
 )
 
 # Program
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/Source)
 add_executable(mural ${Mural_SOURCES})
 target_link_libraries(mural ${Mural_LIBS})
