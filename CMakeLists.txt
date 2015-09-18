@@ -52,6 +52,9 @@ set(Mural_SOURCES
   Source/MuSharedOpenGLContext.cc
   Source/MuTimer.cc
 
+  Source/MuCanvas/MuSharedTextureCache.cc
+  Source/MuCanvas/MuTexture.cc
+  Source/MuCanvas/MuTextureStorage.cc
   Source/MuCanvas/2D/MuGLProgram2D.cc
 
   Source/main.cc

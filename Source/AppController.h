@@ -2,12 +2,14 @@
 #define Mural_AppController_h
 
 #include "MuSharedOpenGLContext.h"
+#include "MuCanvas/MuCanvasContext.h"
 
 namespace mural {
 
   class MuTimerCollection;
   class AppController {
     public:
+      short width, height;
       float averageFPS;
 
       bool hasScreenCanvas;
@@ -19,8 +21,8 @@ namespace mural {
       // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
-      // MuCanvasContext *currentRenderingContext;
-      // MuCanvasContext<MuPresentable> *screenRenderingContext;
+      MuCanvasContext *currentRenderingContext;
+      MuCanvasContext *screenRenderingContext;
 
     public:
       void init(int width = 640, int height = 400);
@@ -35,6 +37,8 @@ namespace mural {
 
     private:
       AppController():
+        width(200),
+        height(100),
         averageFPS(0.0f),
         hasScreenCanvas(false),
         isPaused(false)
@@ -43,6 +47,8 @@ namespace mural {
       void operator=(AppController const&) {}
 
       ~AppController();
+
+      void setCurrentRenderingContext(MuCanvasContext *renderingContext);
   };
 
 }

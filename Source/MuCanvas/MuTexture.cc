@@ -1,11 +1,12 @@
 #include "MuTexture.h"
+#include "MuSharedTextureCache.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 namespace mural {
 
-  GLuint getBytesPerPixel(GLenum type, GLenum format) {
+  GLuint getBytesPerPixel(GLenum format) {
     switch (format) {
       case GL_LUMINANCE:
       case GL_ALPHA:
@@ -38,7 +39,7 @@ namespace mural {
     if (!fbo) {
       glGenFramebuffers(1, &tempFramebuffer);
       glBindFramebuffer(GL_FRAMEBUFFER, tempFramebuffer);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureStorage.textureId, 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureStorage->textureId, 0);
     }
     else {
       glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -78,10 +79,10 @@ namespace mural {
   }
 
   void MuTexture::setParam(GLenum pname, GLenum param) {
-    if (pname == GL_TEXTURE_MIN_FILTER) params[kMuTextureParamMinFilter] = param;
-    else if (pname == GL_TEXTURE_MAG_FILTER) params[kMuTextureParamMagFilter] = param;
-    else if (pname == GL_TEXTURE_WRAP_S) params[kMuTextureParamWrapS] = param;
-    else if (pname == GL_TEXTURE_WRAP_T) params[kMuTextureParamWrapT] = param;
+    if (pname == GL_TEXTURE_MIN_FILTER) params[kMuTextureParamMinFilter] = (MuTextureParam)param;
+    else if (pname == GL_TEXTURE_MAG_FILTER) params[kMuTextureParamMagFilter] = (MuTextureParam)param;
+    else if (pname == GL_TEXTURE_WRAP_S) params[kMuTextureParamWrapS] = (MuTextureParam)param;
+    else if (pname == GL_TEXTURE_WRAP_T) params[kMuTextureParamWrapT] = (MuTextureParam)param;
   }
 
   MuTexture::MuTexture(const char *path):
@@ -137,7 +138,7 @@ namespace mural {
 
   MuTexture::~MuTexture() {
     if (cached) {
-      // theTextureCache.textures.removeObjectForKey(fullPath);
+      theTextureCache.getTextures().erase(fullPath);
     }
   }
 
@@ -147,16 +148,16 @@ namespace mural {
     }
 
     // Set the default texture params for Canvas2D
-    params[kMuTextureParamMinFilter] = GL_LINEAR;
-    params[kMuTextureParamMagFilter] = GL_LINEAR;
-    params[kMuTextureParamWrapS] = GL_CLAMP_TO_EDGE;
-    params[kMuTextureParamWrapT] = GL_CLAMP_TO_EDGE;
+    params[kMuTextureParamMinFilter] = (MuTextureParam)GL_LINEAR;
+    params[kMuTextureParamMagFilter] = (MuTextureParam)GL_LINEAR;
+    params[kMuTextureParamWrapS] = (MuTextureParam)GL_CLAMP_TO_EDGE;
+    params[kMuTextureParamWrapT] = (MuTextureParam)GL_CLAMP_TO_EDGE;
 
     GLint maxTextureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 
     if (width > maxTextureSize || height > maxTextureSize) {
-      printf("Warning: Image %s larger than MAX_TEXTURE_SIZE (%d)", fullPath ? fullPath.c_str() : "[Dynamic]", maxTextureSize);
+      printf("Warning: Image %s larger than MAX_TEXTURE_SIZE (%d)", fullPath.empty() ? "[Dynamic]" : fullPath.c_str(), maxTextureSize);
       return;
     }
     this->format = format;
@@ -174,11 +175,11 @@ namespace mural {
     glBindTexture(target, boundTexture);
   }
 
-  void MuTexture::updateWithPixels(unsigned char *pixels, int x, int y, int subWidth, int subHeight) {
+  void MuTexture::updateWithPixels(unsigned char *pixels, int sx, int sy, int sw, int sh) {
     int boundTexture = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
 
-    glBindTexture(GL_TEXTURE_2D, textureStorage.textureId);
+    glBindTexture(GL_TEXTURE_2D, textureStorage->textureId);
     glTexSubImage2D(GL_TEXTURE_2D, 0, sx, sy, sw, sh, format, GL_UNSIGNED_BYTE, pixels);
 
     glBindTexture(GL_TEXTURE_2D, boundTexture);
@@ -189,7 +190,7 @@ namespace mural {
     // TODO: add @2x texture support
     // TODO: accept images without alpha channel (jpg ...)
     int w, h, n;
-    unsigned char *data = stbi_load(normalizePath(file).c_str(), &w, &h, &n, 4);
+    unsigned char *data = stbi_load(normalizePath(path).c_str(), &w, &h, &n, 4);
     if (data) {
       width = w;
       height = h;
@@ -201,8 +202,8 @@ namespace mural {
   }
 
   void MuTexture::bindWithFilter(GLenum filter) {
-    params[kMuTextureParamMinFilter] = filter;
-    params[kMuTextureParamMagFilter] = filter;
+    params[kMuTextureParamMinFilter] = (MuTextureParam)filter;
+    params[kMuTextureParamMagFilter] = (MuTextureParam)filter;
     textureStorage->bindToTarget(GL_TEXTURE_2D, params);
   }
 
@@ -211,7 +212,7 @@ namespace mural {
   }
 
   void MuTexture::premultiplyPixels(const GLubyte *inPixels, GLubyte *outPixels, int byteLength, GLenum format) {
-    const GLubyte *premultiplyTable = theTextureCache.premultiplyTable;
+    const GLubyte *premultiplyTable = theTextureCache.getPremultiplyTable();
 
     if (format == GL_RGBA) {
       for (int i = 0; i < byteLength; i += 4) {
@@ -232,7 +233,7 @@ namespace mural {
   }
 
   void MuTexture::unPremultiplyPixels(const GLubyte *inPixels, GLubyte *outPixels, int byteLength, GLenum format) {
-    const GLubyte *unPremultiplyTable = theTextureCache.unPremultiplyTable;
+    const GLubyte *unPremultiplyTable = theTextureCache.getUnPremultiplyTable();
 
     if (format == GL_RGBA) {
       for (int i = 0; i < byteLength; i += 4) {

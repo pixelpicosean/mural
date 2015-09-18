@@ -6,6 +6,8 @@
 #include <string>
 #include <functional>
 
+#include "MuOpenGL.h"
+
 namespace mural {
 
   class MuTexture {

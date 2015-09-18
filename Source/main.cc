@@ -1,9 +1,6 @@
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <cstdio>
 
+#include "MuOpenGL.h"
 #include "AppController.h"
 
 // TODO: set width and height from script instead

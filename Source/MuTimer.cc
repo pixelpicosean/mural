@@ -1,6 +1,6 @@
 #include "MuTimer.h"
 
-#include <GLFW/glfw3.h>
+#include "MuOpenGL.h"
 #include <utility>
 
 namespace mural {

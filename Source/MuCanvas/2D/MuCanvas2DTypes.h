@@ -1,7 +1,7 @@
 #ifndef Mural_MuCanvas2DTypes_h
 #define Mural_MuCanvas2DTypes_h
 
-#include <glm/glm.hpp>
+#include "MuOpenGL.h"
 
 namespace mural {
 

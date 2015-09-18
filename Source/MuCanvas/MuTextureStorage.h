@@ -1,17 +1,17 @@
 #ifndef Mural_MuTextureStorage_h
 #define Mural_MuTextureStorage_h
 
-#include <GLFW/glfw3.h>
+#include "MuOpenGL.h"
 
 namespace mural {
 
-  typedef enum {
+  enum MuTextureParam {
     kMuTextureParamMinFilter,
     kMuTextureParamMagFilter,
     kMuTextureParamWrapS,
     kMuTextureParamWrapT,
     kMuTextureParamLast
-  } MuTextureParam;
+  };
 
   typedef MuTextureParam MuTextureParams[kMuTextureParamLast];
 

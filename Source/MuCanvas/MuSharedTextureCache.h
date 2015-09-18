@@ -2,6 +2,7 @@
 #define Mural_MuSharedTextureCache
 
 #include <map>
+#include <string>
 
 namespace mural {
 
