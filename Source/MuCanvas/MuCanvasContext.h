@@ -14,6 +14,8 @@ namespace mural {
       float backingStoreRatio;
       bool useRetinaResolution;
 
+      MuCanvasContext() {}
+
       virtual void create() {}
       virtual void flushBuffers() {}
       virtual void prepare() {}

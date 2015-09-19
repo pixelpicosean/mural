@@ -9,6 +9,8 @@ namespace mural {
     public:
       MuTexture *getTexture();
 
+      MuCanvasContext2DTexture(): MuCanvasContext2D(200, 150) {}
+
       void resizeTo(short newWidth, short newHeight);
     private:
       MuTexture *texture;

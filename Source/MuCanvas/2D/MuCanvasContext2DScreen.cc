@@ -19,4 +19,26 @@ namespace mural {
     return texture;
   }
 
+  void MuCanvasContext2DScreen::present() {
+    flushBuffers();
+
+    if (!needsPresenting) { return; }
+
+    // TODO: MSAA for screen present
+    if (msaaEnabled) {
+        //Bind the MSAA and View frameBuffers and resolve
+        // glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, msaaFrameBuffer);
+        // glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFrameBuffer);
+        // glResolveMultisampleFramebufferAPPLE();
+
+        // glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
+        // [glContext presentRenderbuffer:GL_RENDERBUFFER];
+        // glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
+    }
+    else {
+        // glContext->presentRenderbuffer(GL_RENDERBUFFER);
+    }
+    needsPresenting = false;
+  }
+
 }

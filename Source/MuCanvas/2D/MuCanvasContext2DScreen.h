@@ -9,8 +9,10 @@ namespace mural {
     public:
       MuTexture *getTexture();
 
+      MuCanvasContext2DScreen(): MuCanvasContext2D(200, 150) {}
+
       void present();
-      void finish();
+      void finish() {}
   };
 
 }
