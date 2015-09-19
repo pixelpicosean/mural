@@ -6,6 +6,9 @@
 
 namespace mural {
 
+  class MuCanvas;
+  class MuCanvasContext2D;
+
   class MuTimerCollection;
   class AppController {
     public:
@@ -49,6 +52,10 @@ namespace mural {
       ~AppController();
 
       void setCurrentRenderingContext(MuCanvasContext *renderingContext);
+
+      // Tests only
+      MuCanvas *canvas;
+      MuCanvasContext2D *ctx;
   };
 
 }

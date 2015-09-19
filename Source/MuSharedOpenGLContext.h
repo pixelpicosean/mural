@@ -45,4 +45,6 @@ namespace mural {
 
 }
 
+#define theSharedOpenGLContext mural::MuSharedOpenGLContext::instance()
+
 #endif
