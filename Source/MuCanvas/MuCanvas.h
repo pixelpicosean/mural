@@ -6,15 +6,16 @@
 
 namespace mural {
 
-  typedef enum {
+  enum MuCanvasContextMode {
     kMuCanvasContextModeInvalid,
     kMuCanvasContextMode2D,
     kMuCanvasContextModeWebGL
-  } MuCanvasContextMode;
+  };
 
   class MuCanvas {
     public:
       MuTexture *texture;
+      short width, height;
 
       MuCanvas();
       ~MuCanvas();
@@ -22,8 +23,6 @@ namespace mural {
       MuCanvasContext *getContext(MuCanvasContextMode mode);
 
     private:
-      short width, height;
-
       MuCanvasContext *renderingContext;
       MuCanvasContextMode contextMode;
 
