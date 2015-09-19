@@ -9,9 +9,10 @@ namespace mural {
     }
   }
 
-  void AppController::init(int width, int height) {
+  void AppController::init(int width, int height, int devicePixelRatio) {
     this->width = width;
     this->height = height;
+    this->devicePixelRatio = devicePixelRatio;
 
     theScheduler.scheduleMessage([] {
       printf("timer\n");

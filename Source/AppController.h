@@ -10,6 +10,7 @@ namespace mural {
   class AppController {
     public:
       short width, height;
+      int devicePixelRatio;
       float averageFPS;
 
       bool hasScreenCanvas;
@@ -25,7 +26,7 @@ namespace mural {
       MuCanvasContext *screenRenderingContext;
 
     public:
-      void init(int width = 640, int height = 400);
+      void init(int width = 640, int height = 400, int devicePixelRatio = 1);
 
       void update();
       void draw();

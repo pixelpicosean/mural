@@ -36,7 +36,15 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  app.init(WIDTH, HEIGHT);
+  // Create hi-dpi FBO for hi-dpi screens.
+  int winWidth, winHeight;
+  int fbWidth, fbHeight;
+  glfwGetWindowSize(window, &winWidth, &winHeight);
+  glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+  // Calculate pixel ration for hi-dpi devices.
+  int ratio = (int)(fbWidth / (float)winWidth);
+
+  app.init(winWidth, winHeight, ratio);
 
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
