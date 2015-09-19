@@ -39,7 +39,7 @@ namespace mural {
       MuPathFillRule fillRule;
 
       MuPath();
-      ~MuPath();
+      ~MuPath() {}
 
       void push(glm::vec2 v);
       void reset();
