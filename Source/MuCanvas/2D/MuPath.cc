@@ -17,7 +17,7 @@ namespace mural {
     reset();
   }
 
-  void push(glm::vec2 v) {
+  void MuPath::push(glm::vec2 v) {
     // Ignore this point if it's identical to the last
     if (glm::equal(v, lastPushed) && !currentPath.points.empty()) {
       return;
@@ -31,7 +31,7 @@ namespace mural {
     currentPath.points.push_back(v);
   }
 
-  void reset() {
+  void MuPath::reset() {
     longestSubpath = 0;
     paths.clear();
     currentPath.isClosed = false;
@@ -43,7 +43,7 @@ namespace mural {
     maxPos = glm::vec2(-INFINITY, -INFINITY);
   }
 
-  void close() {
+  void MuPath::close() {
     currentPath.isClosed = true;
     if (currentPath.points.size()) {
         currentPos = currentPath.points.front();
@@ -52,7 +52,7 @@ namespace mural {
     endSubPath();
   }
 
-  void endSubPath() {
+  void MuPath::endSubPath() {
     if (currentPath.points.size() > 1) {
       paths.push_back(currentPath);
       longestSubpath = std::max(longestSubpath, (unsigned int)currentPath.points.size());
@@ -61,18 +61,18 @@ namespace mural {
     currentPath.isClosed = false;
   }
 
-  void moveTo(float x, float y) {
+  void MuPath::moveTo(float x, float y) {
     endSubPath();
     currentPos = applyTransform(glm::vec2(x, y), transform);
     push(currentPos);
   }
 
-  void lineTo(float x, float y) {
+  void MuPath::lineTo(float x, float y) {
     currentPos = applyTransform(glm::vec2(x, y), transform);
     push(currentPos);
   }
 
-  void bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y, float scale) {
+  void MuPath::bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y, float scale) {
     distanceTolerance = MU_PATH_DISTANCE_EPSILON / scale;
     distanceTolerance *= distanceTolerance;
 
@@ -85,7 +85,7 @@ namespace mural {
     push(currentPos);
   }
 
-  void recursiveBezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int level) {
+  void MuPath::recursiveBezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int level) {
     // Based on http://www.antigrain.com/research/adaptive_bezier/index.html
 
     // Calculate all the mid-points of the line segments
@@ -154,7 +154,7 @@ namespace mural {
     }
   }
 
-  void quadraticCurveTo(float cpx, float cpy, float x, float y, float scale) {
+  void MuPath::quadraticCurveTo(float cpx, float cpy, float x, float y, float scale) {
     distanceTolerance = MU_PATH_DISTANCE_EPSILON / scale;
     distanceTolerance *= distanceTolerance;
 
@@ -166,7 +166,7 @@ namespace mural {
     push(currentPos);
   }
 
-  void recursiveQuadratic(float x1, float y1, float x2, float y2, float x3, float y3, int level) {
+  void MuPath::recursiveQuadratic(float x1, float y1, float x2, float y2, float x3, float y3, int level) {
     // Based on http://www.antigrain.com/research/adaptive_bezier/index.html
 
     // Calculate all the mid-points of the line segments
@@ -205,7 +205,7 @@ namespace mural {
     }
   }
 
-  void arcTo(float x1, float y1, float x2, float y2, float radius) {
+  void MuPath::arcTo(float x1, float y1, float x2, float y2, float radius) {
     // Lifted from http://code.google.com/p/fxcanvas/
     // I have no idea what this code is doing, but it seems to work.
 
@@ -242,7 +242,7 @@ namespace mural {
     }
   }
 
-  void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {
+  void MuPath::arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {
     startAngle = fmodf(startAngle, 2 * M_PI);
     endAngle = fmodf(endAngle, 2 * M_PI);
 
@@ -273,7 +273,7 @@ namespace mural {
     push(currentPos);
   }
 
-  void drawPolygonsToContext(MuCanvasContext2D *context, MuPathFillRule fillRule, MuPathPolygonTarget target) {
+  void MuPath::drawPolygonsToContext(MuCanvasContext2D *context, MuPathFillRule fillRule, MuPathPolygonTarget target) {
     fillRule = rule;
     if (longestSubpath < 3 && currentPath.points.size() < 3) { return; }
 
@@ -402,7 +402,7 @@ namespace mural {
     }
   }
 
-  void drawArcTo(MuCanvasContext2D *context, glm::vec2 point, glm::vec2 p1, glm::vec2 p2, MuColorRGBA color) {
+  void MuPath::drawArcTo(MuCanvasContext2D *context, glm::vec2 point, glm::vec2 p1, glm::vec2 p2, MuColorRGBA color) {
     MuCanvasState *state = context->state;
     float width2 = state->lineWidth / 2;
 
@@ -431,7 +431,7 @@ namespace mural {
       context->pushTri(p1.x, p1.y, point.x, point.y, p2.x, p2.y, color, transform);
       return;
     }
-    // avoid "triangular" look
+    // avoid MuPath::"triangular" look
     else if (numSteps == 3 && fabsf(angle2) > M_PI_2) {
       numSteps = 4;
     }
@@ -458,7 +458,7 @@ namespace mural {
     }
   }
 
-  void drawLinesToContext(MuCanvasContext2D *context) {
+  void MuPath::drawLinesToContext(MuCanvasContext2D *context) {
     MuCanvasState *state = context->state;
     GLubyte stencilMask;
 
