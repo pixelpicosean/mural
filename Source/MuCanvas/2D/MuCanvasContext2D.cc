@@ -253,13 +253,13 @@ namespace mural {
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {}
   void MuCanvasContext2D::strokeRect(float x, float y, float w, float h) {}
   void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {}
-  MuImageData *getImageDataScaled(float scale, bool flipped, short sx, short sy, short sw, short sh) {
+  MuImageData *MuCanvasContext2D::getImageDataScaled(float scale, bool flipped, short sx, short sy, short sw, short sh) {
     return nullptr;
   }
-  MuImageData *getImageData(short sx, short sy, short sw, short sh) {
+  MuImageData *MuCanvasContext2D::getImageData(short sx, short sy, short sw, short sh) {
     return nullptr;
   }
-  MuImageData *getImageDataHD(short sx, short sy, short sw, short sh) {
+  MuImageData *MuCanvasContext2D::getImageDataHD(short sx, short sy, short sw, short sh) {
     return nullptr;
   }
   void MuCanvasContext2D::putImageData(MuImageData* imageData, float dx, float dy) {}
@@ -279,7 +279,7 @@ namespace mural {
 
   // void MuCanvasContext2D::fillText(std::string text, float x, float y) {}
   // void MuCanvasContext2D::strokeText(std::string text, float x, float y) {}
-  // MuTextMetrics measureText(std::string text) {}
+  // MuTextMetrics MuCanvasContext2D::measureText(std::string text) {}
 
   void MuCanvasContext2D::clip(MuPathFillRule fillRule) {}
   void MuCanvasContext2D::resetClip() {}
