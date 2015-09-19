@@ -39,8 +39,10 @@ namespace mural {
   }
 
   unsigned char *MuSharedOpenGLContext::getVertexBuffer() {
-    vertexBuffer = new unsigned char[MU_OPENGL_VERTEX_BUFFER_SIZE];
-    vertexBufferLength = MU_OPENGL_VERTEX_BUFFER_SIZE;
+    if (!vertexBuffer) {
+      vertexBuffer = new unsigned char[MU_OPENGL_VERTEX_BUFFER_SIZE];
+      vertexBufferLength = (int)MU_OPENGL_VERTEX_BUFFER_SIZE;
+    }
     return vertexBuffer;
   }
 
