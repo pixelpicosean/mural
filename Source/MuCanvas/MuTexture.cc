@@ -22,7 +22,7 @@ namespace mural {
   }
 
   std::string normalizePath(const GLchar *file) {
-    std::string path("../assets");
+    std::string path("../assets/");
     path += file;
     return path;
   }
@@ -160,6 +160,10 @@ namespace mural {
       printf("Warning: Image %s larger than MAX_TEXTURE_SIZE (%d)", fullPath.empty() ? "[Dynamic]" : fullPath.c_str(), maxTextureSize);
       return;
     }
+    else if (width <= 0 || height <= 0) {
+      printf("Warning: Image %s not properly loaded", fullPath.empty() ? "[Dynamic]" : fullPath.c_str());
+      return;
+    }
     this->format = format;
 
     GLint boundTexture = 0;
@@ -198,9 +202,13 @@ namespace mural {
       height = h;
       format = GL_RGBA;
       dimensionsKnown = true;
-    }
 
-    return data;
+      return data;
+    }
+    else {
+      printf("Failed to load file [%s], from path: %s\n", path, normalizePath(path).c_str());
+      return nullptr;
+    }
   }
 
   void MuTexture::bindWithFilter(GLenum filter) {
