@@ -97,27 +97,27 @@ namespace mural {
   }
 
   MuTexture::MuTexture(short width, short height, GLenum format):
-    contentScale(1.0f),
     width(width),
     height(height),
+    contentScale(1.0f),
     dimensionsKnown(true)
   {
     createWithPixels(nullptr, format);
   }
 
   MuTexture::MuTexture(short width, short height, unsigned char *pixels):
-    contentScale(1.0f),
     width(width),
     height(height),
+    contentScale(1.0f),
     dimensionsKnown(true)
   {
     createWithPixels(pixels, GL_RGBA);
   }
 
   MuTexture::MuTexture(short width, short height, GLuint fbo, float contentScale):
-    contentScale(contentScale),
     width(width),
     height(height),
+    contentScale(contentScale),
     dimensionsKnown(true),
     fbo(fbo)
   {
@@ -173,6 +173,8 @@ namespace mural {
     glTexImage2D(target, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
 
     glBindTexture(target, boundTexture);
+
+    this->pixels = pixels;
   }
 
   void MuTexture::updateWithPixels(unsigned char *pixels, int sx, int sy, int sw, int sh) {

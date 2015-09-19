@@ -1,4 +1,5 @@
 #include "MuSharedTextureCache.h"
+#include "MuTexture.h"
 
 namespace mural {
 
