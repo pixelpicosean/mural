@@ -1,4 +1,5 @@
 #include "MuCanvasContext2D.h"
+#include "MuSharedOpenGLContext.h"
 #include "AppController.h"
 
 namespace mural {
@@ -19,9 +20,8 @@ namespace mural {
   };
 
   MuCanvasContext2D::MuCanvasContext2D(short widthp, short heightp) {
-    sharedGLContext = app.openGLContext;
-    vertexBuffer = (MuVertex *)(sharedGLContext->getVertexBuffer());
-    vertexBufferSize = (int)(sharedGLContext->getVertexBufferLength() / sizeof(MuVertex));
+    vertexBuffer = (MuVertex *)(theSharedOpenGLContext.getVertexBuffer());
+    vertexBufferSize = (int)(theSharedOpenGLContext.getVertexBufferLength() / sizeof(MuVertex));
 
     memset(stateStack, 0, sizeof(stateStack));
     stateIndex = 0;

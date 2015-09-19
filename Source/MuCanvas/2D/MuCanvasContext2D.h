@@ -3,6 +3,8 @@
 
 #include "MuOpenGL.h"
 
+#include "MuGLProgram2D.h"
+
 #include "MuCanvas/MuTexture.h"
 #include "MuImageData.h"
 #include "MuPath.h"
@@ -10,7 +12,6 @@
 #include "MuCanvas/MuCanvasContext.h"
 // #include "MuFont.h"
 // #include "MuFontCache.h"
-#include "MuSharedOpenGLContext.h"
 
 #include <string>
 
@@ -134,7 +135,7 @@ namespace mural {
       GLubyte stencilMask;
 
       MuCanvasContext2D(short widthp, short heightp);
-      ~MuCanvasContext2D();
+      virtual ~MuCanvasContext2D();
 
       void create();
       void resizeTo(short newWidth, short newHeight);
@@ -219,7 +220,6 @@ namespace mural {
       // MuFontCache *fontCache;
 
       MuGLProgram2D *currentProgram;
-      MuSharedOpenGLContext *sharedGLContext;
   };
 
   /*
