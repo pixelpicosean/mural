@@ -7,7 +7,7 @@ namespace mural {
     public:
       short width, height;
 
-      bool msaaEnabled;
+      bool msaaEnabled = false;
       bool needsPresenting;
       int msaaSamples;
 
