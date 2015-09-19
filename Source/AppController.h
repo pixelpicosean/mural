@@ -18,7 +18,6 @@ namespace mural {
 
       // JSGlobalContextRef jsGlobalContext;
 
-      MuSharedOpenGLContext *openGLContext;
       // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
