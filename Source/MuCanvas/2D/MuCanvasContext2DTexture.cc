@@ -23,7 +23,8 @@ namespace mural {
     }
 
     // Special case where this canvas is drawn into itself - we have to use glReadPixels to get a texture
-    if (app.currentRenderingContext == this) {
+    MuCanvasContext2DTexture *ctx = dynamic_cast<MuCanvasContext2DTexture *>(app.currentRenderingContext);
+    if (ctx && ctx == this) {
       float w = width * backingStoreRatio;
       float h = height * backingStoreRatio;
 
