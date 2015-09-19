@@ -5,6 +5,15 @@
 
 namespace mural {
 
+  static inline float distanceToLineSegmentSquared(const glm::vec2& p, const glm::vec2& v, const glm::vec2& w) {
+    float l2 = glm::distance(v, w);
+    if (l2 == 0) return glm::distance(p, v);
+    float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+    if (t < 0) return glm::distance(p, v);
+    if (t > 1) return glm::distance(p, w);
+    return glm::distance(p, glm::vec2(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
+  }
+
   glm::vec2 applyTransform(glm::vec2 v, glm::mat3 t) {
     return (glm::vec2)(t * glm::vec3(v, 1.0f));
   }
@@ -19,7 +28,7 @@ namespace mural {
 
   void MuPath::push(glm::vec2 v) {
     // Ignore this point if it's identical to the last
-    if (glm::equal(v, lastPushed) && !currentPath.points.empty()) {
+    if ((v.x == lastPushed.x && v.y == lastPushed.y) && !currentPath.points.empty()) {
       return;
     }
     lastPushed = v;
@@ -256,7 +265,7 @@ namespace mural {
     float span = antiClockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
 
     // Calculate the number of steps, based on the radius, scaling and the span
-    float size = radius * getTransformScale(transform) * 5;
+    float size = radius * getTransformScale(transform).x * 5;
     float maxSteps = MU_PATH_MAX_STEPS_FOR_CIRCLE * fabsf(span)/(2 * M_PI);
     int steps = std::max(MU_PATH_MIN_STEPS_FOR_CIRCLE, (size / (200+size)) * maxSteps);
 
@@ -273,7 +282,7 @@ namespace mural {
     push(currentPos);
   }
 
-  void MuPath::drawPolygonsToContext(MuCanvasContext2D *context, MuPathFillRule fillRule, MuPathPolygonTarget target) {
+  void MuPath::drawPolygonsToContext(MuCanvasContext2D *context, MuPathFillRule rule, MuPathPolygonTarget target) {
     fillRule = rule;
     if (longestSubpath < 3 && currentPath.points.size() < 3) { return; }
 
@@ -424,7 +433,7 @@ namespace mural {
     }
 
     // 1 step per 5 pixel
-    float pxScale = getTransformScale(state->transform);
+    float pxScale = getTransformScale(state->transform).x;
     int numSteps = ceilf((angle2 * width2 * pxScale) / 5.0f);
 
     if (numSteps == 1) {
@@ -463,7 +472,7 @@ namespace mural {
     GLubyte stencilMask;
 
     // Find the width of the line as it is projected onto the screen.
-    float projectedLineWidth = getTransformScale(state->transform) * state->lineWidth;
+    float projectedLineWidth = getTransformScale(state->transform).x * state->lineWidth;
 
     // Figure out if we need to add line caps and set the cap texture coord for square or round caps.
     // For thin lines we disable texturing and line caps.
@@ -649,13 +658,13 @@ namespace mural {
           // two points are possible for each edge - the one farthest away from the other line has to be used
 
           // calculate point for current edge
-          d1 = MuDistanceToLineSegmentSquared(miter21, current, next);
-          d2 = MuDistanceToLineSegmentSquared(miter22, current, next);
+          d1 = distanceToLineSegmentSquared(miter21, current, next);
+          d2 = distanceToLineSegmentSquared(miter22, current, next);
           p1 = (d1 > d2) ? miter21 : miter22;
 
           // calculate point for next edge
-          d1 = MuDistanceToLineSegmentSquared(current + nextExt, current, prev);
-          d2 = MuDistanceToLineSegmentSquared(current - nextExt, current, prev);
+          d1 = distanceToLineSegmentSquared(current + nextExt, current, prev);
+          d2 = distanceToLineSegmentSquared(current - nextExt, current, prev);
           p2 = (d1 > d2) ? (current + nextExt) : (current - nextExt);
 
 
@@ -694,19 +703,19 @@ namespace mural {
         float d1, d2;
         glm::vec2 p1, p2,
           firstNormal = firstMiter1 - firstMiter2, // unnormalized line normal for first edge
-          second = next + glm::vec2(firstNormal.y, -firstNormal.x)); // approximated second point
+          second = next + glm::vec2(firstNormal.y, -firstNormal.x); // approximated second point
 
         // calculate points to use for bevel
         // two points are possible for each edge - the one farthest away from the other line has to be used
 
         // calculate point for current edge
-        d1 = MuDistanceToLineSegmentSquared(miter12, next, second);
-        d2 = MuDistanceToLineSegmentSquared(miter11, next, second);
+        d1 = distanceToLineSegmentSquared(miter12, next, second);
+        d2 = distanceToLineSegmentSquared(miter11, next, second);
         p2 = (d1 > d2) ? miter12 : miter11;
 
         // calculate point for next edge
-        d1 = MuDistanceToLineSegmentSquared(firstMiter1, current, next);
-        d2 = MuDistanceToLineSegmentSquared(firstMiter2, current, next);
+        d1 = distanceToLineSegmentSquared(firstMiter1, current, next);
+        d2 = distanceToLineSegmentSquared(firstMiter2, current, next);
         p1 = (d1 > d2) ? firstMiter1 : firstMiter2;
 
         if (state->lineJoin == kMuLineJoinRound) {
