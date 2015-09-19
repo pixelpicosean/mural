@@ -4,7 +4,9 @@
 namespace mural {
 
   AppController::~AppController() {
-    screenRenderingContext->finish();
+    if (screenRenderingContext) {
+      screenRenderingContext->finish();
+    }
   }
 
   void AppController::init(int width, int height) {
