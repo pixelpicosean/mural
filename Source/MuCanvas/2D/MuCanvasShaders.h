@@ -29,10 +29,10 @@ namespace mural {
     \
     out vec4 color;                           \
     \
-    uniform sampler2D texture;                \
+    uniform sampler2D image;                  \
     \
     void main() {                             \
-      color = texture2D(texture, vUv).aaaa * vColor; \
+      color = texture(image, vUv).aaaa * vColor; \
     }                                         \
     ";
 
@@ -55,10 +55,10 @@ namespace mural {
     \
     out vec4 color;                       \
     \
-    uniform sampler2D texture;            \
+    uniform sampler2D image;              \
     \
     void main() {                         \
-      color = texture2D(texture, mod(vUv, vec2(1.0, 1.0)) ) * vColor; \
+      color = texture(image, mod(vUv, vec2(1.0, 1.0)) ) * vColor; \
     }                                     \
     ";
 
@@ -69,10 +69,10 @@ namespace mural {
     \
     out vec4 color;                       \
     \
-    uniform sampler2D texture;            \
+    uniform sampler2D image;              \
     \
     void main() {                         \
-      color = texture2D(texture, vUv) * vColor; \
+      color = texture(image, vUv) * vColor; \
     }                                     \
     ";
 
@@ -88,7 +88,7 @@ namespace mural {
     uniform mediump vec3 inner; // x, y, z=radius \
     uniform mediump vec3 diff; // x, y, z=radius  \
     \
-    uniform sampler2D texture;                  \
+    uniform sampler2D image;                    \
     \
     void main() {                               \
       vec2 p2 = vUv - inner.xy;                 \
@@ -104,7 +104,7 @@ namespace mural {
       float t = max(BA+DA, BA-DA);              \
     \
       lowp float keep = sign(diff.z * t + inner.z); // discard if < 0.0 \
-      color = texture2D(texture, vec2(t, 0.0)) * vColor * keep; \
+      color = texture(image, vec2(t, 0.0)) * vColor * keep; \
     }                                           \
     ";
 

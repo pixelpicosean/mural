@@ -13,6 +13,7 @@ namespace mural {
   }
 
   void MuTextureStorage::bindToTarget(GLenum target, MuTextureParam *newParams) {
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(target, textureId);
 
     // Check if we have to set a param
