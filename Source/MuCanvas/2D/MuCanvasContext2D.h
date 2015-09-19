@@ -202,20 +202,20 @@ namespace mural {
       GLuint msaaFrameBuffer, msaaRenderBuffer;
       GLuint stencilBuffer;
 
-      short bufferWidth, bufferHeight;
+      short bufferWidth = 150, bufferHeight = 100;
 
       GLenum textureFilter;
       MuTexture *currentTexture;
       MuPath *path;
 
       MuVertex *vertexBuffer;
-      int vertexBufferSize;
-      int vertexBufferIndex;
+      int vertexBufferSize = 0;
+      int vertexBufferIndex = 0;
 
-      int stateIndex;
+      int stateIndex = 0;
       MuCanvasState stateStack[MU_CANVAS_STATE_STACK_SIZE];
 
-      bool upsideDown;
+      bool upsideDown = false;
 
       // MuFontCache *fontCache;
 
