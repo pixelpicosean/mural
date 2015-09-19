@@ -73,7 +73,9 @@ namespace mural {
   class MuCanvasPattern;
   class MuCanvasGradient;
 
-  struct MuFillable {};
+  struct MuFillable {
+    virtual ~MuFillable() {}
+  };
 
   struct MuCanvasState {
     glm::mat3 transform;
