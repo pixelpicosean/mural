@@ -37,6 +37,7 @@ namespace mural {
       MuGLProgram2DRadialGradient *glProgram2DRadialGradient;
 
       unsigned char *vertexBuffer;
+      unsigned int vertexBufferLength;
   };
 
 }
