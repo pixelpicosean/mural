@@ -1,5 +1,9 @@
 #include "MuCanvasContext2D.h"
+#include "MuCanvasPattern.h"
+#include "MuCanvasGradient.h"
+#include "MuCanvasShaders.h"
 #include "MuSharedOpenGLContext.h"
+
 #include "AppController.h"
 
 namespace mural {
@@ -300,15 +304,176 @@ namespace mural {
     vertexBufferIndex += 6;
   }
 
-  void MuCanvasContext2D::pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, glm::mat3 transform) {}
-  void MuCanvasContext2D::pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, glm::mat3 transform) {}
-  void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, glm::mat3 transform) {}
+  void MuCanvasContext2D::pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, glm::mat3 transform) {
+    MuCanvasPattern *pattern;
+    MuCanvasGradient *gradient;
+
+    if ((pattern = dynamic_cast<MuCanvasPattern *>(fillable))) {
+      pushPatternedRect(x, y, w, h, pattern, color, transform);
+    }
+    else if ((gradient = dynamic_cast<MuCanvasGradient *>(fillable))) {
+      pushGradientRect(x, y, w, h, gradient, color, transform);
+    }
+  }
+
+  void MuCanvasContext2D::pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, glm::mat3 transform) {
+    if (gradient->type == kMuCanvasGradientTypeLinear) {
+      // Local positions inside the quad
+      glm::vec2 p1((gradient->p1.x-x)/w, (gradient->p1.y-y)/h);
+      glm::vec2 p2((gradient->p2.x-x)/w, (gradient->p2.y-y)/h);
+
+      // Calculate the slope of (p1,p2) and the line orthogonal to it
+      float aspect = w/h;
+      glm::vec2 slope = p2 - p1;
+      glm::vec2 ortho(slope.y/aspect, -slope.x*aspect);
+
+      // Calculate the intersection points of the slope (starting at p1)
+      // and the orthogonal starting at each corner of the quad - these
+      // points are the final texture coordinates.
+      float d = 1/(slope.y * ortho.x - slope.x * ortho.y);
+
+      glm::vec2
+        ot(ortho.x * d, ortho.y * d),
+        st(slope.x * d, slope.y * d);
+
+      glm::vec2
+        a11(ot.x * -p1.y, st.x * -p1.y),
+        a12(ot.y * p1.x, st.y * p1.x),
+        a21(ot.x * (1 - p1.y), st.x * (1 - p1.y)),
+        a22(ot.y * (p1.x - 1), st.y * (p1.x - 1));
+
+      glm::vec2
+        t11(a11.x + a12.x, a11.y + a12.y),
+        t21(a11.x + a22.x, a11.y + a22.y),
+        t12(a21.x + a12.x, a21.y + a12.y),
+        t22(a21.x + a22.x, a21.y + a22.y);
+
+      setProgram(theSharedOpenGLContext.getGLProgram2DTexture());
+      setTexture(gradient->texture);
+      if (vertexBufferIndex >= vertexBufferSize - 6) {
+        flushBuffers();
+      }
+
+      // Vertex coordinates
+      glm::vec2 d11(x, y);
+      glm::vec2 d21(x+w, y);
+      glm::vec2 d12(x, y+h);
+      glm::vec2 d22(x+w, y+h);
+
+      glm::mat3 identity;
+      if (identity != transform) {
+        d11 = (glm::vec2)(transform * glm::vec3(d11, 1.0f));
+        d21 = (glm::vec2)(transform * glm::vec3(d21, 1.0f));
+        d12 = (glm::vec2)(transform * glm::vec3(d12, 1.0f));
+        d22 = (glm::vec2)(transform * glm::vec3(d22, 1.0f));
+      }
+
+      MuVertex *vb = &vertexBuffer[vertexBufferIndex];
+      vb[0] = (MuVertex) { d11, t11, color }; // top left
+      vb[1] = (MuVertex) { d21, t21, color }; // top right
+      vb[2] = (MuVertex) { d12, t12, color }; // bottom left
+
+      vb[3] = (MuVertex) { d21, t21, color }; // top right
+      vb[4] = (MuVertex) { d12, t12, color }; // bottom left
+      vb[5] = (MuVertex) { d22, t22, color }; // bottom right
+
+      vertexBufferIndex += 6;
+    }
+    else if (gradient->type == kMuCanvasGradientTypeRadial) {
+      flushBuffers();
+
+      MuGLProgram2DRadialGradient *gradientProgram = theSharedOpenGLContext.getGLProgram2DRadialGradient();
+      setProgram(gradientProgram);
+
+      glUniform3f(gradientProgram->inner, gradient->p1.x, gradient->p1.y, gradient->r1);
+      glm::vec2 dp = gradient->p2 - gradient->p1;
+      float dr = gradient->r2 - gradient->r1;
+      glUniform3f(gradientProgram->diff, dp.x, dp.y, dr);
+
+      setTexture(gradient->texture);
+      pushTexturedRect(x, y, w, h, x, y, w, h, color, transform);
+    }
+  }
+
+  void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, glm::mat3 transform) {
+    MuTexture *texture = pattern->texture;
+    float scale = texture->contentScale;
+    float
+      tw = texture->width / scale,
+      th = texture->height / scale,
+      pw = w,
+      ph = h;
+
+    if (!(pattern->repeat & kMuCanvasPatternRepeatX)) {
+      pw = std::min(tw - x, w);
+    }
+    if (!(pattern->repeat & kMuCanvasPatternRepeatY)) {
+      ph = std::min(th - y, h);
+    }
+
+    if (pw > 0 && ph > 0) { // We may have to skip entirely
+      setProgram(theSharedOpenGLContext.getGLProgram2DPattern());
+      setTexture(texture);
+
+      pushTexturedRect(
+        x, y, pw, ph,
+        x/tw, y/th, pw/tw, ph/th,
+        color, transform
+      );
+    }
+
+    if (pw < w || ph < h) {
+      // Draw clearing rect for the stencil buffer if we didn't fill everything with
+      // the pattern image - happens when not repeating in both directions
+      setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+      MuColorRGBA transparentBlack = { .hex = 0x00000000 };
+      pushRect(x, y, w, h, transparentBlack, transform);
+    }
+  }
+
   void MuCanvasContext2D::pushTexturedRect(
     float x, float y, float w, float h,
     float tx, float ty, float tw, float th,
     MuColorRGBA color,
     glm::mat3 transform
-  ) {}
+  )
+  {
+    if (vertexBufferIndex >= vertexBufferSize - 6) {
+      flushBuffers();
+    }
+
+    // Textures from offscreen WebGL contexts have to be draw upside down.
+    // They're actually right-side up in memory, but everything else has
+    // flipped y
+    if (currentTexture->drawFlippedY) {
+      ty = 1 - ty;
+      th *= -1;
+    }
+
+    glm::vec2 d11(x, y);
+    glm::vec2 d21(x+w, y);
+    glm::vec2 d12(x, y+h);
+    glm::vec2 d22(x+w, y+h);
+
+    glm::mat3 identity;
+    if (transform != identity) {
+      d11 = (glm::vec2)(transform * glm::vec3(d11, 1.0f));
+      d21 = (glm::vec2)(transform * glm::vec3(d21, 1.0f));
+      d12 = (glm::vec2)(transform * glm::vec3(d12, 1.0f));
+      d22 = (glm::vec2)(transform * glm::vec3(d22, 1.0f));
+    }
+
+    MuVertex *vb = &vertexBuffer[vertexBufferIndex];
+    vb[0] = (MuVertex) { d11, {tx, ty}, color };  // top left
+    vb[1] = (MuVertex) { d21, {tx+tw, ty}, color }; // top right
+    vb[2] = (MuVertex) { d12, {tx, ty+th}, color }; // bottom left
+
+    vb[3] = (MuVertex) { d21, {tx+tw, ty}, color }; // top right
+    vb[4] = (MuVertex) { d12, {tx, ty+th}, color }; // bottom left
+    vb[5] = (MuVertex) { d22, {tx+tw, ty+th}, color };  // bottom right
+
+    vertexBufferIndex += 6;
+  }
 
   void MuCanvasContext2D::flushBuffers() {
     if (vertexBufferIndex == 0) { return; }
@@ -462,17 +627,79 @@ namespace mural {
   }
 
   MuImageData *MuCanvasContext2D::getImageDataScaled(float scale, bool flipped, short sx, short sy, short sw, short sh) {
-    return nullptr;
+    flushBuffers();
+
+    unsigned char *pixels;
+
+    // Fast case - no scaling, no flipping
+    if (scale == 1 && !flipped) {
+      pixels = new unsigned char[sw * sh * 4];
+      glReadPixels(sx, sy, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    }
+
+    // More processing needed - take care of the flipped screen layout and the scaling
+    else {
+      int internalWidth = sw * scale;
+      int internalHeight = sh * scale;
+      int internalX = sx * scale;
+      int internalY = ((bufferHeight/scale)-sy-sh) * scale;
+
+      MuColorRGBA *internalPixels = (MuColorRGBA *)malloc(internalWidth * internalHeight * sizeof(MuColorRGBA));
+      glReadPixels(internalX, internalY, internalWidth, internalHeight, GL_RGBA, GL_UNSIGNED_BYTE, internalPixels);
+
+      int size = sw * sh * sizeof(MuColorRGBA);
+      MuColorRGBA *scaledPixels = (MuColorRGBA *)malloc(size);
+      int index = 0;
+      for (int y = 0; y < sh; y++) {
+        int rowIndex = (int)((flipped ? sh-y-1 : y) * scale) * internalWidth;
+        for (int x = 0; x < sw; x++) {
+          int internalIndex = rowIndex + (int)(x * scale);
+          scaledPixels[index] = internalPixels[internalIndex];
+          index++;
+        }
+      }
+      free(internalPixels);
+
+      pixels = (unsigned char *)scaledPixels;
+    }
+
+    return new MuImageData(sw, sh, pixels);
   }
+
   MuImageData *MuCanvasContext2D::getImageData(short sx, short sy, short sw, short sh) {
-    return nullptr;
+    return getImageDataScaled(backingStoreRatio, upsideDown, sx, sy, sw, sh);
   }
+
   MuImageData *MuCanvasContext2D::getImageDataHD(short sx, short sy, short sw, short sh) {
-    return nullptr;
+    return getImageDataScaled(1.0f, upsideDown, sx, sy, sw, sh);
   }
-  void MuCanvasContext2D::putImageData(MuImageData* imageData, float dx, float dy) {}
-  void MuCanvasContext2D::putImageDataHD(MuImageData* imageData, float dx, float dy) {}
-  void MuCanvasContext2D::putImageData(MuImageData* imageData, float scale, float dx, float dy) {}
+
+  void MuCanvasContext2D::putImageData(MuImageData* imageData, float scale, float dx, float dy) {
+    MuTexture *texture = imageData->getTexture();
+    setProgram(theSharedOpenGLContext.getGLProgram2DTexture());
+    setTexture(texture);
+
+    short tw = texture->width / scale;
+    short th = texture->height / scale;
+
+    static MuColorRGBA white = { .hex = 0xffffffff };
+
+    MuCompositeOperation oldOp = state->globalCompositeOperation;
+    globalCompositeOperation = kMuCompositeOperationCopy;
+
+    pushTexturedRect(dx, dy, tw, th, 0, 0, 1, 1, white, glm::mat3());
+    flushBuffers();
+
+    globalCompositeOperation = oldOp;
+  }
+
+  void MuCanvasContext2D::putImageDataHD(MuImageData* imageData, float dx, float dy) {
+    putImageData(imageData, 1, dx, dy);
+  }
+
+  void MuCanvasContext2D::putImageData(MuImageData* imageData, float dx, float dy) {
+    putImageData(imageData, backingStoreRatio, dx, dy);
+  }
 
   void MuCanvasContext2D::beginPath() {
     path->reset();
