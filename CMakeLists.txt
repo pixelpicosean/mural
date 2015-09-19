@@ -56,6 +56,7 @@ set(Mural_SOURCES
   Source/MuCanvas/MuTexture.cc
   Source/MuCanvas/MuTextureStorage.cc
   Source/MuCanvas/2D/MuCanvasContext2D.cc
+  Source/MuCanvas/2D/MuCanvasContext2DScreen.cc
   Source/MuCanvas/2D/MuGLProgram2D.cc
   Source/MuCanvas/2D/MuPath.cc
 
