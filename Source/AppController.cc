@@ -14,9 +14,6 @@ namespace mural {
     if (canvas) {
       delete canvas;
     }
-    if (ctx) {
-      delete ctx;
-    }
   }
 
   void AppController::init(int width, int height, int devicePixelRatio) {

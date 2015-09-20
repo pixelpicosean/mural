@@ -105,7 +105,7 @@ namespace mural {
   }
 
   void MuCanvasContext2DScreen::finish() {
-    glFinish();
+//    glFinish();
   }
 
 }
