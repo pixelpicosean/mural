@@ -23,6 +23,24 @@ namespace mural {
     [kMuCompositeOperationDestinationAtop] = {GL_ONE_MINUS_DST_ALPHA, GL_SRC_ALPHA, 1}
   };
 
+  void MuCanvasContext2D::setWidth(short newWidth) {
+    if (newWidth == width) {
+      flushBuffers();
+      glClear(GL_COLOR_BUFFER_BIT);
+      return;
+    }
+    resizeTo(newWidth, height);
+  }
+
+  void MuCanvasContext2D::setHeight(short newHeight) {
+    if (newHeight == height) {
+      flushBuffers();
+      glClear(GL_COLOR_BUFFER_BIT);
+      return;
+    }
+    resizeTo(width, newHeight);
+  }
+
   MuCanvasContext2D::MuCanvasContext2D(short widthp, short heightp) {
     vertexBuffer = (MuVertex *)(theSharedOpenGLContext.getVertexBuffer());
     vertexBufferSize = (int)(theSharedOpenGLContext.getVertexBufferLength() / sizeof(MuVertex));
@@ -185,26 +203,6 @@ namespace mural {
     }
 
     needsPresenting = true;
-  }
-
-  void MuCanvasContext2D::setWidth(short newWidth) {
-    if (newWidth == width) {
-      // Same width as before? Just clear the canvas, as per the spec
-      flushBuffers();
-      glClear(GL_COLOR_BUFFER_BIT);
-      return;
-    }
-    resizeTo(newWidth, height);
-  }
-
-  void MuCanvasContext2D::setHeight(short newHeight) {
-    if (newHeight == height) {
-      // Same height as before? Just clear the canvas, as per the spec
-      flushBuffers();
-      glClear(GL_COLOR_BUFFER_BIT);
-      return;
-    }
-    resizeTo(width, newHeight);
   }
 
   void MuCanvasContext2D::setTexture(MuTexture *newTexture) {

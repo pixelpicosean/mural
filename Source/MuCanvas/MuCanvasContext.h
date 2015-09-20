@@ -1,18 +1,24 @@
 #ifndef Mural_MuCanvasContext_h
 #define Mural_MuCanvasContext_h
 
+#include <cstdio>
+
 namespace mural {
 
   class MuCanvasContext {
     public:
-      short width, height;
-
       bool msaaEnabled = false;
-      bool needsPresenting;
-      int msaaSamples;
+      bool needsPresenting = false;
+      int msaaSamples = 2;
 
-      float backingStoreRatio;
-      bool useRetinaResolution;
+      float backingStoreRatio = 1.0f;
+      bool useRetinaResolution = false;
+
+      virtual short getWidth() { return width; }
+      virtual void setWidth(short newWidth) { width = newWidth; }
+
+      virtual short getHeight() { return height; }
+      virtual void setHeight(short newHeight) { height = newHeight; }
 
       MuCanvasContext() {}
 
@@ -23,6 +29,8 @@ namespace mural {
       // Presentable
       virtual void present() {}
       virtual void finish() {}
+    protected:
+      short width = 150, height = 100;
   };
 
 }

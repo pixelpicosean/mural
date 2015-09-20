@@ -128,13 +128,21 @@ namespace mural {
       MuCanvasState *state;
 
       MuCompositeOperation globalCompositeOperation;
-      bool imageSmoothingEnabled;
+      bool imageSmoothingEnabled = false;;
 
       // MuFontDescriptor *font;
       MuFillable *fillObject;
       MuFillable *strokeObject;
 
       GLubyte stencilMask;
+
+      virtual MuTexture *getTexture() { return nullptr; }
+      void setTexture(MuTexture *newTexture);
+
+      void setWidth(short newWidth);
+      void setHeight(short newHeight);
+
+      void setProgram(MuGLProgram2D *program);
 
       MuCanvasContext2D(short widthp, short heightp);
       virtual ~MuCanvasContext2D();
@@ -145,10 +153,6 @@ namespace mural {
       void createStencilBufferOnce();
       void bindVertexBuffer();
       void prepare();
-      void setWidth(short newWidth);
-      void setHeight(short newHeight);
-      void setTexture(MuTexture *newTexture);
-      void setProgram(MuGLProgram2D *program);
       void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, MuColorRGBA color, glm::mat3 transform);
       void pushQuad(glm::vec2 v1, glm::vec2 v2, glm::vec2 v3, glm::vec2 v4, MuColorRGBA color, glm::mat3 transform);
       void pushRect(float x, float y, float w, float h, MuColorRGBA color, glm::mat3 transform);
