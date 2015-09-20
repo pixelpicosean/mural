@@ -13,11 +13,11 @@ namespace mural {
   class MuTexture {
     public:
       // Properties
-      bool drawFlippedY;
+      bool drawFlippedY = false;
 
       GLenum format;
-      short width, height;
-      float contentScale;
+      short width = 0, height = 0;
+      float contentScale = 1.0f;
 
       unsigned char *getPixels();
       double getLastUsed();
@@ -55,14 +55,14 @@ namespace mural {
     private:
       void operator=(MuTexture const&) {}
 
-      bool cached;
-      bool dimensionsKnown;
+      bool cached = false;
+      bool dimensionsKnown = false;
 
       std::string fullPath;
 
       unsigned char *pixels;
       MuTextureStorage *textureStorage;
-      GLuint fbo;
+      GLuint fbo = 0;
       MuTextureParams params;
 
       std::function<void()> loadCallback;

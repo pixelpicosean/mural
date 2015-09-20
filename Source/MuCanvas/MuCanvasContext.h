@@ -21,6 +21,7 @@ namespace mural {
       virtual void setHeight(short newHeight) { height = newHeight; }
 
       MuCanvasContext() {}
+      virtual ~MuCanvasContext() {}
 
       virtual void create() {}
       virtual void flushBuffers() {}
