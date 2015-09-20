@@ -6,8 +6,41 @@
 
 namespace mural {
 
+  MuTexture *MuCanvas::getTexture() {
+    if (renderingContext) {
+      MuCanvasContext2D *ctx = dynamic_cast<MuCanvasContext2D *>(renderingContext);
+      if (ctx) return ctx->getTexture();
+    }
+
+    return nullptr;
+  }
+
+  void MuCanvas::setWidth(short newWidth) {
+    if (renderingContext) {
+      app.currentRenderingContext = renderingContext;
+      renderingContext->setWidth(newWidth);
+      width = renderingContext->getWidth();
+      return;
+    }
+    else {
+      width = newWidth;
+    }
+  }
+
+  void MuCanvas::setHeight(short newHeight) {
+    if (renderingContext) {
+      app.currentRenderingContext = renderingContext;
+      renderingContext->setHeight(newHeight);
+      height = renderingContext->getHeight();
+      return;
+    }
+    else {
+      height = newHeight;
+    }
+  }
+
   MuCanvas::MuCanvas():
-    useRetinaResolution(true),
+    useRetinaResolution(false),
     msaaEnabled(false),
     msaaSamples(2)
   {
@@ -23,6 +56,9 @@ namespace mural {
   MuCanvas::~MuCanvas() {
     if (isScreenCanvas) {
       app.hasScreenCanvas = false;
+    }
+    if (renderingContext) {
+      delete renderingContext;
     }
   }
 

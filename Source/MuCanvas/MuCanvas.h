@@ -15,7 +15,14 @@ namespace mural {
   class MuCanvas {
     public:
       MuTexture *texture;
-      short width, height;
+
+      MuTexture *getTexture();
+
+      short getWidth() { return width; }
+      void setWidth(short newWidth);
+
+      short getHeight() { return height; }
+      void setHeight(short newHeight);
 
       MuCanvas();
       ~MuCanvas();
@@ -28,6 +35,8 @@ namespace mural {
 
       bool isScreenCanvas;
       bool useRetinaResolution;
+
+      short width, height;
 
       bool msaaEnabled;
       int msaaSamples;
