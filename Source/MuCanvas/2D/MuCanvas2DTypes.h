@@ -19,6 +19,18 @@ namespace mural {
     MuColorRGBA color;
   };
 
+  struct MuRect {
+    glm::vec2 origin;
+    glm::vec2 size;
+
+    MuRect(float x, float y, float w, float h) {
+      origin.x = x;
+      origin.y = y;
+      size.x = w;
+      size.y = h;
+    }
+  };
+
 }
 
 #endif
