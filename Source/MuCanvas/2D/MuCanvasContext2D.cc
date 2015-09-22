@@ -60,8 +60,14 @@ namespace mural {
     // state->font = new MuFontDescriptor("Helvetica", 10);
     state->clipPath = nullptr;
 
-    bufferWidth = width = widthp;
-    bufferHeight = height = heightp;
+    if (widthp <= 0 || heightp <= 0) {
+      bufferWidth = width = app.width;
+      bufferHeight = height = app.height;
+    }
+    else {
+      bufferWidth = width = widthp;
+      bufferHeight = height = heightp;
+    }
 
     path = new MuPath();
     backingStoreRatio = 1;

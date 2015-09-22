@@ -48,7 +48,7 @@ namespace mural {
         "size: %dx%d, "
         "style: %.0fx%.0f, "
         "retina: %s = %.0fx%.0f, "
-        "msaa: %s",
+        "msaa: %s\n",
       width, height,
       frame.size.x, frame.size.y,
       (useRetinaResolution ? "yes" : "no"),
