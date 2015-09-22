@@ -25,24 +25,27 @@ namespace mural {
     ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));
 
     if (ctx) {
-      ctx->resizeTo(width, height);
-      printf("context exists, size = (%d, %d)\n", ctx->width, ctx->height);
+      printf("context exists, size = (%d, %d)\n", ctx->getWidth(), ctx->getHeight());
     }
 
-    ctx->state->lineWidth = 5.0f;
-    ctx->state->strokeColor = { .hex = 0xffffffff };
-    ctx->state->fillColor = { .hex = 0x2196f3ff };
+    // ctx->clearRect(0.0f, 0.0f, ctx->width, ctx->height);
 
-    ctx->clearRect(0.0f, 0.0f, ctx->width, ctx->height);
-
-    MuTexture *tex = new MuTexture("ship.png");
-    printf("texture.size = (%d, %d)\n", tex->width, tex->height);
+    // MuTexture *tex = new MuTexture("ship.png");
+    // printf("texture.size = (%d, %d)\n", tex->width, tex->height);
 
     // ctx->drawImage(tex, 0, 0, 99, 75, 0, 0, 99, 75);
 
-    theScheduler.scheduleMessage([&] {
+    theScheduler.scheduleMessage([=] {
       printf("start to draw a rect\n");
-      ctx->fillRect(0.0f, 0.0f, width, height);
+
+      ctx->state->lineWidth = 5.0f;
+      ctx->state->strokeColor = { .hex = 0xffffffff };
+      ctx->state->fillColor = { .hex = 0x2196f3ff };
+
+      ctx->moveTo(10, 10);
+      ctx->lineTo(width - 10, height - 10);
+      ctx->lineTo(10, height - 10);
+      ctx->stroke();
     }, 400, false);
   }
 
