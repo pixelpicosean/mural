@@ -205,7 +205,6 @@ namespace mural {
 
     protected:
       GLuint viewFrameBuffer = 0, viewRenderBuffer = 0;
-      GLuint msaaFrameBuffer = 0, msaaRenderBuffer = 0;
       GLuint stencilBuffer = 0;
 
       short bufferWidth = 200, bufferHeight = 150;

@@ -40,9 +40,7 @@ namespace mural {
   }
 
   MuCanvas::MuCanvas():
-    useRetinaResolution(false),
-    msaaEnabled(false),
-    msaaSamples(2)
+    useRetinaResolution(false)
   {
     if (!app.hasScreenCanvas) {
       isScreenCanvas = true;
@@ -80,8 +78,6 @@ namespace mural {
     }
 
     renderingContext->useRetinaResolution = useRetinaResolution;
-    renderingContext->msaaEnabled = msaaEnabled;
-    renderingContext->msaaSamples = msaaSamples;
 
     if (isScreenCanvas) {
       app.screenRenderingContext = renderingContext;

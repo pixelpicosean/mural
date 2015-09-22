@@ -17,9 +17,7 @@ namespace mural {
       {}
 
       void resizeTo(short newWidth, short newHeight);
-
       void present();
-      void finish();
 
     private:
       MuRect style;

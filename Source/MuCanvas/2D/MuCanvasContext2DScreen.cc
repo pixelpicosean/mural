@@ -44,16 +44,14 @@ namespace mural {
     bufferHeight = frame.size.y * contentScale;
 
     printf(
-      "Creating ScreenCanvas (2D): "
-        "size: %dx%d, "
-        "style: %.0fx%.0f, "
-        "retina: %s = %.0fx%.0f, "
-        "msaa: %s\n",
+      "Creating ScreenCanvas (2D):\n"
+        "  size:    %dx%d\n"
+        "  style:   %.0fx%.0f\n"
+        "  retina:  %s (%.0fx%.0f)\n\n",
       width, height,
       frame.size.x, frame.size.y,
-      (useRetinaResolution ? "yes" : "no"),
-      frame.size.x * contentScale, frame.size.y * contentScale,
-      (msaaEnabled ? "yes" : "no")
+      (useRetinaResolution ? "true" : "false"),
+      frame.size.x * contentScale, frame.size.y * contentScale
     );
 
     // Set up the renderbuffer
@@ -87,25 +85,10 @@ namespace mural {
 
     if (!needsPresenting) { return; }
 
-    // TODO: MSAA for screen present
-    if (msaaEnabled) {
-        //Bind the MSAA and View frameBuffers and resolve
-        // glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, msaaFrameBuffer);
-        // glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFrameBuffer);
-        // glResolveMultisampleFramebufferAPPLE();
+    // TODO: render current render buffer to the screen
+    // glContext->presentRenderbuffer(GL_RENDERBUFFER);
 
-        // glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
-        // [glContext presentRenderbuffer:GL_RENDERBUFFER];
-        // glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
-    }
-    else {
-        // glContext->presentRenderbuffer(GL_RENDERBUFFER);
-    }
     needsPresenting = false;
-  }
-
-  void MuCanvasContext2DScreen::finish() {
-//    glFinish();
   }
 
 }

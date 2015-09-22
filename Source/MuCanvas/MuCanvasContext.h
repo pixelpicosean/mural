@@ -7,9 +7,7 @@ namespace mural {
 
   class MuCanvasContext {
     public:
-      bool msaaEnabled = false;
       bool needsPresenting = false;
-      int msaaSamples = 2;
 
       float backingStoreRatio = 1.0f;
       bool useRetinaResolution = false;
@@ -29,7 +27,7 @@ namespace mural {
 
       // Presentable
       virtual void present() {}
-      virtual void finish() {}
+
     protected:
       short width = 200, height = 150;
   };

@@ -72,28 +72,17 @@ namespace mural {
     path = new MuPath();
     backingStoreRatio = 1;
 
-    // fontCache = theFontCache;
-
     textureFilter = GL_LINEAR;
-    msaaEnabled = false;
-    msaaSamples = 2;
     stencilMask = 0x1;
   }
 
   MuCanvasContext2D::~MuCanvasContext2D() {
     if (viewFrameBuffer) { glDeleteFramebuffers( 1, &viewFrameBuffer); }
     if (viewRenderBuffer) { glDeleteRenderbuffers(1, &viewRenderBuffer); }
-    if (msaaFrameBuffer) { glDeleteFramebuffers( 1, &msaaFrameBuffer); }
-    if (msaaRenderBuffer) { glDeleteRenderbuffers(1, &msaaRenderBuffer); }
     if (stencilBuffer) { glDeleteRenderbuffers(1, &stencilBuffer); }
   }
 
   void MuCanvasContext2D::create() {
-    if (msaaEnabled) {
-      glGenFramebuffers(1, &msaaFrameBuffer);
-      glGenRenderbuffers(1, &msaaRenderBuffer);
-    }
-
     glGenFramebuffers(1, &viewFrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, viewFrameBuffer);
 
@@ -128,15 +117,6 @@ namespace mural {
       stencilBuffer = 0;
     }
 
-    // Resize the MSAA buffer
-    if (msaaEnabled && msaaFrameBuffer && msaaRenderBuffer) {
-      glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
-      glBindRenderbuffer(GL_RENDERBUFFER, msaaRenderBuffer);
-
-      glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_RGBA, bufferWidth, bufferHeight);
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaRenderBuffer);
-    }
-
     prepare();
 
     // Clear to transparent
@@ -151,16 +131,12 @@ namespace mural {
 
     glGenRenderbuffers(1, &stencilBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, stencilBuffer);
-    if (msaaEnabled) {
-      glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, bufferWidth, bufferHeight);
-    }
-    else {
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, bufferWidth, bufferHeight);
-    }
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, bufferWidth, bufferHeight);
+
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
 
-    glBindRenderbuffer(GL_RENDERBUFFER, msaaEnabled ? msaaRenderBuffer : viewRenderBuffer );
+    glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
 
     glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -182,8 +158,8 @@ namespace mural {
 
   void MuCanvasContext2D::prepare() {
     // Bind the frameBuffer and vertexBuffer array
-    glBindFramebuffer(GL_FRAMEBUFFER, msaaEnabled ? msaaFrameBuffer : viewFrameBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, msaaEnabled ? msaaRenderBuffer : viewRenderBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, viewFrameBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
 
     glViewport(0, 0, bufferWidth, bufferHeight);
 

@@ -7,10 +7,6 @@
 namespace mural {
 
   AppController::~AppController() {
-    if (screenRenderingContext) {
-      screenRenderingContext->finish();
-    }
-
     if (canvas) {
       delete canvas;
     }

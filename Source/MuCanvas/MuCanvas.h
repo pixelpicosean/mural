@@ -37,9 +37,6 @@ namespace mural {
       bool useRetinaResolution = false;
 
       short width = 200, height = 150;
-
-      bool msaaEnabled = false;
-      int msaaSamples = 2;
   };
 
 }
