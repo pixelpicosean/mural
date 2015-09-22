@@ -15,7 +15,7 @@ namespace mural {
 
       void resizeTo(short newWidth, short newHeight);
     private:
-      MuTexture *texture;
+      MuTexture *texture = nullptr;
   };
 
 }

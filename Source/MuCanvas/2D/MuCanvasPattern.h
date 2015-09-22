@@ -15,7 +15,7 @@ namespace mural {
 
   class MuCanvasPattern : public MuFillable {
     public:
-      MuTexture *texture;
+      MuTexture *texture = nullptr;
       MuCanvasPatternRepeat repeat;
 
       MuCanvasPattern(MuTexture *texture, MuCanvasPatternRepeat repeat):

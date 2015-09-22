@@ -25,9 +25,9 @@ namespace mural {
   class MuCanvasGradient : public MuFillable {
     public:
       MuCanvasGradientType type;
-      MuTexture *texture;
+      MuTexture *texture = nullptr;
       glm::vec2 p1, p2;
-      float r1, r2;
+      float r1 = 0.0f, r2 = 0.0f;
 
       /* Linear */
       MuCanvasGradient(glm::vec2 p1, glm::vec2 p2) {}

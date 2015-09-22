@@ -6,7 +6,7 @@
 namespace mural {
 
   struct MuGLProgram2DRadialGradient : public MuGLProgram2D {
-    GLuint inner, diff;
+    GLuint inner = 0, diff = 0;
 
     MuGLProgram2DRadialGradient(const char *vertexShaderSource, const char *fragmentShaderSource):
       MuGLProgram2D(vertexShaderSource, fragmentShaderSource)

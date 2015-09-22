@@ -17,9 +17,9 @@ namespace mural {
 
   class MuTextureStorage {
     public:
-      GLuint textureId;
-      bool immutable;
-      double lastBound;
+      GLuint textureId = 0;
+      bool immutable = false;
+      double lastBound = 0.0;
 
       MuTextureStorage(bool immutable = false);
       ~MuTextureStorage();

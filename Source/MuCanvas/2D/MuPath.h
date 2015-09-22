@@ -60,9 +60,9 @@ namespace mural {
     private:
       glm::vec2 currentPos, lastPushed;
       glm::vec2 minPos, maxPos;
-      unsigned int longestSubpath;
+      unsigned int longestSubpath = 0;
 
-      float distanceTolerance;
+      float distanceTolerance = 0.0f;
 
       subpath_t currentPath;
       path_t paths;

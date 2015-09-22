@@ -25,8 +25,8 @@ namespace mural {
       void operator=(MuSharedTextureCache const&) {}
 
       std::map<std::string, MuTexture *> textures;
-      unsigned char *premultiplyTable;
-      unsigned char *unPremultiplyTable;
+      unsigned char *premultiplyTable = nullptr;
+      unsigned char *unPremultiplyTable = nullptr;
   };
 
 }

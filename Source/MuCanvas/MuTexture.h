@@ -60,8 +60,8 @@ namespace mural {
 
       std::string fullPath;
 
-      unsigned char *pixels;
-      MuTextureStorage *textureStorage;
+      unsigned char *pixels = nullptr;
+      MuTextureStorage *textureStorage = nullptr;
       GLuint fbo = 0;
       MuTextureParams params;
 

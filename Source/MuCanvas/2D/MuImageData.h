@@ -6,8 +6,8 @@
 namespace mural {
 
   struct MuImageData {
-    int width, height;
-    unsigned char *pixels;
+    int width = 0, height = 0;
+    unsigned char *pixels = nullptr;
 
     MuTexture *getTexture() {
       return new MuTexture(width, height, pixels);

@@ -14,7 +14,7 @@ namespace mural {
 
   class MuCanvas {
     public:
-      MuTexture *texture;
+      MuTexture *texture = nullptr;
 
       MuTexture *getTexture();
 
@@ -30,16 +30,16 @@ namespace mural {
       MuCanvasContext *getContext(MuCanvasContextMode mode);
 
     private:
-      MuCanvasContext *renderingContext;
+      MuCanvasContext *renderingContext = nullptr;
       MuCanvasContextMode contextMode;
 
-      bool isScreenCanvas;
-      bool useRetinaResolution;
+      bool isScreenCanvas = false;
+      bool useRetinaResolution = false;
 
-      short width, height;
+      short width = 200, height = 150;
 
-      bool msaaEnabled;
-      int msaaSamples;
+      bool msaaEnabled = false;
+      int msaaSamples = 2;
   };
 
 }

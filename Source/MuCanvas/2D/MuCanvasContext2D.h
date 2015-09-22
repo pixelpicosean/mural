@@ -125,14 +125,14 @@ namespace mural {
 
   class MuCanvasContext2D : public MuCanvasContext {
     public:
-      MuCanvasState *state;
+      MuCanvasState *state = nullptr;
 
       MuCompositeOperation globalCompositeOperation;
       bool imageSmoothingEnabled = false;;
 
       // MuFontDescriptor *font;
-      MuFillable *fillObject;
-      MuFillable *strokeObject;
+      MuFillable *fillObject = nullptr;
+      MuFillable *strokeObject = nullptr;
 
       GLubyte stencilMask;
 
@@ -204,17 +204,17 @@ namespace mural {
       void resetClip();
 
     protected:
-      GLuint viewFrameBuffer, viewRenderBuffer;
-      GLuint msaaFrameBuffer, msaaRenderBuffer;
-      GLuint stencilBuffer;
+      GLuint viewFrameBuffer = 0, viewRenderBuffer = 0;
+      GLuint msaaFrameBuffer = 0, msaaRenderBuffer = 0;
+      GLuint stencilBuffer = 0;
 
-      short bufferWidth = 150, bufferHeight = 100;
+      short bufferWidth = 200, bufferHeight = 150;
 
       GLenum textureFilter;
-      MuTexture *currentTexture;
-      MuPath *path;
+      MuTexture *currentTexture = nullptr;
+      MuPath *path = nullptr;
 
-      MuVertex *vertexBuffer;
+      MuVertex *vertexBuffer = nullptr;
       int vertexBufferSize = 0;
       int vertexBufferIndex = 0;
 
@@ -225,7 +225,7 @@ namespace mural {
 
       // MuFontCache *fontCache;
 
-      MuGLProgram2D *currentProgram;
+      MuGLProgram2D *currentProgram = nullptr;
   };
 
   /*

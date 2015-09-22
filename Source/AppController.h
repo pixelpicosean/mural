@@ -12,20 +12,20 @@ namespace mural {
   class MuTimerCollection;
   class AppController {
     public:
-      short width, height;
-      int devicePixelRatio;
-      float averageFPS;
+      short width = 0, height = 0;
+      int devicePixelRatio = 1;
+      float averageFPS = 0.0f;
 
-      bool hasScreenCanvas;
-      bool isPaused;
+      bool hasScreenCanvas = false;
+      bool isPaused = false;
 
       // JSGlobalContextRef jsGlobalContext;
 
       // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
-      MuCanvasContext *currentRenderingContext;
-      MuCanvasContext *screenRenderingContext;
+      MuCanvasContext *currentRenderingContext = nullptr;
+      MuCanvasContext *screenRenderingContext = nullptr;
 
     public:
       void init(int width = 640, int height = 400, int devicePixelRatio = 1);
@@ -54,8 +54,8 @@ namespace mural {
       void setCurrentRenderingContext(MuCanvasContext *renderingContext);
 
       // Tests only
-      MuCanvas *canvas;
-      MuCanvasContext2D *ctx;
+      MuCanvas *canvas = nullptr;
+      MuCanvasContext2D *ctx = nullptr;
   };
 
 }

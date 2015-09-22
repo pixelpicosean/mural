@@ -31,7 +31,7 @@ namespace mural {
       virtual void present() {}
       virtual void finish() {}
     protected:
-      short width = 150, height = 100;
+      short width = 200, height = 150;
   };
 
 }

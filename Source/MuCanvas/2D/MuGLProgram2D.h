@@ -14,8 +14,8 @@ namespace mural {
   };
 
   struct MuGLProgram2D {
-    GLuint program;
-    GLuint screen;
+    GLuint program = 0;
+    GLuint screen = 0;
 
     MuGLProgram2D(const char *vertexShaderSource, const char *fragmentShaderSource);
     ~MuGLProgram2D();
