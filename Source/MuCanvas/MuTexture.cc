@@ -22,7 +22,7 @@ namespace mural {
   }
 
   std::string normalizePath(const GLchar *file) {
-    std::string path("../assets/");
+    std::string path("../../assets/");
     path += file;
     return path;
   }
