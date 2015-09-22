@@ -11,16 +11,17 @@ namespace mural {
       void setStyle(MuRect newStyle);
       MuRect getFrame();
 
-      MuCanvasContext2DScreen(short width, short height):
-        MuCanvasContext2D(width, height),
-        style(0.0f, 0.0f, width, height)
-      {}
+      MuCanvasContext2DScreen(short width, short height);
+      ~MuCanvasContext2DScreen();
 
       void resizeTo(short newWidth, short newHeight);
       void present();
 
     private:
       MuRect style;
+
+      GLuint vao = 0, vbo = 0;
+      GLuint textureId = 0;
   };
 
 }

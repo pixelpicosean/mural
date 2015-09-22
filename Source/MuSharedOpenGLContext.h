@@ -12,6 +12,8 @@ namespace mural {
 
   class MuSharedOpenGLContext {
     public:
+      MuGLProgram2D *getGLProgramScreen();
+
       MuGLProgram2D *getGLProgram2DFlat();
       MuGLProgram2D *getGLProgram2DTexture();
       MuGLProgram2D *getGLProgram2DAlphaTexture();
@@ -32,6 +34,8 @@ namespace mural {
       MuSharedOpenGLContext() {}
       MuSharedOpenGLContext(MuSharedOpenGLContext const&) {}
       void operator=(MuSharedOpenGLContext const&) {}
+
+      MuGLProgram2D *glProgramScreen;
 
       MuGLProgram2D *glProgram2DFlat;
       MuGLProgram2D *glProgram2DTexture;

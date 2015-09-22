@@ -133,8 +133,11 @@ namespace mural {
     glBindRenderbuffer(GL_RENDERBUFFER, stencilBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, bufferWidth, bufferHeight);
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
+    // FIXME: Ejecta uses these lines to bind render buffer, should I use them instead?
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
+    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
 
     glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
 
@@ -159,7 +162,8 @@ namespace mural {
   void MuCanvasContext2D::prepare() {
     // Bind the frameBuffer and vertexBuffer array
     glBindFramebuffer(GL_FRAMEBUFFER, viewFrameBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
+    // FIXME: Ejecta also binds render buffer here, which may not required
+    // glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
 
     glViewport(0, 0, bufferWidth, bufferHeight);
 

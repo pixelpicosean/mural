@@ -3,6 +3,13 @@
 
 namespace mural {
 
+  MuGLProgram2D *MuSharedOpenGLContext::getGLProgramScreen() {
+    if (!glProgramScreen) {
+      glProgramScreen = new MuGLProgram2D(MuShaderScreenVertex, MuShaderScreenFragment);
+    }
+    return glProgramScreen;
+  }
+
   MuGLProgram2D *MuSharedOpenGLContext::getGLProgram2DFlat() {
     if (!glProgram2DFlat) {
       glProgram2DFlat = new MuGLProgram2D(MuShaderVertex, MuShaderFlat);
