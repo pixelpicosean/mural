@@ -148,7 +148,7 @@ namespace mural {
       virtual ~MuCanvasContext2D();
 
       void create();
-      void resizeTo(short newWidth, short newHeight);
+      virtual void resizeTo(short newWidth, short newHeight);
       void resetFramebuffer();
       void createStencilBufferOnce();
       void bindVertexBuffer();
