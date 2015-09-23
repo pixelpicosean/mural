@@ -7,7 +7,9 @@ namespace nvg {
 
   static GLint defaultFBO = -1;
 
-  Framebuffer::Framebuffer(NVGcontext *ctxp, int width, int height, int imageFlags) {
+  Framebuffer::Framebuffer(NVGcontext *ctxp, int width, int height, int imageFlags):
+    ctx(ctxp)
+  {
     GLint defaultFBO;
     GLint defaultRBO;
 
@@ -16,7 +18,6 @@ namespace nvg {
 
     image = nvgCreateImageRGBA(ctx, width, height, imageFlags | NVG_IMAGE_FLIPY | NVG_IMAGE_PREMULTIPLIED, nullptr);
     texture = nvglImageHandle(ctx, image);
-    ctx = ctxp;
 
     // frame buffer object
     glGenFramebuffers(1, &fbo);
