@@ -6,15 +6,6 @@
 
 namespace mural {
 
-  MuTexture *MuCanvas::getTexture() {
-    if (renderingContext) {
-      MuCanvasContext2D *ctx = dynamic_cast<MuCanvasContext2D *>(renderingContext);
-      if (ctx) return ctx->getTexture();
-    }
-
-    return nullptr;
-  }
-
   void MuCanvas::setWidth(short newWidth) {
     if (renderingContext) {
       app.currentRenderingContext = renderingContext;

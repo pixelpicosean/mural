@@ -1,6 +1,7 @@
 #ifndef Mural_AppController_h
 #define Mural_AppController_h
 
+#include "MuNanoVG.h"
 #include "MuSharedOpenGLContext.h"
 #include "MuCanvas/MuCanvasContext.h"
 
@@ -24,14 +25,15 @@ namespace mural {
       // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
+      NVGcontext *glContext2D;
+
       MuCanvasContext *currentRenderingContext = nullptr;
       MuCanvasContext *screenRenderingContext = nullptr;
 
     public:
-      void init(int width = 640, int height = 400, int devicePixelRatio = 1);
+      void init(int width, int height, int devicePixelRatio, NVGcontext *ctx);
 
       void update();
-      void draw();
 
       static AppController& instance() {
         static AppController instance;

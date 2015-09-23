@@ -7,7 +7,6 @@ namespace mural {
 
   class MuCanvasContext2DScreen : public MuCanvasContext2D {
     public:
-      MuTexture *getTexture();
       void setStyle(MuRect newStyle);
       MuRect getFrame();
 

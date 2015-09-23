@@ -1,5 +1,4 @@
 #include "MuSharedOpenGLContext.h"
-#include "MuCanvas/MuTexture.h"
 
 namespace mural {
 

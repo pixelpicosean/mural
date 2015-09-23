@@ -1,7 +1,6 @@
 #ifndef Mural_MuCanvas_h
 #define Mural_MuCanvas_h
 
-#include "MuTexture.h"
 #include "MuCanvasContext.h"
 
 namespace mural {
@@ -14,10 +13,6 @@ namespace mural {
 
   class MuCanvas {
     public:
-      MuTexture *texture = nullptr;
-
-      MuTexture *getTexture();
-
       short getWidth() { return width; }
       void setWidth(short newWidth);
 

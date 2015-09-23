@@ -40,27 +40,27 @@ find_library(CoreVideo_FRAMEWORK CoreVideo)
 
 add_library(glew STATIC ${PROJECT_SOURCE_DIR}/Source/glew.c)
 
+add_library(nanovg STATIC ${PROJECT_SOURCE_DIR}/Source/nanovg/src/nanovg.c)
+
 set(Mural_LIBS
   ${BOOST_LIB}
   ${GLFW_LIB} ${Cocoa_FRAMEWORK} ${OpenGL_FRAMEWORK} ${IOKit_FRAMEWORK} ${CoreVideo_FRAMEWORK}
   glew
+  nanovg
 )
 
 # Core sources
 set(Mural_SOURCES
   Source/AppController.cc
+  Source/MuNanoVG.cc
   Source/MuSharedOpenGLContext.cc
   Source/MuTimer.cc
 
   Source/MuCanvas/MuCanvas.cc
-  Source/MuCanvas/MuSharedTextureCache.cc
-  Source/MuCanvas/MuTexture.cc
-  Source/MuCanvas/MuTextureStorage.cc
   Source/MuCanvas/2D/MuCanvasContext2D.cc
   Source/MuCanvas/2D/MuCanvasContext2DScreen.cc
   Source/MuCanvas/2D/MuCanvasContext2DTexture.cc
   Source/MuCanvas/2D/MuGLProgram2D.cc
-  Source/MuCanvas/2D/MuPath.cc
 
   Source/main.cc
 )
@@ -69,6 +69,7 @@ set(Mural_SOURCES
 include_directories(
   ${PROJECT_SOURCE_DIR}/Source
   ${PROJECT_SOURCE_DIR}/Source/glm
+  ${PROJECT_SOURCE_DIR}/Source/nanovg/src
 )
 add_executable(mural ${Mural_SOURCES})
 target_link_libraries(mural ${Mural_LIBS})

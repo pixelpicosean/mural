@@ -46,26 +46,26 @@ namespace mural {
     MuCanvasContext2D(width, height),
     style(0.0f, 0.0f, width, height)
   {
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
+    // glGenVertexArrays(1, &vao);
+    // glGenBuffers(1, &vbo);
 
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quad), &quad, GL_STATIC_DRAW);
+    // glBindVertexArray(vao);
+    // glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(quad), &quad, GL_STATIC_DRAW);
 
-    // Position
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-    // Color
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+    // // Position
+    // glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+    // // Color
+    // glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
 
-    glBindVertexArray(0);
+    // glBindVertexArray(0);
   }
 
   MuCanvasContext2DScreen::~MuCanvasContext2DScreen() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
+    // glDeleteVertexArrays(1, &vao);
+    // glDeleteBuffers(1, &vbo);
   }
 
   void MuCanvasContext2DScreen::setStyle(MuRect newStyle) {
@@ -76,9 +76,9 @@ namespace mural {
 
       // Only resize if we already have a viewFrameBuffer. Otherwise the style
       // will be honored in the 'create' call.
-      if (viewFrameBuffer) {
-        resizeTo(width, height);
-      }
+      // if (viewFrameBuffer) {
+      //   resizeTo(width, height);
+      // }
     }
     else {
       // Just reposition
@@ -119,51 +119,14 @@ namespace mural {
       frame.size.x * contentScale, frame.size.y * contentScale
     );
 
-    // Set up the renderbuffer
-    // glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
-    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderBuffer);
-
     // Create a color attachment texture
-    textureId = generateAttachmentTexture(false, false, bufferWidth, bufferHeight);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
+    // textureId = generateAttachmentTexture(false, false, bufferWidth, bufferHeight);
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
     // Flip the screen - OpenGL has the origin in the bottom left corner. We want the top left.
     upsideDown = true;
-
-    resetFramebuffer();
   }
 
-  MuTexture *MuCanvasContext2DScreen::getTexture() {
-    // This context may not be the current one, but it has to be in order for
-    // glReadPixels to succeed.
-    MuCanvasContext *previousContext = app.currentRenderingContext;
-    app.currentRenderingContext = this;
-
-    float w = width * backingStoreRatio;
-    float h = height * backingStoreRatio;
-
-    MuTexture *texture = getImageDataScaled(1, upsideDown, 0, 0, w, h)->getTexture();
-    texture->contentScale = backingStoreRatio;
-
-    app.currentRenderingContext = previousContext;
-    return texture;
-  }
-
-  void MuCanvasContext2DScreen::present() {
-    flushBuffers();
-
-    // Render frame buffer to the screen
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDisable(GL_DEPTH_TEST);
-
-    setProgram(theSharedOpenGLContext.getGLProgramScreen());
-    glBindVertexArray(vao);
-    glBindTexture(GL_TEXTURE_2D, textureId);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
-  }
+  void MuCanvasContext2DScreen::present() {}
 
 }

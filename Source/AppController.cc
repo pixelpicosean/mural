@@ -4,6 +4,8 @@
 #include "MuCanvas/MuCanvas.h"
 #include "MuCanvas/2D/MuCanvasContext2D.h"
 
+#include "MuOpenGL.h"
+
 namespace mural {
 
   AppController::~AppController() {
@@ -12,55 +14,63 @@ namespace mural {
     }
   }
 
-  void AppController::init(int width, int height, int devicePixelRatio) {
+  void AppController::init(int width, int height, int devicePixelRatio, NVGcontext *vg) {
     this->width = width;
     this->height = height;
     this->devicePixelRatio = devicePixelRatio;
 
-    canvas = new MuCanvas();
-    ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));
+    this->glContext2D = vg;
 
-    if (ctx) {
-      printf("context exists, size = (%d, %d)\n", ctx->getWidth(), ctx->getHeight());
-    }
+    // canvas = new MuCanvas();
+    // ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));
 
-    MuTexture *tex = new MuTexture("ship.png");
-    printf("texture.size = (%d, %d)\n", tex->width, tex->height);
+    // if (ctx) {
+    //   printf("context exists, size = (%d, %d)\n", ctx->getWidth(), ctx->getHeight());
+    // }
 
     theScheduler.scheduleMessage([=] {
       printf("start to draw a rect\n");
 
-      ctx->state->lineWidth = 1;
-      ctx->state->strokeColor = { .hex = 0xffffffff };
-      ctx->state->fillColor = { .hex = 0xffffffff };
+      // glViewport(0, 0, width * devicePixelRatio, height * devicePixelRatio);
+      // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+      // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-      ctx->fillRect(0, 0, 20, 20);
-      // ctx->drawImage(tex, 0, 0, 99, 75, 0, 0, 99, 75);
+      // nvgBeginFrame(glContext2D, width, height, devicePixelRatio);
+
+      //   nvgBeginPath(glContext2D);
+      //   nvgRect(glContext2D, 0, 0, 100, 100);
+      //   nvgFillColor(glContext2D, nvgRGBA(255, 255, 255, 255));
+      //   nvgFill(glContext2D);
+
+      // nvgEndFrame(glContext2D);
     }, 400, false);
   }
 
   void AppController::update() {
     if (isPaused) return;
 
+    glViewport(0, 0, width * devicePixelRatio, height * devicePixelRatio);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    nvgBeginFrame(glContext2D, width, height, devicePixelRatio);
+
+      nvgBeginPath(glContext2D);
+      nvgRect(glContext2D, 0, 0, 100, 100);
+      nvgFillColor(glContext2D, nvgRGBA(255, 255, 255, 255));
+      nvgFill(glContext2D);
+
+    nvgEndFrame(glContext2D);
+
     // Update timers
     theScheduler.update();
   }
 
-  void AppController::draw() {
-    if (isPaused) return;
-
-    // Redraw the canvas
-    if (hasScreenCanvas) {
-      setCurrentRenderingContext(screenRenderingContext);
-      screenRenderingContext->present();
-    }
-  }
-
   void AppController::setCurrentRenderingContext(MuCanvasContext *renderingContext) {
     if (renderingContext != currentRenderingContext) {
-      currentRenderingContext->flushBuffers();
+      // currentRenderingContext->flushBuffers();
 
-      renderingContext->prepare();
+      // renderingContext->prepare();
       currentRenderingContext = renderingContext;
     }
   }
