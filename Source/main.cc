@@ -1,7 +1,6 @@
 #include <cstdio>
 
 #include "MuOpenGL.h"
-#include "MuNanoVG.h"
 #include "AppController.h"
 
 // TODO: set width and height from script instead
@@ -45,8 +44,7 @@ int main(int argc, char const *argv[]) {
   // Calculate pixel ration for hi-dpi devices.
   int ratio = (int)(fbWidth / (float)winWidth);
 
-  NVGcontext *ctx = nvg::createGLContext();
-  app.init(winWidth, winHeight, ratio, ctx);
+  app.init(winWidth, winHeight, ratio);
 
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
@@ -56,7 +54,7 @@ int main(int argc, char const *argv[]) {
     glfwSwapBuffers(window);
   }
 
-  nvg::deleteGLContext(ctx);
+  app.terminate();
 
   glfwTerminate();
 

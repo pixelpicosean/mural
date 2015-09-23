@@ -21,8 +21,6 @@ namespace mural {
       bool isPaused = false;
 
       // JSGlobalContextRef jsGlobalContext;
-
-      // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
       NVGcontext *glContext2D;
@@ -31,9 +29,9 @@ namespace mural {
       MuCanvasContext *screenRenderingContext = nullptr;
 
     public:
-      void init(int width, int height, int devicePixelRatio, NVGcontext *ctx);
-
+      void init(int width, int height, int devicePixelRatio);
       void update();
+      void terminate();
 
       static AppController& instance() {
         static AppController instance;

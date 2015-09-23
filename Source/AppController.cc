@@ -8,18 +8,14 @@
 
 namespace mural {
 
-  AppController::~AppController() {
-    if (canvas) {
-      delete canvas;
-    }
-  }
+  AppController::~AppController() {}
 
-  void AppController::init(int width, int height, int devicePixelRatio, NVGcontext *vg) {
+  void AppController::init(int width, int height, int devicePixelRatio) {
     this->width = width;
     this->height = height;
     this->devicePixelRatio = devicePixelRatio;
 
-    this->glContext2D = vg;
+    this->glContext2D = nvg::createGLContext();
 
     // canvas = new MuCanvas();
     // ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));
@@ -64,6 +60,10 @@ namespace mural {
 
     // Update timers
     theScheduler.update();
+  }
+
+  void AppController::terminate() {
+    nvg::deleteGLContext(glContext2D);
   }
 
   void AppController::setCurrentRenderingContext(MuCanvasContext *renderingContext) {
