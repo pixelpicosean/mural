@@ -7,11 +7,11 @@ namespace mural {
 
   class MuCanvasContext2DTexture : public MuCanvasContext2D {
     public:
-      MuCanvasContext2DTexture(short width, short height):
+      MuCanvasContext2DTexture(int width, int height):
         MuCanvasContext2D(width, height)
       {}
 
-      void resizeTo(short newWidth, short newHeight);
+      void resizeTo(int newWidth, int newHeight);
   };
 
 }

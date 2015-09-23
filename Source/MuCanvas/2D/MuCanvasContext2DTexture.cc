@@ -5,7 +5,7 @@
 
 namespace mural {
 
-  void MuCanvasContext2DTexture::resizeTo(short newWidth, short newHeight) {
+  void MuCanvasContext2DTexture::resizeTo(int newWidth, int newHeight) {
     width = newWidth;
     height = newHeight;
 

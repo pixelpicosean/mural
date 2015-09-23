@@ -14,15 +14,16 @@ namespace mural {
     public:
       bool imageSmoothingEnabled = false;;
 
-      void setWidth(short newWidth);
-      void setHeight(short newHeight);
+      void setWidth(int newWidth);
+      void setHeight(int newHeight);
 
-      MuCanvasContext2D(short widthp, short heightp);
+      MuCanvasContext2D(int widthp, int heightp);
       virtual ~MuCanvasContext2D();
 
-      virtual void resizeTo(short newWidth, short newHeight);
+      virtual void resizeTo(int newWidth, int newHeight);
       virtual void create();
       virtual void prepare();
+      virtual void present();
 
       void save();
       void restore();
@@ -35,9 +36,9 @@ namespace mural {
       void fillRect(float x, float y, float w, float h);
       void strokeRect(float x, float y, float w, float h);
       void clearRect(float x, float y, float w, float h);
-      // MuImageData *getImageDataScaled(float scale, bool flipped, short sx, short sy, short sw, short sh);
-      // MuImageData *getImageData(short sx, short sy, short sw, short sh);
-      // MuImageData *getImageDataHD(short sx, short sy, short sw, short sh);
+      // MuImageData *getImageDataScaled(float scale, bool flipped, int sx, int sy, int sw, int sh);
+      // MuImageData *getImageData(int sx, int sy, int sw, int sh);
+      // MuImageData *getImageDataHD(int sx, int sy, int sw, int sh);
       // void putImageData(MuImageData* imageData, float dx, float dy);
       // void putImageDataHD(MuImageData* imageData, float dx, float dy);
       // void putImageData(MuImageData* imageData, float scale, float dx, float dy);
@@ -58,7 +59,7 @@ namespace mural {
       // MuTextMetrics measureText(std::string text);
 
     protected:
-      short bufferWidth = 200, bufferHeight = 150;
+      int bufferWidth = 200, bufferHeight = 150;
 
       bool upsideDown = false;
   };

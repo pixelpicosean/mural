@@ -11,10 +11,10 @@ namespace mural {
       void setStyle(MuRect newStyle);
       MuRect getFrame();
 
-      MuCanvasContext2DScreen(short width, short height);
+      MuCanvasContext2DScreen(int width, int height);
       ~MuCanvasContext2DScreen();
 
-      void resizeTo(short newWidth, short newHeight);
+      void resizeTo(int newWidth, int newHeight);
       void create();
       void present();
 

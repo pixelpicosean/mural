@@ -4,15 +4,22 @@
 
 namespace mural {
 
-  void MuCanvasContext2D::setWidth(short newWidth) {}
+  void MuCanvasContext2D::setWidth(int newWidth) {}
 
-  void MuCanvasContext2D::setHeight(short newHeight) {}
+  void MuCanvasContext2D::setHeight(int newHeight) {}
 
-  MuCanvasContext2D::MuCanvasContext2D(short widthp, short heightp) {}
+  MuCanvasContext2D::MuCanvasContext2D(int widthp, int heightp) {
+    width = widthp;
+    height = heightp;
+    bufferWidth = width * app.devicePixelRatio;
+    bufferHeight = height * app.devicePixelRatio;
+
+    glContext = app.glContext2D;
+  }
 
   MuCanvasContext2D::~MuCanvasContext2D() {}
 
-  void MuCanvasContext2D::resizeTo(short newWidth, short newHeight) {}
+  void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {}
 
   void MuCanvasContext2D::create() {}
 

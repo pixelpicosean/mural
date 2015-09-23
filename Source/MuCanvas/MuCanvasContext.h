@@ -12,11 +12,11 @@ namespace mural {
       float backingStoreRatio = 1.0f;
       bool useRetinaResolution = false;
 
-      virtual short getWidth() { return width; }
-      virtual void setWidth(short newWidth) { width = newWidth; }
+      virtual int getWidth() { return width; }
+      virtual void setWidth(int newWidth) { width = newWidth; }
 
-      virtual short getHeight() { return height; }
-      virtual void setHeight(short newHeight) { height = newHeight; }
+      virtual int getHeight() { return height; }
+      virtual void setHeight(int newHeight) { height = newHeight; }
 
       MuCanvasContext() {}
       virtual ~MuCanvasContext() {}
@@ -26,7 +26,7 @@ namespace mural {
       virtual void present() {}
 
     protected:
-      short width = 200, height = 150;
+      int width = 200, height = 150;
   };
 
 }

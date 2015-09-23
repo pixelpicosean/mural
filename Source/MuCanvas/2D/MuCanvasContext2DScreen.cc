@@ -42,7 +42,7 @@ namespace mural {
     return textureId;
   }
 
-  MuCanvasContext2DScreen::MuCanvasContext2DScreen(short width, short height):
+  MuCanvasContext2DScreen::MuCanvasContext2DScreen(int width, int height):
     MuCanvasContext2D(width, height),
     style(0.0f, 0.0f, width, height)
   {
@@ -94,7 +94,7 @@ namespace mural {
     );
   }
 
-  void MuCanvasContext2DScreen::resizeTo(short newWidth, short newHeight) {
+  void MuCanvasContext2DScreen::resizeTo(int newWidth, int newHeight) {
     width = newWidth;
     height = newHeight;
 
