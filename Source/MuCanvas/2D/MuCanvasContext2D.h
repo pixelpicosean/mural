@@ -61,7 +61,7 @@ namespace mural {
     protected:
       int bufferWidth = 200, bufferHeight = 150;
       NVGcontext *glContext;
-      NVGLUframebuffer *framebuffer;
+      nvg::Framebuffer *framebuffer;
 
       bool upsideDown = false;
   };

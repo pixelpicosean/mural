@@ -6,9 +6,23 @@
 #define NANOVG_GLEW
 #include <nanovg.h>
 
-class NVGLUframebuffer;
-
 namespace nvg {
+
+  struct Framebuffer {
+    bool valid = false;
+
+    NVGcontext* ctx = nullptr;
+    GLuint fbo = 0;
+    GLuint rbo = 0;
+    GLuint texture = 0;
+    int image = 0;
+
+    Framebuffer(NVGcontext *ctx, int width, int height, int imageFlags = 0);
+    ~Framebuffer();
+
+    void bind();
+    void unbind();
+  };
 
   /**
    * Create rendering context for NavoVG
@@ -18,13 +32,6 @@ namespace nvg {
    * Clean up rendering context
    */
   void deleteGLContext(NVGcontext *ctx);
-
-  /**
-   * Create a frame buffer
-   */
-  NVGLUframebuffer *createFramebuffer(NVGcontext *ctx, int width, int height, int imageFlags = 0);
-
-  void bindFramebuffer(NVGLUframebuffer *fb);
 
   /**
    * Create an image object from an OpenGL texture

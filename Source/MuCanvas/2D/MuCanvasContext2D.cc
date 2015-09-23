@@ -17,19 +17,23 @@ namespace mural {
     glContext = app.glContext2D;
   }
 
-  MuCanvasContext2D::~MuCanvasContext2D() {}
+  MuCanvasContext2D::~MuCanvasContext2D() {
+    if (framebuffer) delete framebuffer;
+  }
 
   void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {}
 
   void MuCanvasContext2D::create() {
-    framebuffer = nvg::createFramebuffer(app.glContext2D, bufferWidth, bufferHeight);
+    framebuffer = new nvg::Framebuffer(app.glContext2D, bufferWidth, bufferHeight);
   }
 
   void MuCanvasContext2D::prepare() {
-    nvg::bindFramebuffer(framebuffer);
+    framebuffer->bind();
+
     glViewport(0, 0, bufferWidth, bufferHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
     nvgBeginFrame(glContext, width, height, backingStoreRatio);
 
     needsPresenting = true;
@@ -39,7 +43,8 @@ namespace mural {
     if (!needsPresenting) return;
 
     nvgEndFrame(glContext);
-    nvg::bindFramebuffer(nullptr);
+
+    framebuffer->unbind();
   }
 
   void MuCanvasContext2D::save() {}
