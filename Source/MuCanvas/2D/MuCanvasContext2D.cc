@@ -34,7 +34,7 @@ namespace mural {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    nvgBeginFrame(glContext, width, height, backingStoreRatio);
+    nvgBeginFrame(glContext, width, height, app.devicePixelRatio);
 
     needsPresenting = true;
   }
