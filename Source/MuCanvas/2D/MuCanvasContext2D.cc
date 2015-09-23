@@ -39,7 +39,7 @@ namespace mural {
     needsPresenting = true;
   }
 
-  void MuCanvasContext2D::present() {
+  void MuCanvasContext2D::flushBuffers() {
     if (!needsPresenting) return;
 
     nvgEndFrame(glContext);

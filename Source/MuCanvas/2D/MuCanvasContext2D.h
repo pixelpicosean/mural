@@ -12,7 +12,9 @@ namespace mural {
 
   class MuCanvasContext2D : public MuCanvasContext {
     public:
-      bool imageSmoothingEnabled = false;;
+      bool imageSmoothingEnabled = false;
+
+      NVGcolor fillColor;
 
       void setWidth(int newWidth);
       void setHeight(int newHeight);
@@ -23,7 +25,7 @@ namespace mural {
       virtual void resizeTo(int newWidth, int newHeight);
       virtual void create();
       virtual void prepare();
-      virtual void present();
+      virtual void flushBuffers();
 
       void save();
       void restore();
@@ -44,7 +46,7 @@ namespace mural {
       // void putImageData(MuImageData* imageData, float scale, float dx, float dy);
       void beginPath();
       void closePath();
-      // void fill(MuPathFillRule fillRule);
+      void fill();
       void stroke();
       void moveTo(float x, float y);
       void lineTo(float x, float y);
@@ -60,8 +62,8 @@ namespace mural {
 
     protected:
       int bufferWidth = 200, bufferHeight = 150;
-      NVGcontext *glContext;
-      nvg::Framebuffer *framebuffer;
+      NVGcontext *glContext = nullptr;
+      nvg::Framebuffer *framebuffer = nullptr;
 
       bool upsideDown = false;
   };

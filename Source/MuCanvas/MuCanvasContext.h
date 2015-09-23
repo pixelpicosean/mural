@@ -23,6 +23,7 @@ namespace mural {
 
       virtual void create() {}
       virtual void prepare() {}
+      virtual void flushBuffers() {}
       virtual void present() {}
 
     protected:
