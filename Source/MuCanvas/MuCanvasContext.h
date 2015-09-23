@@ -22,10 +22,7 @@ namespace mural {
       virtual ~MuCanvasContext() {}
 
       virtual void create() {}
-      virtual void flushBuffers() {}
       virtual void prepare() {}
-
-      // Presentable
       virtual void present() {}
 
     protected:

@@ -2,6 +2,7 @@
 #define Mural_MuCanvasContext2DScreen_h
 
 #include "MuCanvasContext2D.h"
+#include "MuCanvas2DTypes.h"
 
 namespace mural {
 
@@ -14,6 +15,7 @@ namespace mural {
       ~MuCanvasContext2DScreen();
 
       void resizeTo(short newWidth, short newHeight);
+      void create();
       void present();
 
     private:

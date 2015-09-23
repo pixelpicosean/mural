@@ -2,10 +2,8 @@
 #define Mural_MuCanvasContext2D_h
 
 #include "MuOpenGL.h"
+#include "MuNanoVG.h"
 
-#include "MuGLProgram2D.h"
-
-#include "MuCanvas2DTypes.h"
 #include "MuCanvas/MuCanvasContext.h"
 
 #include <string>
@@ -22,10 +20,9 @@ namespace mural {
       MuCanvasContext2D(short widthp, short heightp);
       virtual ~MuCanvasContext2D();
 
-      void create();
       virtual void resizeTo(short newWidth, short newHeight);
-      void prepare();
-      void flushBuffers();
+      virtual void create();
+      virtual void prepare();
 
       void save();
       void restore();

@@ -95,8 +95,6 @@ namespace mural {
   }
 
   void MuCanvasContext2DScreen::resizeTo(short newWidth, short newHeight) {
-    flushBuffers();
-
     width = newWidth;
     height = newHeight;
 
@@ -126,6 +124,8 @@ namespace mural {
     // Flip the screen - OpenGL has the origin in the bottom left corner. We want the top left.
     upsideDown = true;
   }
+
+  void MuCanvasContext2DScreen::create() {}
 
   void MuCanvasContext2DScreen::present() {}
 

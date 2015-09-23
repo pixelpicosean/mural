@@ -12,13 +12,11 @@ namespace mural {
 
   MuCanvasContext2D::~MuCanvasContext2D() {}
 
-  void MuCanvasContext2D::create() {}
-
   void MuCanvasContext2D::resizeTo(short newWidth, short newHeight) {}
 
-  void MuCanvasContext2D::prepare() {}
+  void MuCanvasContext2D::create() {}
 
-  void MuCanvasContext2D::flushBuffers() {}
+  void MuCanvasContext2D::prepare() {}
 
   void MuCanvasContext2D::save() {}
 
