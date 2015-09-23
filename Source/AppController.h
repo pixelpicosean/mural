@@ -13,7 +13,8 @@ namespace mural {
   class MuTimerCollection;
   class AppController {
     public:
-      short width = 0, height = 0;
+      int width = 0, height = 0;
+      int fbWidth = 0, fbHeight = 0;
       int devicePixelRatio = 1;
       float averageFPS = 0.0f;
 

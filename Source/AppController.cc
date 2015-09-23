@@ -14,6 +14,8 @@ namespace mural {
     this->width = width;
     this->height = height;
     this->devicePixelRatio = devicePixelRatio;
+    this->fbWidth = width * devicePixelRatio;
+    this->fbHeight = height * devicePixelRatio;
 
     this->glContext2D = nvg::createGLContext();
 
@@ -45,7 +47,7 @@ namespace mural {
   void AppController::update() {
     if (isPaused) return;
 
-    glViewport(0, 0, width * devicePixelRatio, height * devicePixelRatio);
+    glViewport(0, 0, fbWidth, fbHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
