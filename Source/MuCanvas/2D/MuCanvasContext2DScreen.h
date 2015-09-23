@@ -20,9 +20,6 @@ namespace mural {
 
     private:
       MuRect style;
-
-      GLuint vao = 0, vbo = 0;
-      GLuint textureId = 0;
   };
 
 }
