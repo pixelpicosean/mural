@@ -31,8 +31,8 @@ namespace mural {
     framebuffer->bind();
 
     glViewport(0, 0, bufferWidth, bufferHeight);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     nvgBeginFrame(glContext, width, height, app.devicePixelRatio);
 
@@ -69,11 +69,18 @@ namespace mural {
 
   void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {}
 
-  void MuCanvasContext2D::beginPath() {}
+  void MuCanvasContext2D::beginPath() {
+    nvgBeginPath(glContext);
+  }
 
-  void MuCanvasContext2D::closePath() {}
+  void MuCanvasContext2D::closePath() {
+    nvgClosePath(glContext);
+  }
 
-  // void MuCanvasContext2D::fill(MuPathFillRule fillRule) {}
+  void MuCanvasContext2D::fill() {
+    nvgFillColor(glContext, fillColor);
+    nvgFill(glContext);
+  }
 
   void MuCanvasContext2D::stroke() {}
 
@@ -81,7 +88,9 @@ namespace mural {
 
   void MuCanvasContext2D::lineTo(float x, float y) {}
 
-  void MuCanvasContext2D::rect(float x, float y, float w, float h) {}
+  void MuCanvasContext2D::rect(float x, float y, float w, float h) {
+    nvgRect(glContext, x, y, w, h);
+  }
 
   void MuCanvasContext2D::bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y) {}
   void MuCanvasContext2D::quadraticCurveTo(float cpx, float cpy, float x, float y) {}
