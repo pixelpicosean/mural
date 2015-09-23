@@ -2,7 +2,7 @@
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
-// #include <nanovg_gl_utils.h>
+#include <nanovg_gl_utils.h>
 
 namespace nvg {
 
@@ -12,6 +12,14 @@ namespace nvg {
 
   void deleteGLContext(NVGcontext *ctx) {
       nvgDeleteGL3(ctx);
+  }
+
+  NVGLUframebuffer *createFramebuffer(NVGcontext *ctx, int width, int height, int imageFlags) {
+    return nvgluCreateFramebuffer(ctx, width, height, imageFlags);
+  }
+
+  void bindFramebuffer(NVGLUframebuffer *fb) {
+    nvgluBindFramebuffer(fb);
   }
 
   int imageFromTexture(NVGcontext* ctx, GLuint textureId, int w, int h, int flags) {

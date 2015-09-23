@@ -6,6 +6,8 @@
 #define NANOVG_GLEW
 #include <nanovg.h>
 
+class NVGLUframebuffer;
+
 namespace nvg {
 
   /**
@@ -16,6 +18,13 @@ namespace nvg {
    * Clean up rendering context
    */
   void deleteGLContext(NVGcontext *ctx);
+
+  /**
+   * Create a frame buffer
+   */
+  NVGLUframebuffer *createFramebuffer(NVGcontext *ctx, int width, int height, int imageFlags = 0);
+
+  void bindFramebuffer(NVGLUframebuffer *fb);
 
   /**
    * Create an image object from an OpenGL texture

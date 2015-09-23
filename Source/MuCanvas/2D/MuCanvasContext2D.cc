@@ -21,9 +21,26 @@ namespace mural {
 
   void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {}
 
-  void MuCanvasContext2D::create() {}
+  void MuCanvasContext2D::create() {
+    framebuffer = nvg::createFramebuffer(app.glContext2D, bufferWidth, bufferHeight);
+  }
 
-  void MuCanvasContext2D::prepare() {}
+  void MuCanvasContext2D::prepare() {
+    nvg::bindFramebuffer(framebuffer);
+    glViewport(0, 0, bufferWidth, bufferHeight);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    nvgBeginFrame(glContext, width, height, backingStoreRatio);
+
+    needsPresenting = true;
+  }
+
+  void MuCanvasContext2D::present() {
+    if (!needsPresenting) return;
+
+    nvgEndFrame(glContext);
+    nvg::bindFramebuffer(nullptr);
+  }
 
   void MuCanvasContext2D::save() {}
 
