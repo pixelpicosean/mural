@@ -64,6 +64,7 @@ namespace mural {
       int bufferWidth = 200, bufferHeight = 150;
       NVGcontext *glContext = nullptr;
       nvg::Framebuffer *framebuffer = nullptr;
+      NVGpaint image;
 
       bool upsideDown = false;
   };

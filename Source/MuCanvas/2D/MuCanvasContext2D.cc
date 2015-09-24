@@ -24,6 +24,7 @@ namespace mural {
   void MuCanvasContext2D::create() {
     framebuffer = new nvg::Framebuffer(app.glContext2D, bufferWidth, bufferHeight);
     glContext = nvg::createGLContext();
+    image = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
   }
 
   void MuCanvasContext2D::prepare() {
