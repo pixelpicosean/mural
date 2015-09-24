@@ -52,6 +52,8 @@ namespace mural {
     // Already prepared
     if (needsPresenting) return;
 
+    app.setCurrentRenderingContext(this);
+
     framebuffer->bind();
 
     glViewport(0, 0, bufferWidth, bufferHeight);

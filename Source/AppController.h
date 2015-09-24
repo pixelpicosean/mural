@@ -29,6 +29,8 @@ namespace mural {
       MuCanvasContext *currentRenderingContext = nullptr;
       MuCanvasContext *screenRenderingContext = nullptr;
 
+      void setCurrentRenderingContext(MuCanvasContext *renderingContext);
+
     public:
       void init(int width, int height, int devicePixelRatio);
       void update();
@@ -51,8 +53,6 @@ namespace mural {
       void operator=(AppController const&) {}
 
       ~AppController();
-
-      void setCurrentRenderingContext(MuCanvasContext *renderingContext);
 
       // Tests only
       MuCanvas *canvas = nullptr;
