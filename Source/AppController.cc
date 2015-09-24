@@ -30,11 +30,21 @@ namespace mural {
       printf("start to draw a rect\n");
 
       ctx->beginPath();
-      ctx->fillColor = nvgRGB(0, 187, 211);
+      ctx->setFillStyle(nvgRGB(0, 187, 211));
       ctx->rect(0, 0, 100, 100);
       ctx->fill();
 
     }, 1000, false);
+
+    theScheduler.scheduleMessage([=] {
+      printf("start to draw another rect\n");
+
+      ctx->beginPath();
+      ctx->setFillStyle(nvgRGB(204, 219, 56));
+      ctx->rect(50, 50, 100, 100);
+      ctx->fill();
+
+    }, 2000, false);
   }
 
   void AppController::update() {

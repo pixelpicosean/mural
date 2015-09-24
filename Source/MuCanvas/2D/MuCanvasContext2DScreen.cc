@@ -65,10 +65,6 @@ namespace mural {
     upsideDown = true;
   }
 
-  void MuCanvasContext2DScreen::create() {
-    MuCanvasContext2D::create();
-  }
-
   void MuCanvasContext2DScreen::present() {
     flushBuffers();
 
