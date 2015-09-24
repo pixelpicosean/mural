@@ -14,10 +14,14 @@ namespace mural {
     public:
       bool imageSmoothingEnabled = false;
 
-      NVGcolor fillColor;
-
       void setWidth(int newWidth);
       void setHeight(int newHeight);
+
+      void setFillStyle(NVGcolor color);
+      void setFillStyle(NVGpaint paint);
+
+      void setStrokeStyle(NVGcolor color);
+      void setStrokeStyle(NVGpaint paint);
 
       MuCanvasContext2D(int widthp, int heightp);
       virtual ~MuCanvasContext2D();
@@ -34,7 +38,7 @@ namespace mural {
       void scale(float x, float y);
       void transform(float m11, float m12, float m21, float m2, float dx, float dy);
       void setTransform(float m11, float m12, float m21, float m2, float dx, float dy);
-      // void drawImage(MuTexture *image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh);
+      void drawImage(NVGpaint image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh);
       void fillRect(float x, float y, float w, float h);
       void strokeRect(float x, float y, float w, float h);
       void clearRect(float x, float y, float w, float h);
