@@ -13,8 +13,6 @@ namespace mural {
     height = heightp;
     bufferWidth = width * app.devicePixelRatio;
     bufferHeight = height * app.devicePixelRatio;
-
-    glContext = app.glContext2D;
   }
 
   MuCanvasContext2D::~MuCanvasContext2D() {
@@ -25,14 +23,16 @@ namespace mural {
 
   void MuCanvasContext2D::create() {
     framebuffer = new nvg::Framebuffer(app.glContext2D, bufferWidth, bufferHeight);
+    glContext = nvg::createGLContext();
   }
 
   void MuCanvasContext2D::prepare() {
+    // Already prepared
+    if (needsPresenting) return;
+
     framebuffer->bind();
 
     glViewport(0, 0, bufferWidth, bufferHeight);
-    // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    // glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     nvgBeginFrame(glContext, width, height, app.devicePixelRatio);
 
@@ -45,6 +45,8 @@ namespace mural {
     nvgEndFrame(glContext);
 
     framebuffer->unbind();
+
+    needsPresenting = false;
   }
 
   void MuCanvasContext2D::save() {}
@@ -70,14 +72,17 @@ namespace mural {
   void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {}
 
   void MuCanvasContext2D::beginPath() {
+    prepare();
     nvgBeginPath(glContext);
   }
 
   void MuCanvasContext2D::closePath() {
+    prepare();
     nvgClosePath(glContext);
   }
 
   void MuCanvasContext2D::fill() {
+    prepare();
     nvgFillColor(glContext, fillColor);
     nvgFill(glContext);
   }
@@ -89,6 +94,7 @@ namespace mural {
   void MuCanvasContext2D::lineTo(float x, float y) {}
 
   void MuCanvasContext2D::rect(float x, float y, float w, float h) {
+    prepare();
     nvgRect(glContext, x, y, w, h);
   }
 
