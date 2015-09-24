@@ -109,7 +109,13 @@ namespace mural {
     nvgTransform(glContext, m11, m12, m21, m22, dx, dy);
   }
 
-  void MuCanvasContext2D::drawImage(NVGpaint image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {}
+  void MuCanvasContext2D::drawImage(NVGpaint image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
+    prepare();
+    nvgBeginPath(glContext);
+    nvgRect(glContext, dx, dy, dw, dh);
+    nvgFillPaint(glContext, image);
+    nvgFill(glContext);
+  }
 
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
     prepare();

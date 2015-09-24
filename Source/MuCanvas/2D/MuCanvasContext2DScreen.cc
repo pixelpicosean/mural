@@ -35,13 +35,12 @@ namespace mural {
 
     printf(
       "Creating ScreenCanvas (2D):\n"
-        "  size:    %dx%d\n"
-        "  style:   %.0fx%.0f\n"
-        "  retina:  %s (%dx%d)\n\n",
+        "  size:        %dx%d\n"
+        "  buffer size: %dx%d\n"
+        "  style:       %.0fx%.0f\n\n",
       width, height,
-      style.size.x, style.size.y,
-      (useRetinaResolution ? "true" : "false"),
-      bufferWidth, bufferHeight
+      bufferWidth, bufferHeight,
+      style.size.x, style.size.y
     );
   }
 

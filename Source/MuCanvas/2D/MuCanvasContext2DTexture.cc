@@ -10,10 +10,9 @@ namespace mural {
 
     printf(
       "Creating Offscreen Canvas (2D):\n"
-        "  size:    %dx%d\n"
-        "  retina:  %s (%dx%d)\n\n",
+        "  size:            %dx%d\n"
+        "  buffer size:     %dx%d\n\n",
       width, height,
-      (useRetinaResolution ? "true" : "false"),
       bufferWidth, bufferHeight
     );
   }

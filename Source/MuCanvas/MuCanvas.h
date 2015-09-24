@@ -29,7 +29,6 @@ namespace mural {
       MuCanvasContextMode contextMode;
 
       bool isScreenCanvas = false;
-      bool useRetinaResolution = false;
 
       short width = 200, height = 150;
   };

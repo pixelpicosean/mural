@@ -68,8 +68,6 @@ namespace mural {
       renderingContext = new MuCanvasContext2DTexture(app.width, app.height);
     }
 
-    renderingContext->useRetinaResolution = useRetinaResolution;
-
     if (isScreenCanvas) {
       app.screenRenderingContext = renderingContext;
     }
