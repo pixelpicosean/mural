@@ -11,7 +11,7 @@ namespace mural {
         MuCanvasContext2D(width, height)
       {}
 
-      void resizeTo(int newWidth, int newHeight);
+      void create();
   };
 
 }

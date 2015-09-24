@@ -5,21 +5,16 @@
 
 namespace mural {
 
-  void MuCanvasContext2DTexture::resizeTo(int newWidth, int newHeight) {
-    width = newWidth;
-    height = newHeight;
-
-    backingStoreRatio = (useRetinaResolution && app.devicePixelRatio == 2) ? 2 : 1;
-    bufferWidth = width * backingStoreRatio;
-    bufferHeight = height * backingStoreRatio;
+  void MuCanvasContext2DTexture::create() {
+    MuCanvasContext2D::create();
 
     printf(
       "Creating Offscreen Canvas (2D):\n"
         "  size:    %dx%d\n"
-        "  retina:  %s (%.0fx%.0f)\n\n",
+        "  retina:  %s (%dx%d)\n\n",
       width, height,
       (useRetinaResolution ? "true" : "false"),
-      width * backingStoreRatio, height * backingStoreRatio
+      bufferWidth, bufferHeight
     );
   }
 

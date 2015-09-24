@@ -30,39 +30,27 @@ namespace mural {
     }
   }
 
+  void MuCanvasContext2DScreen::create() {
+    MuCanvasContext2D::create();
+
+    printf(
+      "Creating ScreenCanvas (2D):\n"
+        "  size:    %dx%d\n"
+        "  style:   %.0fx%.0f\n"
+        "  retina:  %s (%dx%d)\n\n",
+      width, height,
+      style.size.x, style.size.y,
+      (useRetinaResolution ? "true" : "false"),
+      bufferWidth, bufferHeight
+    );
+  }
+
   MuRect MuCanvasContext2DScreen::getFrame() {
     return MuRect(
       style.origin.x, style.origin.y,
       (style.size.x ? style.size.x : width),
       (style.size.y ? style.size.y : height)
     );
-  }
-
-  void MuCanvasContext2DScreen::resizeTo(int newWidth, int newHeight) {
-    width = newWidth;
-    height = newHeight;
-
-    MuRect frame = getFrame();
-
-    float contentScale = useRetinaResolution ? app.devicePixelRatio : 1;
-    backingStoreRatio = (frame.size.x / (float)width) * contentScale;
-
-    bufferWidth = frame.size.x * contentScale;
-    bufferHeight = frame.size.y * contentScale;
-
-    printf(
-      "Creating ScreenCanvas (2D):\n"
-        "  size:    %dx%d\n"
-        "  style:   %.0fx%.0f\n"
-        "  retina:  %s (%.0fx%.0f)\n\n",
-      width, height,
-      frame.size.x, frame.size.y,
-      (useRetinaResolution ? "true" : "false"),
-      frame.size.x * contentScale, frame.size.y * contentScale
-    );
-
-    // Flip the screen - OpenGL has the origin in the bottom left corner. We want the top left.
-    upsideDown = true;
   }
 
   void MuCanvasContext2DScreen::present() {
