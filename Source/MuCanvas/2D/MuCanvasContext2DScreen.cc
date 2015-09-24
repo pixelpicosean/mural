@@ -70,21 +70,50 @@ namespace mural {
   }
 
   void MuCanvasContext2DScreen::present() {
-    flushBuffers();
+    // flushBuffers();
+
+    // auto ctx = glContext;
+    auto ctx = app.glContext2D;
+
+    framebuffer->bind();
+    glViewport(0, 0, width, height);
+    glClearColor(0.37f, 0.49f, 0.54f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    nvgBeginFrame(ctx, width, height, app.devicePixelRatio);
+      nvgBeginPath(ctx);
+      nvgFillColor(ctx, nvgRGB(0, 187, 211));
+      nvgRect(ctx, 0, 0, 100, 100);
+      nvgFill(ctx);
+    nvgEndFrame(ctx);
+    framebuffer->unbind();
+
+     NVGpaint img = nvgImagePattern(ctx, 0, 0, width, height, 0, framebuffer->image, 1.0f);
 
     // Render to screen
     glViewport(0, 0, app.fbWidth, app.fbHeight);
     // TODO: clear with background color instead of black
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     if (framebuffer->valid) {
-      nvgBeginFrame(glContext, app.width, app.height, app.devicePixelRatio);
-        NVGpaint img = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
-        nvgBeginPath(glContext);
-        nvgRect(glContext, 0, 0, width, height);
-        nvgFillPaint(glContext, img);
-      nvgEndFrame(glContext);
+      nvgBeginFrame(ctx, app.width, app.height, app.devicePixelRatio);
+        nvgBeginPath(ctx);
+        nvgCircle(ctx, 540, 100, 40);
+        nvgFillColor(ctx, nvgRGB(254, 151, 0));
+        nvgFill(ctx);
+
+        nvgSave(ctx);
+        nvgBeginPath(ctx);
+        nvgRect(ctx, 0, 0, width, height);
+        nvgFillPaint(ctx, img);
+        nvgFill(ctx);
+        nvgRestore(ctx);
+
+        nvgBeginPath(ctx);
+        nvgCircle(ctx, 100, 100, 40);
+        nvgFillColor(ctx, nvgRGB(155, 38, 175));
+        nvgFill(ctx);
+      nvgEndFrame(ctx);
     }
   }
 
