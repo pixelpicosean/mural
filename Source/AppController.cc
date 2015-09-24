@@ -29,10 +29,10 @@ namespace mural {
     theScheduler.scheduleMessage([=] {
       printf("start to draw a rect\n");
 
-      ctx->beginPath();
-      ctx->fillColor = nvgRGB(255, 0, 255);
-      ctx->rect(0, 0, 100, 100);
-      ctx->fill();
+      // ctx->beginPath();
+      // ctx->fillColor = nvgRGB(255, 0, 255);
+      // ctx->rect(0, 0, 100, 100);
+      // ctx->fill();
 
     }, 400, false);
   }
@@ -57,8 +57,6 @@ namespace mural {
   void AppController::setCurrentRenderingContext(MuCanvasContext *renderingContext) {
     if (renderingContext != currentRenderingContext) {
       currentRenderingContext->flushBuffers();
-
-      renderingContext->prepare();
       currentRenderingContext = renderingContext;
     }
   }
