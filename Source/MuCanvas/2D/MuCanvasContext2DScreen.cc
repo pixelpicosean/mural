@@ -70,26 +70,12 @@ namespace mural {
   }
 
   void MuCanvasContext2DScreen::present() {
-    // flushBuffers();
-
-    framebuffer->bind();
-    glViewport(0, 0, bufferWidth, bufferHeight);
-    glClearColor(0.37f, 0.49f, 0.54f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    nvgBeginFrame(glContext, width, height, app.devicePixelRatio);
-      nvgBeginPath(glContext);
-      nvgFillColor(glContext, nvgRGB(0, 187, 211));
-      nvgRect(glContext, 0, 0, 100, 100);
-      nvgFill(glContext);
-    nvgEndFrame(glContext);
-    framebuffer->unbind();
-
-    NVGpaint img = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
+    flushBuffers();
 
     // Render to screen
     glViewport(0, 0, app.fbWidth, app.fbHeight);
     // TODO: clear with background color instead of black
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     if (framebuffer->valid) {
@@ -97,27 +83,9 @@ namespace mural {
       auto width = app.width;
       auto height = app.height;
       nvgBeginFrame(ctx, width, height, app.devicePixelRatio);
-        // Draw a circle on the left
-        nvgBeginPath(ctx);
-        nvgCircle(ctx, 100, 100, 40);
-        nvgFillColor(ctx, nvgRGB(155, 38, 175));
-        nvgFill(ctx);
-
-        // Draw frame buffer
         nvgBeginPath(ctx);
         nvgRect(ctx, 0, 0, width, height);
-        nvgFillPaint(ctx, img);
-        nvgFill(ctx);
-
-        nvgBeginPath(ctx);
-        nvgFillColor(ctx, nvgRGB(0, 187, 211));
-        nvgRect(ctx, 110, 0, 100, 100);
-        nvgFill(ctx);
-
-        // Draw a circle on the right
-        nvgBeginPath(ctx);
-        nvgCircle(ctx, 540, 100, 40);
-        nvgFillColor(ctx, nvgRGB(254, 151, 0));
+        nvgFillPaint(ctx, image);
         nvgFill(ctx);
       nvgEndFrame(ctx);
     }
