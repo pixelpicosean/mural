@@ -73,7 +73,7 @@ namespace mural {
     // flushBuffers();
 
     framebuffer->bind();
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, bufferWidth, bufferHeight);
     glClearColor(0.37f, 0.49f, 0.54f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     nvgBeginFrame(glContext, width, height, app.devicePixelRatio);
@@ -94,7 +94,9 @@ namespace mural {
 
     if (framebuffer->valid) {
       auto ctx = app.glContext2D;
-      nvgBeginFrame(ctx, app.width, app.height, app.devicePixelRatio);
+      auto width = app.width;
+      auto height = app.height;
+      nvgBeginFrame(ctx, width, height, app.devicePixelRatio);
         // Draw a circle on the left
         nvgBeginPath(ctx);
         nvgCircle(ctx, 100, 100, 40);
@@ -102,12 +104,15 @@ namespace mural {
         nvgFill(ctx);
 
         // Draw frame buffer
-        nvgSave(ctx);
         nvgBeginPath(ctx);
-        nvgRect(ctx, 0, 0, app.width, app.height);
+        nvgRect(ctx, 0, 0, width, height);
         nvgFillPaint(ctx, img);
         nvgFill(ctx);
-        nvgRestore(ctx);
+
+        nvgBeginPath(ctx);
+        nvgFillColor(ctx, nvgRGB(0, 187, 211));
+        nvgRect(ctx, 110, 0, 100, 100);
+        nvgFill(ctx);
 
         // Draw a circle on the right
         nvgBeginPath(ctx);
