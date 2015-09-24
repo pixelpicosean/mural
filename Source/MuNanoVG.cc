@@ -16,7 +16,7 @@ namespace nvg {
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &defaultRBO);
 
-    image = nvgCreateImageRGBA(ctx, width, height, imageFlags | NVG_IMAGE_FLIPY | NVG_IMAGE_PREMULTIPLIED, nullptr);
+    image = nvgCreateImageRGBA(ctx, width, height, imageFlags | NVG_IMAGE_FLIPY | NVG_IMAGE_PREMULTIPLIED | NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY, nullptr);
     texture = nvglImageHandle(ctx, image);
 
     // frame buffer object
