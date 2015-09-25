@@ -37,9 +37,9 @@ namespace mural {
 
       ctx->state->lineWidth = 1;
       ctx->state->strokeColor = { .hex = 0xffffffff };
-      ctx->state->fillColor = { .hex = 0xffffffff };
+      ctx->state->fillColor = { .hex = 0xFC572Eff };
 
-      ctx->fillRect(0, 0, 20, 20);
+      ctx->fillRect(0, 0, 100, 100);
       // ctx->drawImage(tex, 0, 0, 99, 75, 0, 0, 99, 75);
     }, 400, false);
   }
@@ -63,7 +63,9 @@ namespace mural {
 
   void AppController::setCurrentRenderingContext(MuCanvasContext *renderingContext) {
     if (renderingContext != currentRenderingContext) {
-      currentRenderingContext->flushBuffers();
+      if (currentRenderingContext) {
+        currentRenderingContext->flushBuffers();
+      }
 
       renderingContext->prepare();
       currentRenderingContext = renderingContext;
