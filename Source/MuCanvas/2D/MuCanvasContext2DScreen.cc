@@ -69,8 +69,8 @@ namespace mural {
   }
 
   void MuCanvasContext2DScreen::setStyle(MuRect newStyle) {
-    if ((style.size.x ? style.size.x : width) != newStyle.size.x ||
-      (style.size.y ? style.size.y : height) != newStyle.size.y) {
+    if ((style.size.width ? style.size.width : width) != newStyle.size.width ||
+      (style.size.height ? style.size.height : height) != newStyle.size.height) {
       // Must resize
       style = newStyle;
 
@@ -89,8 +89,8 @@ namespace mural {
   MuRect MuCanvasContext2DScreen::getFrame() {
     return MuRect(
       style.origin.x, style.origin.y,
-      (style.size.x ? style.size.x : width),
-      (style.size.y ? style.size.y : height)
+      (style.size.width ? style.size.width : width),
+      (style.size.height ? style.size.height : height)
     );
   }
 
@@ -110,7 +110,7 @@ namespace mural {
         "  style:       %.0fx%.0f\n",
       width, height,
       bufferWidth, bufferHeight,
-      style.size.x, style.size.y
+      style.size.width, style.size.height
     );
 
     // Set up the renderbuffer
