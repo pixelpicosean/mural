@@ -7,11 +7,11 @@
 namespace mural {
 
   typedef union {
+    unsigned int hex;
     struct {
       unsigned char r, g, b, a;
     } rgba;
     unsigned char components[4];
-    unsigned int hex;
   } MuColorRGBA;
 
   struct MuVector2 {

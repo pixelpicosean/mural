@@ -101,17 +101,16 @@ namespace mural {
 
   static inline MuColorRGBA MuCanvasBlendColor(MuCanvasState *state, MuColorRGBA color) {
     float alpha = state->globalAlpha * (float)color.rgba.a / 255.0f;
-    return (MuColorRGBA) { .rgba = {
-      .r = (unsigned char)(color.rgba.r * alpha),
-      .g = (unsigned char)(color.rgba.g * alpha),
-      .b = (unsigned char)(color.rgba.b * alpha),
-      .a = (unsigned char)(MuCompositeOperationFuncs[state->globalCompositeOperation].alphaFactor *
-         (float)color.rgba.a * state->globalAlpha)
-    }};
+    MuColorRGBA blendColor;
+    blendColor.rgba.r = (unsigned char)(color.rgba.r * alpha);
+    blendColor.rgba.g = (unsigned char)(color.rgba.g * alpha);
+    blendColor.rgba.b = (unsigned char)(color.rgba.b * alpha);
+    blendColor.rgba.a = (unsigned char)(MuCompositeOperationFuncs[state->globalCompositeOperation].alphaFactor * color.rgba.a * state->globalAlpha);
+    return blendColor;
   }
 
   static inline MuColorRGBA MuCanvasBlendWhiteColor(MuCanvasState *state) {
-    return MuCanvasBlendColor(state, (MuColorRGBA){.hex = 0xffffffff});
+    return MuCanvasBlendColor(state, (MuColorRGBA){0xffffffff});
   }
 
   static inline MuColorRGBA MuCanvasBlendFillColor(MuCanvasState *state) {
@@ -186,7 +185,7 @@ namespace mural {
       void putImageData(MuImageData* imageData, float scale, float dx, float dy);
       void beginPath();
       void closePath();
-      void fill(MuPathFillRule fillRule);
+      void fill(MuPathFillRule fillRule = kMuPathFillRuleNonZero);
       void stroke();
       void moveTo(float x, float y);
       void lineTo(float x, float y);
