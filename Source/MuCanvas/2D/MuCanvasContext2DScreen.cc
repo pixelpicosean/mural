@@ -153,8 +153,7 @@ namespace mural {
     flushBuffers();
 
     // Render frame buffer to the screen
-    // FIXME: replace this line with: glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    __glewBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
