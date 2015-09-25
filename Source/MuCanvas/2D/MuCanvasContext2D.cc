@@ -138,7 +138,7 @@ namespace mural {
     // FIXME: Ejecta uses these lines to bind render buffer, should I use them instead?
     // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
     // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, app.defaultRBO);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
 
     glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
@@ -462,6 +462,8 @@ namespace mural {
     glDrawArrays(GL_TRIANGLES, 0, vertexBufferIndex);
     needsPresenting = true;
     vertexBufferIndex = 0;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, app.defaultFBO);
   }
 
   void MuCanvasContext2D::save() {
