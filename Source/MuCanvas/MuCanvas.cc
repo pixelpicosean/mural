@@ -17,7 +17,7 @@ namespace mural {
 
   void MuCanvas::setWidth(short newWidth) {
     if (renderingContext) {
-      app.currentRenderingContext = renderingContext;
+      app.setCurrentRenderingContext(renderingContext);
       renderingContext->setWidth(newWidth);
       width = renderingContext->getWidth();
       return;
@@ -29,7 +29,7 @@ namespace mural {
 
   void MuCanvas::setHeight(short newHeight) {
     if (renderingContext) {
-      app.currentRenderingContext = renderingContext;
+      app.setCurrentRenderingContext(renderingContext);
       renderingContext->setHeight(newHeight);
       height = renderingContext->getHeight();
       return;

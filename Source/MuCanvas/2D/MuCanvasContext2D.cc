@@ -61,12 +61,12 @@ namespace mural {
     state->clipPath = nullptr;
 
     if (widthp <= 0 || heightp <= 0) {
-      bufferWidth = width = app.width;
-      bufferHeight = height = app.height;
+      bufferWidth = width = app.bufferWidth;
+      bufferHeight = height = app.bufferHeight;
     }
     else {
-      bufferWidth = width = widthp;
-      bufferHeight = height = heightp;
+      bufferWidth = width = widthp * app.devicePixelRatio;
+      bufferHeight = height = heightp * app.devicePixelRatio;
     }
 
     path = new MuPath();
@@ -103,7 +103,7 @@ namespace mural {
     width = newWidth;
     height = newHeight;
 
-    backingStoreRatio = (useRetinaResolution && app.devicePixelRatio == 2) ? 2 : 1;
+    backingStoreRatio = app.devicePixelRatio;
     bufferWidth = width * backingStoreRatio;
     bufferHeight = height * backingStoreRatio;
 
