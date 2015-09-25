@@ -15,6 +15,7 @@ namespace mural {
       short width = 0, height = 0;
       short bufferWidth = 0, bufferHeight = 0;
       int devicePixelRatio = 1;
+
       float averageFPS = 0.0f;
 
       GLint defaultFBO = -1;
@@ -28,10 +29,11 @@ namespace mural {
       // MuSharedTextureCache *textureCache;
       // MuSharedOpenALManager *openALManager;
 
-      MuCanvasContext *currentRenderingContext = nullptr;
-      MuCanvasContext *screenRenderingContext = nullptr;
-
+      MuCanvasContext *getCurrentRenderingContext() { return currentRenderingContext; }
       void setCurrentRenderingContext(MuCanvasContext *renderingContext);
+
+      MuCanvasContext *getScreenRenderingContext() { return screenRenderingContext; }
+      void setScreenRenderingContext(MuCanvasContext *renderingContext) { screenRenderingContext = renderingContext; }
 
     public:
       void init(int width = 640, int height = 400, int devicePixelRatio = 1);
@@ -56,6 +58,9 @@ namespace mural {
       void operator=(AppController const&) {}
 
       ~AppController();
+
+      MuCanvasContext *currentRenderingContext = nullptr;
+      MuCanvasContext *screenRenderingContext = nullptr;
 
       // Tests only
       MuCanvas *canvas = nullptr;

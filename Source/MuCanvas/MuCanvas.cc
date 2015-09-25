@@ -39,9 +39,7 @@ namespace mural {
     }
   }
 
-  MuCanvas::MuCanvas():
-    useRetinaResolution(false)
-  {
+  MuCanvas::MuCanvas() {
     if (!app.hasScreenCanvas) {
       isScreenCanvas = true;
       app.hasScreenCanvas = true;
@@ -66,8 +64,11 @@ namespace mural {
       return nullptr;
     }
 
+    if (renderingContext) {
+      return renderingContext;
+    }
+
     contextMode = mode;
-    app.currentRenderingContext = nullptr;
 
     // Configure and create the CanvasContext
     if (isScreenCanvas) {
@@ -77,14 +78,12 @@ namespace mural {
       renderingContext = new MuCanvasContext2DTexture(app.width, app.height);
     }
 
-    renderingContext->useRetinaResolution = useRetinaResolution;
-
     if (isScreenCanvas) {
-      app.screenRenderingContext = renderingContext;
+      app.setScreenRenderingContext(renderingContext);
     }
 
     renderingContext->create();
-    app.currentRenderingContext = renderingContext;
+    app.setCurrentRenderingContext(renderingContext);
 
     return renderingContext;
   }

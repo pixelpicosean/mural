@@ -61,16 +61,19 @@ namespace mural {
     state->clipPath = nullptr;
 
     if (widthp <= 0 || heightp <= 0) {
-      bufferWidth = width = app.bufferWidth;
-      bufferHeight = height = app.bufferHeight;
+      width = app.width;
+      height = app.height;
+      bufferWidth = app.bufferWidth;
+      bufferHeight = app.bufferHeight;
     }
     else {
-      bufferWidth = width = widthp * app.devicePixelRatio;
-      bufferHeight = height = heightp * app.devicePixelRatio;
+      width = widthp;
+      height = heightp;
+      bufferWidth = width * app.devicePixelRatio;
+      bufferHeight = height * app.devicePixelRatio;
     }
 
     path = new MuPath();
-    backingStoreRatio = 1;
 
     textureFilter = GL_LINEAR;
     stencilMask = 0x1;
@@ -103,9 +106,8 @@ namespace mural {
     width = newWidth;
     height = newHeight;
 
-    backingStoreRatio = app.devicePixelRatio;
-    bufferWidth = width * backingStoreRatio;
-    bufferHeight = height * backingStoreRatio;
+    bufferWidth = width * app.devicePixelRatio;
+    bufferHeight = height * app.devicePixelRatio;
 
     resetFramebuffer();
   }
@@ -651,7 +653,7 @@ namespace mural {
   }
 
   MuImageData *MuCanvasContext2D::getImageData(short sx, short sy, short sw, short sh) {
-    return getImageDataScaled(backingStoreRatio, upsideDown, sx, sy, sw, sh);
+    return getImageDataScaled(1, upsideDown, sx, sy, sw, sh);
   }
 
   MuImageData *MuCanvasContext2D::getImageDataHD(short sx, short sy, short sw, short sh) {
@@ -682,7 +684,7 @@ namespace mural {
   }
 
   void MuCanvasContext2D::putImageData(MuImageData* imageData, float dx, float dy) {
-    putImageData(imageData, backingStoreRatio, dx, dy);
+    putImageData(imageData, 1, dx, dy);
   }
 
   void MuCanvasContext2D::beginPath() {

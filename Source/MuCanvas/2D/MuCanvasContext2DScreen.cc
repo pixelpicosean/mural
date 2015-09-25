@@ -100,23 +100,17 @@ namespace mural {
     width = newWidth;
     height = newHeight;
 
-    MuRect frame = getFrame();
-
-    float contentScale = useRetinaResolution ? app.devicePixelRatio : 1;
-    backingStoreRatio = (frame.size.x / (float)width) * contentScale;
-
-    bufferWidth = frame.size.x * contentScale;
-    bufferHeight = frame.size.y * contentScale;
+    bufferWidth = width * app.devicePixelRatio;
+    bufferHeight = height * app.devicePixelRatio;
 
     printf(
       "Creating ScreenCanvas (2D):\n"
-        "  size:    %dx%d\n"
-        "  style:   %.0fx%.0f\n"
-        "  retina:  %s (%.0fx%.0f)\n\n",
+        "  size:        %dx%d\n"
+        "  buffer size: %dx%df\n\n"
+        "  style:       %.0fx%.0f\n",
       width, height,
-      frame.size.x, frame.size.y,
-      (useRetinaResolution ? "true" : "false"),
-      frame.size.x * contentScale, frame.size.y * contentScale
+      bufferWidth, bufferHeight,
+      style.size.x, style.size.y
     );
 
     // Set up the renderbuffer
@@ -136,14 +130,11 @@ namespace mural {
   MuTexture *MuCanvasContext2DScreen::getTexture() {
     // This context may not be the current one, but it has to be in order for
     // glReadPixels to succeed.
-    MuCanvasContext *previousContext = app.currentRenderingContext;
+    MuCanvasContext *previousContext = app.getCurrentRenderingContext();
     app.setCurrentRenderingContext(this);
 
-    float w = width * backingStoreRatio;
-    float h = height * backingStoreRatio;
-
-    MuTexture *texture = getImageDataScaled(1, upsideDown, 0, 0, w, h)->getTexture();
-    texture->contentScale = backingStoreRatio;
+    MuTexture *texture = getImageDataScaled(1, upsideDown, 0, 0, width, height)->getTexture();
+    texture->contentScale = 1;
 
     app.setCurrentRenderingContext(previousContext);
     return texture;

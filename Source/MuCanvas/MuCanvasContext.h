@@ -9,9 +9,6 @@ namespace mural {
     public:
       bool needsPresenting = false;
 
-      float backingStoreRatio = 1.0f;
-      bool useRetinaResolution = false;
-
       virtual short getWidth() { return width; }
       virtual void setWidth(short newWidth) { width = newWidth; }
 
