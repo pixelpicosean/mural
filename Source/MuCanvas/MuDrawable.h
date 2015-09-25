@@ -8,13 +8,10 @@ namespace mural {
 
   class MuDrawable {
     public:
-      NVGpaint getTexture() { return texture; }
+      virtual NVGpaint getTexture() { return NVGpaint(); }
 
       MuDrawable() {};
       virtual ~MuDrawable() {}
-
-    protected:
-      NVGpaint texture;
   };
 
 }

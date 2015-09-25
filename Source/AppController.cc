@@ -19,30 +19,35 @@ namespace mural {
 
     this->glContext2D = nvg::createGLContext();
 
+    // Create a screen canvas
     canvas = new MuCanvas();
     ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));
+    if (!ctx) {
+      printf("Failed to get context of an screen canvas!\n");
+    }
+    // Draw something to screen canvas
+    ctx->beginPath();
+    ctx->setFillStyle(nvgRGB(0, 187, 211));
+    ctx->rect(0, 0, 100, 100);
+    ctx->fill();
 
-    if (ctx) {
-      printf("context exists, size = (%d, %d)\n", ctx->getWidth(), ctx->getHeight());
+    // Create a off-screen canvas
+    auto canvas2 = new MuCanvas();
+    auto ctx2 = dynamic_cast<MuCanvasContext2D *>(canvas2->getContext(kMuCanvasContextMode2D));
+    if (!ctx2) {
+      printf("Failed to get context of an off-screen canvas!\n");
     }
 
+    // Draw part of the off-screen canvas to screen canvas after a period
     theScheduler.scheduleMessage([=] {
-      printf("start to draw a rect\n");
+      printf("Draw something to the off-screen canvas\n");
 
-      ctx->beginPath();
-      ctx->setFillStyle(nvgRGB(0, 187, 211));
-      ctx->rect(0, 0, 100, 100);
-      ctx->fill();
+      // ctx2->beginPath();
+      // ctx2->setFillStyle(nvgRGB(252, 87, 46));
+      // ctx2->rect(0, 0, 50, 50);
+      // ctx2->fill();
 
-    }, 1000, false);
-
-    theScheduler.scheduleMessage([=] {
-      printf("start to draw another rect\n");
-
-      ctx->beginPath();
-      ctx->setFillStyle(nvgRGB(204, 219, 56));
-      ctx->rect(50, 50, 100, 100);
-      ctx->fill();
+      // ctx->drawImage(tex, 0, 0, imgWidth, imgHeight, 100, 100, imgWidth, imgHeight);
 
     }, 2000, false);
   }

@@ -62,6 +62,10 @@ namespace mural {
       return nullptr;
     }
 
+    if (renderingContext) {
+      return renderingContext;
+    }
+
     contextMode = mode;
     app.currentRenderingContext = nullptr;
 
