@@ -9,11 +9,11 @@ namespace mural {
     // Positions   // TexCoords
     -1.0f,  1.0f,  0.0f, 1.0f,
     -1.0f, -1.0f,  0.0f, 0.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
+     0.0f, -1.0f,  1.0f, 0.0f,
 
     -1.0f,  1.0f,  0.0f, 1.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
-     1.0f,  1.0f,  1.0f, 1.0f
+     0.0f, -1.0f,  1.0f, 0.0f,
+     0.0f,  1.0f,  1.0f, 1.0f
   };
 
   // Generates a texture that is suited for attachments to a framebuffer
