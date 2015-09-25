@@ -1,12 +1,17 @@
 #include "MuCanvasContext2D.h"
 
+#include "MuNanoVG.h"
 #include "AppController.h"
 
 namespace mural {
 
-  void MuCanvasContext2D::setWidth(int newWidth) {}
+  void MuCanvasContext2D::setWidth(int newWidth) {
+    resizeTo(newWidth, height);
+  }
 
-  void MuCanvasContext2D::setHeight(int newHeight) {}
+  void MuCanvasContext2D::setHeight(int newHeight) {
+    resizeTo(width, newHeight);
+  }
 
   void MuCanvasContext2D::setFillStyle(NVGcolor color) {
     prepare();
@@ -37,15 +42,35 @@ namespace mural {
 
   MuCanvasContext2D::~MuCanvasContext2D() {
     if (framebuffer) delete framebuffer;
-    if (glContext) delete glContext;
+    if (glContext) nvg::deleteGLContext(glContext);
   }
 
-  void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {}
+  void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {
+    flushBuffers();
+
+    if (width != newWidth || height != newHeight) {
+      width = newWidth;
+      height = newHeight;
+      bufferWidth = width * app.devicePixelRatio;
+      bufferHeight = height * app.devicePixelRatio;
+
+      if (framebuffer) {
+        delete framebuffer;
+        framebuffer = new nvg::Framebuffer(app.glContext2D, bufferWidth, bufferHeight);
+      }
+      texture = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
+    }
+
+    // Clear to transparent
+    prepare();
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+  }
 
   void MuCanvasContext2D::create() {
     framebuffer = new nvg::Framebuffer(app.glContext2D, bufferWidth, bufferHeight);
     glContext = nvg::createGLContext();
-    image = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
+    texture = nvgImagePattern(glContext, 0, 0, width, height, 0, framebuffer->image, 1.0f);
   }
 
   void MuCanvasContext2D::prepare() {
@@ -109,11 +134,11 @@ namespace mural {
     nvgTransform(glContext, m11, m12, m21, m22, dx, dy);
   }
 
-  void MuCanvasContext2D::drawImage(NVGpaint image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
+  void MuCanvasContext2D::drawImage(MuDrawable *drawable, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
     prepare();
     nvgBeginPath(glContext);
     nvgRect(glContext, dx, dy, dw, dh);
-    nvgFillPaint(glContext, image);
+    nvgFillPaint(glContext, drawable->getTexture());
     nvgFill(glContext);
   }
 

@@ -68,7 +68,7 @@ namespace mural {
       nvgBeginFrame(ctx, width, height, app.devicePixelRatio);
         nvgBeginPath(ctx);
         nvgRect(ctx, 0, 0, width, height);
-        nvgFillPaint(ctx, image);
+        nvgFillPaint(ctx, texture);
         nvgFill(ctx);
       nvgEndFrame(ctx);
     }
