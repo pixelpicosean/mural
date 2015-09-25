@@ -106,8 +106,8 @@ namespace mural {
     printf(
       "Creating ScreenCanvas (2D):\n"
         "  size:        %dx%d\n"
-        "  buffer size: %dx%df\n\n"
-        "  style:       %.0fx%.0f\n",
+        "  buffer size: %dx%d\n"
+        "  style:       %dx%d\n\n",
       width, height,
       bufferWidth, bufferHeight,
       style.size.width, style.size.height
