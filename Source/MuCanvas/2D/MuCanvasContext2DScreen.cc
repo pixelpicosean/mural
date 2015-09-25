@@ -137,7 +137,7 @@ namespace mural {
     // This context may not be the current one, but it has to be in order for
     // glReadPixels to succeed.
     MuCanvasContext *previousContext = app.currentRenderingContext;
-    app.currentRenderingContext = this;
+    app.setCurrentRenderingContext(this);
 
     float w = width * backingStoreRatio;
     float h = height * backingStoreRatio;
@@ -145,7 +145,7 @@ namespace mural {
     MuTexture *texture = getImageDataScaled(1, upsideDown, 0, 0, w, h)->getTexture();
     texture->contentScale = backingStoreRatio;
 
-    app.currentRenderingContext = previousContext;
+    app.setCurrentRenderingContext(previousContext);
     return texture;
   }
 
@@ -153,7 +153,9 @@ namespace mural {
     flushBuffers();
 
     // Render frame buffer to the screen
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, app.defaultFBO);
+
+    glViewport(0, 0, app.bufferWidth, app.bufferHeight);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
