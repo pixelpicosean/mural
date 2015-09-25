@@ -50,7 +50,7 @@ namespace mural {
     state = &stateStack[stateIndex];
     state->globalAlpha = 1;
     state->globalCompositeOperation = kMuCompositeOperationSourceOver;
-    state->transform = glm::mat3();
+    state->transform = MuAffineTransform();
     state->lineWidth = 1;
     state->lineCap = kMuLineCapButt;
     state->lineJoin = kMuLineJoinMiter;
@@ -212,20 +212,19 @@ namespace mural {
     glUniform2f(currentProgram->screen, width, height * (upsideDown ? -1 : 1));
   }
 
-  void MuCanvasContext2D::pushTri(float x1, float y1, float x2, float y2, float x3, float y3, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushTri(float x1, float y1, float x2, float y2, float x3, float y3, MuColorRGBA color, MuAffineTransform transform) {
     if (vertexBufferIndex >= vertexBufferSize - 3) {
       flushBuffers();
     }
 
-    glm::vec2 d1(x1, y1);
-    glm::vec2 d2(x2, y2);
-    glm::vec2 d3(x3, y3);
+    MuVector2 d1(x1, y1);
+    MuVector2 d2(x2, y2);
+    MuVector2 d3(x3, y3);
 
-    glm::mat3 identity;
-    if (transform != identity) {
-      d1 = (glm::vec2)(transform * glm::vec3(d1, 1.0f));
-      d2 = (glm::vec2)(transform * glm::vec3(d2, 1.0f));
-      d3 = (glm::vec2)(transform * glm::vec3(d3, 1.0f));
+    if (!MuAffineTransformIsIdentity(transform)) {
+      d1 = MuVector2ApplyTransform(d1, transform);
+      d2 = MuVector2ApplyTransform(d2, transform);
+      d3 = MuVector2ApplyTransform(d3, transform);
     }
 
     MuVertex *vb = &vertexBuffer[vertexBufferIndex];
@@ -236,17 +235,16 @@ namespace mural {
     vertexBufferIndex += 3;
   }
 
-  void MuCanvasContext2D::pushQuad(glm::vec2 v1, glm::vec2 v2, glm::vec2 v3, glm::vec2 v4, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushQuad(MuVector2 v1, MuVector2 v2, MuVector2 v3, MuVector2 v4, MuColorRGBA color, MuAffineTransform transform) {
     if (vertexBufferIndex >= vertexBufferSize - 6) {
       flushBuffers();
     }
 
-    glm::mat3 identity;
-    if (transform != identity) {
-      v1 = (glm::vec2)(transform * glm::vec3(v1, 1.0f));
-      v2 = (glm::vec2)(transform * glm::vec3(v2, 1.0f));
-      v3 = (glm::vec2)(transform * glm::vec3(v3, 1.0f));
-      v4 = (glm::vec2)(transform * glm::vec3(v4, 1.0f));
+    if (!MuAffineTransformIsIdentity(transform)) {
+      v1 = MuVector2ApplyTransform(v1, transform);
+      v2 = MuVector2ApplyTransform(v2, transform);
+      v3 = MuVector2ApplyTransform(v3, transform);
+      v4 = MuVector2ApplyTransform(v4, transform);
     }
 
     MuVertex *vb = &vertexBuffer[vertexBufferIndex];
@@ -260,22 +258,21 @@ namespace mural {
     vertexBufferIndex += 6;
   }
 
-  void MuCanvasContext2D::pushRect(float x, float y, float w, float h, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushRect(float x, float y, float w, float h, MuColorRGBA color, MuAffineTransform transform) {
     if (vertexBufferIndex >= vertexBufferSize - 6) {
       flushBuffers();
     }
 
-    glm::vec2 d11(x, y);
-    glm::vec2 d21(x+w, y);
-    glm::vec2 d12(x, y+h);
-    glm::vec2 d22(x+w, y+h);
+    MuVector2 d11(x, y);
+    MuVector2 d21(x+w, y);
+    MuVector2 d12(x, y+h);
+    MuVector2 d22(x+w, y+h);
 
-    glm::mat3 identity;
-    if (transform != identity) {
-      d11 = (glm::vec2)(transform * glm::vec3(d11, 1.0f));
-      d21 = (glm::vec2)(transform * glm::vec3(d21, 1.0f));
-      d12 = (glm::vec2)(transform * glm::vec3(d12, 1.0f));
-      d22 = (glm::vec2)(transform * glm::vec3(d22, 1.0f));
+    if (!MuAffineTransformIsIdentity(transform)) {
+      d11 = MuVector2ApplyTransform(d11, transform);
+      d21 = MuVector2ApplyTransform(d21, transform);
+      d12 = MuVector2ApplyTransform(d12, transform);
+      d22 = MuVector2ApplyTransform(d22, transform);
     }
 
     MuVertex *vb = &vertexBuffer[vertexBufferIndex];
@@ -290,7 +287,7 @@ namespace mural {
     vertexBufferIndex += 6;
   }
 
-  void MuCanvasContext2D::pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, MuAffineTransform transform) {
     MuCanvasPattern *pattern;
     MuCanvasGradient *gradient;
 
@@ -302,33 +299,33 @@ namespace mural {
     }
   }
 
-  void MuCanvasContext2D::pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, MuAffineTransform transform) {
     if (gradient->type == kMuCanvasGradientTypeLinear) {
       // Local positions inside the quad
-      glm::vec2 p1((gradient->p1.x-x)/w, (gradient->p1.y-y)/h);
-      glm::vec2 p2((gradient->p2.x-x)/w, (gradient->p2.y-y)/h);
+      MuVector2 p1((gradient->p1.x-x)/w, (gradient->p1.y-y)/h);
+      MuVector2 p2((gradient->p2.x-x)/w, (gradient->p2.y-y)/h);
 
       // Calculate the slope of (p1,p2) and the line orthogonal to it
       float aspect = w/h;
-      glm::vec2 slope = p2 - p1;
-      glm::vec2 ortho(slope.y/aspect, -slope.x*aspect);
+      MuVector2 slope = MuVector2Sub(p2, p1);
+      MuVector2 ortho(slope.y/aspect, -slope.x*aspect);
 
       // Calculate the intersection points of the slope (starting at p1)
       // and the orthogonal starting at each corner of the quad - these
       // points are the final texture coordinates.
       float d = 1/(slope.y * ortho.x - slope.x * ortho.y);
 
-      glm::vec2
+      MuVector2
         ot(ortho.x * d, ortho.y * d),
         st(slope.x * d, slope.y * d);
 
-      glm::vec2
+      MuVector2
         a11(ot.x * -p1.y, st.x * -p1.y),
         a12(ot.y * p1.x, st.y * p1.x),
         a21(ot.x * (1 - p1.y), st.x * (1 - p1.y)),
         a22(ot.y * (p1.x - 1), st.y * (p1.x - 1));
 
-      glm::vec2
+      MuVector2
         t11(a11.x + a12.x, a11.y + a12.y),
         t21(a11.x + a22.x, a11.y + a22.y),
         t12(a21.x + a12.x, a21.y + a12.y),
@@ -341,17 +338,16 @@ namespace mural {
       }
 
       // Vertex coordinates
-      glm::vec2 d11(x, y);
-      glm::vec2 d21(x+w, y);
-      glm::vec2 d12(x, y+h);
-      glm::vec2 d22(x+w, y+h);
+      MuVector2 d11(x, y);
+      MuVector2 d21(x+w, y);
+      MuVector2 d12(x, y+h);
+      MuVector2 d22(x+w, y+h);
 
-      glm::mat3 identity;
-      if (identity != transform) {
-        d11 = (glm::vec2)(transform * glm::vec3(d11, 1.0f));
-        d21 = (glm::vec2)(transform * glm::vec3(d21, 1.0f));
-        d12 = (glm::vec2)(transform * glm::vec3(d12, 1.0f));
-        d22 = (glm::vec2)(transform * glm::vec3(d22, 1.0f));
+      if (!MuAffineTransformIsIdentity(transform)) {
+        d11 = MuVector2ApplyTransform(d11, transform);
+        d21 = MuVector2ApplyTransform(d21, transform);
+        d12 = MuVector2ApplyTransform(d12, transform);
+        d22 = MuVector2ApplyTransform(d22, transform);
       }
 
       MuVertex *vb = &vertexBuffer[vertexBufferIndex];
@@ -372,7 +368,7 @@ namespace mural {
       setProgram(gradientProgram);
 
       glUniform3f(gradientProgram->inner, gradient->p1.x, gradient->p1.y, gradient->r1);
-      glm::vec2 dp = gradient->p2 - gradient->p1;
+      MuVector2 dp = MuVector2Sub(gradient->p2, gradient->p1);
       float dr = gradient->r2 - gradient->r1;
       glUniform3f(gradientProgram->diff, dp.x, dp.y, dr);
 
@@ -381,7 +377,7 @@ namespace mural {
     }
   }
 
-  void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, glm::mat3 transform) {
+  void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, MuAffineTransform transform) {
     MuTexture *texture = pattern->texture;
     float scale = texture->contentScale;
     float
@@ -421,7 +417,7 @@ namespace mural {
     float x, float y, float w, float h,
     float tx, float ty, float tw, float th,
     MuColorRGBA color,
-    glm::mat3 transform
+    MuAffineTransform transform
   )
   {
     if (vertexBufferIndex >= vertexBufferSize - 6) {
@@ -436,17 +432,16 @@ namespace mural {
       th *= -1;
     }
 
-    glm::vec2 d11(x, y);
-    glm::vec2 d21(x+w, y);
-    glm::vec2 d12(x, y+h);
-    glm::vec2 d22(x+w, y+h);
+    MuVector2 d11(x, y);
+    MuVector2 d21(x+w, y);
+    MuVector2 d12(x, y+h);
+    MuVector2 d22(x+w, y+h);
 
-    glm::mat3 identity;
-    if (transform != identity) {
-      d11 = (glm::vec2)(transform * glm::vec3(d11, 1.0f));
-      d21 = (glm::vec2)(transform * glm::vec3(d21, 1.0f));
-      d12 = (glm::vec2)(transform * glm::vec3(d12, 1.0f));
-      d22 = (glm::vec2)(transform * glm::vec3(d22, 1.0f));
+    if (!MuAffineTransformIsIdentity(transform)) {
+      d11 = MuVector2ApplyTransform(d11, transform);
+      d21 = MuVector2ApplyTransform(d21, transform);
+      d12 = MuVector2ApplyTransform(d12, transform);
+      d22 = MuVector2ApplyTransform(d22, transform);
     }
 
     MuVertex *vb = &vertexBuffer[vertexBufferIndex];
@@ -511,41 +506,28 @@ namespace mural {
   }
 
   void MuCanvasContext2D::rotate(float angle) {
-    state->transform = glm::rotate(state->transform, angle);
+    state->transform = MuAffineTransformRotate(state->transform, angle);
     path->transform = state->transform;
   }
 
   void MuCanvasContext2D::translate(float x, float y) {
-    state->transform = glm::translate(state->transform, glm::vec2(x, y));
+    state->transform = MuAffineTransformTranslate(state->transform, x, y);
     path->transform = state->transform;
   }
 
   void MuCanvasContext2D::scale(float x, float y) {
-    state->transform = glm::scale(state->transform, glm::vec2(x, y));
+    state->transform = MuAffineTransformScale(state->transform, x, y);
     path->transform = state->transform;
   }
 
   void MuCanvasContext2D::transform(float m11, float m12, float m21, float m22, float dx, float dy) {
-    glm::mat3 t;
-    t[0][0] = m11;
-    t[1][0] = m12;
-    t[0][1] = m21;
-    t[1][1] = m22;
-    t[0][2] = dx;
-    t[1][2] = dy;
-
-    state->transform = t * state->transform;
+    MuAffineTransform t(m11, m12, m21, m22, dx, dy);
+    state->transform = MuAffineTransformConcat(t, state->transform);
     path->transform = state->transform;
   }
 
   void MuCanvasContext2D::setTransform(float m11, float m12, float m21, float m22, float dx, float dy) {
-    state->transform[0][0] = m11;
-    state->transform[1][0] = m12;
-    state->transform[0][1] = m21;
-    state->transform[1][1] = m22;
-    state->transform[0][2] = dx;
-    state->transform[1][2] = dy;
-
+    state->transform = MuAffineTransform(m11, m12, m21, m22, dx, dy);
     path->transform = state->transform;
   }
 
@@ -673,7 +655,7 @@ namespace mural {
     MuCompositeOperation oldOp = state->globalCompositeOperation;
     globalCompositeOperation = kMuCompositeOperationCopy;
 
-    pushTexturedRect(dx, dy, tw, th, 0, 0, 1, 1, white, glm::mat3());
+    pushTexturedRect(dx, dy, tw, th, 0, 0, 1, 1, white, MuAffineTransform());
     flushBuffers();
 
     globalCompositeOperation = oldOp;

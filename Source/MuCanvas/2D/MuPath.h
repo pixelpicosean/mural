@@ -25,7 +25,7 @@ namespace mural {
   };
 
   // We're using the C++ std::vector here to store our points.
-  typedef std::vector<glm::vec2> points_t;
+  typedef std::vector<MuVector2> points_t;
   typedef struct {
     points_t points;
     bool isClosed;
@@ -35,13 +35,13 @@ namespace mural {
   class MuCanvasContext2D;
   class MuPath {
     public:
-      glm::mat3 transform;
+      MuAffineTransform transform;
       MuPathFillRule fillRule;
 
       MuPath();
       ~MuPath() {}
 
-      void push(glm::vec2 v);
+      void push(MuVector2 v);
       void reset();
       void close();
       void endSubPath();
@@ -58,8 +58,8 @@ namespace mural {
       void drawLinesToContext(MuCanvasContext2D *context);
 
     private:
-      glm::vec2 currentPos, lastPushed;
-      glm::vec2 minPos, maxPos;
+      MuVector2 currentPos, lastPushed;
+      MuVector2 minPos, maxPos;
       unsigned int longestSubpath = 0;
 
       float distanceTolerance = 0.0f;
@@ -67,7 +67,7 @@ namespace mural {
       subpath_t currentPath;
       path_t paths;
 
-      void drawArcTo(MuCanvasContext2D *context, glm::vec2 point, glm::vec2 p1, glm::vec2 p2, MuColorRGBA color);
+      void drawArcTo(MuCanvasContext2D *context, MuVector2 point, MuVector2 p1, MuVector2 p2, MuColorRGBA color);
   };
 
 }

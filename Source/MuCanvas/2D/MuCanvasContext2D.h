@@ -78,7 +78,7 @@ namespace mural {
   };
 
   struct MuCanvasState {
-    glm::mat3 transform;
+    MuAffineTransform transform;
 
     MuCompositeOperation globalCompositeOperation;
     MuColorRGBA fillColor;
@@ -153,17 +153,17 @@ namespace mural {
       void createStencilBufferOnce();
       void bindVertexBuffer();
       void prepare();
-      void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, MuColorRGBA color, glm::mat3 transform);
-      void pushQuad(glm::vec2 v1, glm::vec2 v2, glm::vec2 v3, glm::vec2 v4, MuColorRGBA color, glm::mat3 transform);
-      void pushRect(float x, float y, float w, float h, MuColorRGBA color, glm::mat3 transform);
-      void pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, glm::mat3 transform);
-      void pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, glm::mat3 transform);
-      void pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, glm::mat3 transform);
+      void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, MuColorRGBA color, MuAffineTransform transform);
+      void pushQuad(MuVector2 v1, MuVector2 v2, MuVector2 v3, MuVector2 v4, MuColorRGBA color, MuAffineTransform transform);
+      void pushRect(float x, float y, float w, float h, MuColorRGBA color, MuAffineTransform transform);
+      void pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, MuColorRGBA color, MuAffineTransform transform);
+      void pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, MuColorRGBA color, MuAffineTransform transform);
+      void pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, MuColorRGBA color, MuAffineTransform transform);
       void pushTexturedRect(
         float x, float y, float w, float h,
         float tx, float ty, float tw, float th,
         MuColorRGBA color,
-        glm::mat3 transform
+        MuAffineTransform transform
       );
       void flushBuffers();
 

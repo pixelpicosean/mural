@@ -5,28 +5,11 @@
 
 namespace mural {
 
-  static inline float distanceToLineSegmentSquared(const glm::vec2& p, const glm::vec2& v, const glm::vec2& w) {
-    float l2 = glm::distance(v, w);
-    if (l2 == 0) return glm::distance(p, v);
-    float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
-    if (t < 0) return glm::distance(p, v);
-    if (t > 1) return glm::distance(p, w);
-    return glm::distance(p, glm::vec2(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
-  }
-
-  glm::vec2 applyTransform(glm::vec2 v, glm::mat3 t) {
-    return (glm::vec2)(t * glm::vec3(v, 1.0f));
-  }
-
-  glm::vec2 getTransformScale(glm::mat3 t) {
-    return glm::vec2(t[0][0], t[1][1]);
-  }
-
   MuPath::MuPath() {
     reset();
   }
 
-  void MuPath::push(glm::vec2 v) {
+  void MuPath::push(MuVector2 v) {
     // Ignore this point if it's identical to the last
     if ((v.x == lastPushed.x && v.y == lastPushed.y) && !currentPath.points.empty()) {
       return;
@@ -46,10 +29,10 @@ namespace mural {
     currentPath.isClosed = false;
     currentPath.points.clear();
 
-    currentPos = glm::vec2(0.0f, 0.0f);
+    currentPos = MuVector2(0.0f, 0.0f);
 
-    minPos = glm::vec2(INFINITY, INFINITY);
-    maxPos = glm::vec2(-INFINITY, -INFINITY);
+    minPos = MuVector2(INFINITY, INFINITY);
+    maxPos = MuVector2(-INFINITY, -INFINITY);
   }
 
   void MuPath::close() {
@@ -72,12 +55,12 @@ namespace mural {
 
   void MuPath::moveTo(float x, float y) {
     endSubPath();
-    currentPos = applyTransform(glm::vec2(x, y), transform);
+    currentPos = MuVector2ApplyTransform(MuVector2(x, y), transform);
     push(currentPos);
   }
 
   void MuPath::lineTo(float x, float y) {
-    currentPos = applyTransform(glm::vec2(x, y), transform);
+    currentPos = MuVector2ApplyTransform(MuVector2(x, y), transform);
     push(currentPos);
   }
 
@@ -85,9 +68,9 @@ namespace mural {
     distanceTolerance = MU_PATH_DISTANCE_EPSILON / scale;
     distanceTolerance *= distanceTolerance;
 
-    glm::vec2 cp1 = applyTransform(glm::vec2(cpx1, cpy1), transform);
-    glm::vec2 cp2 = applyTransform(glm::vec2(cpx2, cpy2), transform);
-    glm::vec2 p = applyTransform(glm::vec2(x, y), transform);
+    MuVector2 cp1 = MuVector2ApplyTransform(MuVector2(cpx1, cpy1), transform);
+    MuVector2 cp2 = MuVector2ApplyTransform(MuVector2(cpx2, cpy2), transform);
+    MuVector2 p = MuVector2ApplyTransform(MuVector2(x, y), transform);
 
     recursiveBezier(currentPos.x, currentPos.y, cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y, 0);
     currentPos = p;
@@ -125,7 +108,7 @@ namespace mural {
         if ((d2 + d3)*(d2 + d3) <= distanceTolerance * (dx*dx + dy*dy)) {
           // If the curvature doesn't exceed the distance_tolerance value
           // we tend to finish subdivisions.
-          push(glm::vec2(x1234, y1234));
+          push(MuVector2(x1234, y1234));
           return;
         }
       }
@@ -133,14 +116,14 @@ namespace mural {
         if (d2 > MU_PATH_COLLINEARITY_EPSILON) {
           // p1,p3,p4 are collinear, p2 is considerable
           if (d2 * d2 <= distanceTolerance * (dx*dx + dy*dy)) {
-            push(glm::vec2(x1234, y1234));
+            push(MuVector2(x1234, y1234));
             return;
           }
         }
         else if (d3 > MU_PATH_COLLINEARITY_EPSILON) {
           // p1,p2,p4 are collinear, p3 is considerable
           if (d3 * d3 <= distanceTolerance * (dx*dx + dy*dy)) {
-            push(glm::vec2(x1234, y1234));
+            push(MuVector2(x1234, y1234));
             return;
           }
         }
@@ -149,7 +132,7 @@ namespace mural {
           dx = x1234 - (x1 + x4) / 2;
           dy = y1234 - (y1 + y4) / 2;
           if (dx*dx + dy*dy <= distanceTolerance) {
-            push(glm::vec2(x1234, y1234));
+            push(MuVector2(x1234, y1234));
             return;
           }
         }
@@ -167,8 +150,8 @@ namespace mural {
     distanceTolerance = MU_PATH_DISTANCE_EPSILON / scale;
     distanceTolerance *= distanceTolerance;
 
-    glm::vec2 cp = applyTransform(glm::vec2(cpx, cpy), transform);
-    glm::vec2 p = applyTransform(glm::vec2(x, y), transform);
+    MuVector2 cp = MuVector2ApplyTransform(MuVector2(cpx, cpy), transform);
+    MuVector2 p = MuVector2ApplyTransform(MuVector2(x, y), transform);
 
     recursiveQuadratic(currentPos.x, currentPos.y, cp.x, cp.y, p.x, p.y, 0);
     currentPos = p;
@@ -193,7 +176,7 @@ namespace mural {
     if (d > MU_PATH_COLLINEARITY_EPSILON) {
       // Regular care
       if (d * d <= distanceTolerance * (dx*dx + dy*dy)) {
-        push(glm::vec2(x123, y123));
+        push(MuVector2(x123, y123));
         return;
       }
     }
@@ -202,7 +185,7 @@ namespace mural {
       dx = x123 - (x1 + x3) / 2;
       dy = y123 - (y1 + y3) / 2;
       if (dx*dx + dy*dy <= distanceTolerance) {
-        push(glm::vec2(x123, y123));
+        push(MuVector2(x123, y123));
         return;
       }
     }
@@ -219,7 +202,7 @@ namespace mural {
     // I have no idea what this code is doing, but it seems to work.
 
     // get untransformed currentPos
-    glm::vec2 cp = applyTransform(currentPos, glm::affineInverse(transform));
+    MuVector2 cp = MuVector2ApplyTransform(currentPos, MuAffineTransformInvert(transform));
 
     float a1 = cp.y - y1;
     float b1 = cp.x - x1;
@@ -265,20 +248,20 @@ namespace mural {
     float span = antiClockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
 
     // Calculate the number of steps, based on the radius, scaling and the span
-    float size = radius * getTransformScale(transform).x * 5;
+    float size = radius * MuAffineTransformGetScale(transform) * 5;
     float maxSteps = MU_PATH_MAX_STEPS_FOR_CIRCLE * fabsf(span)/(2 * M_PI);
     int steps = std::max(MU_PATH_MIN_STEPS_FOR_CIRCLE, (size / (200+size)) * maxSteps);
 
     float stepSize = span / (float)steps;
     float angle = startAngle;
     for( int i = 0; i < steps; i++, angle += stepSize ) {
-      currentPos = applyTransform(glm::vec2(x + cosf(angle) * radius, y + sinf(angle) * radius), transform);
+      currentPos = MuVector2ApplyTransform(MuVector2(x + cosf(angle) * radius, y + sinf(angle) * radius), transform);
       push(currentPos);
     }
 
     // Add the final step or close to the first one if it's a full circle
     float lastAngle = (fabsf(span) < 2 * M_PI - FLT_EPSILON) ? angle : startAngle;
-    currentPos = applyTransform(glm::vec2(x + cosf(lastAngle) * radius, y + sinf(lastAngle) * radius), transform);
+    currentPos = MuVector2ApplyTransform(MuVector2(x + cosf(lastAngle) * radius, y + sinf(lastAngle) * radius), transform);
     push(currentPos);
   }
 
@@ -314,7 +297,7 @@ namespace mural {
 
     glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
     glm::mat3 identity;
-    context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, white, identity);
+    context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, white, MuAffineTransform::identity);
     context->flushBuffers();
 
 
@@ -383,20 +366,20 @@ namespace mural {
       // If we have a fill pattern or gradient, we have to do some extra work to unproject the
       // Quad we're drawing, so we can then project it _with_ the pattern/gradient again
 
-      glm::mat3 inverse = glm::affineInverse(transform);
-      glm::vec2 p1 = applyTransform(minPos, inverse);
-      glm::vec2 p2 = applyTransform(glm::vec2(maxPos.x, minPos.y), inverse);
-      glm::vec2 p3 = applyTransform(glm::vec2(minPos.x, maxPos.y), inverse);
-      glm::vec2 p4 = applyTransform(maxPos, inverse);
+      MuAffineTransform inverse = MuAffineTransformInvert(transform);
+      MuVector2 p1 = MuVector2ApplyTransform(minPos, inverse);
+      MuVector2 p2 = MuVector2ApplyTransform(MuVector2(maxPos.x, minPos.y), inverse);
+      MuVector2 p3 = MuVector2ApplyTransform(MuVector2(minPos.x, maxPos.y), inverse);
+      MuVector2 p4 = MuVector2ApplyTransform(maxPos, inverse);
 
       // Find the unprojected min/max
-      glm::vec2 tmin(std::min(p1.x, std::min(p2.x,std::min(p3.x, p4.x))), std::min(p1.y, std::min(p2.y,std::min(p3.y, p4.y))));
-      glm::vec2 tmax(std::max(p1.x, std::max(p2.x,std::max(p3.x, p4.x))), std::max(p1.y, std::max(p2.y,std::max(p3.y, p4.y))));
+      MuVector2 tmin(std::min(p1.x, std::min(p2.x,std::min(p3.x, p4.x))), std::min(p1.y, std::min(p2.y,std::min(p3.y, p4.y))));
+      MuVector2 tmax(std::max(p1.x, std::max(p2.x,std::max(p3.x, p4.x))), std::max(p1.y, std::max(p2.y,std::max(p3.y, p4.y))));
 
       context->pushFilledRect(tmin.x, tmin.y, tmax.x-tmin.x, tmax.y-tmin.y, state->fillObject, MuCanvasBlendWhiteColor(state), transform);
     }
     else {
-      context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, MuCanvasBlendFillColor(state), identity);
+        context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, MuCanvasBlendFillColor(state), MuAffineTransform::identity);
     }
 
     context->flushBuffers();
@@ -411,13 +394,13 @@ namespace mural {
     }
   }
 
-  void MuPath::drawArcTo(MuCanvasContext2D *context, glm::vec2 point, glm::vec2 p1, glm::vec2 p2, MuColorRGBA color) {
+  void MuPath::drawArcTo(MuCanvasContext2D *context, MuVector2 point, MuVector2 p1, MuVector2 p2, MuColorRGBA color) {
     MuCanvasState *state = context->state;
     float width2 = state->lineWidth / 2;
 
-    glm::vec2
-      v1 = glm::normalize(p1 - point),
-      v2 = glm::normalize(p2 - point);
+    MuVector2
+      v1 = MuVector2Normalize(MuVector2Sub(p1, point)),
+      v2 = MuVector2Normalize(MuVector2Sub(p2, point));
 
     // calculate starting angle for arc
     float angle1 = atan2(1, 0) - atan2(v1.x, -v1.y);
@@ -433,7 +416,7 @@ namespace mural {
     }
 
     // 1 step per 5 pixel
-    float pxScale = getTransformScale(state->transform).x;
+    float pxScale = MuAffineTransformGetScale(state->transform);
     int numSteps = ceilf((angle2 * width2 * pxScale) / 5.0f);
 
     if (numSteps == 1) {
@@ -454,12 +437,12 @@ namespace mural {
     // starting point
     float angle = angle1;
 
-    glm::vec2 arcP1(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
-    glm::vec2 arcP2;
+    MuVector2 arcP1(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
+    MuVector2 arcP2;
 
     for (int i = 0; i < numSteps; i++) {
       angle += step;
-      arcP2 = glm::vec2(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
+      arcP2 = MuVector2(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
 
       context->pushTri(arcP1.x, arcP1.y, point.x, point.y, arcP2.x, arcP2.y, color, transform);
 
@@ -472,7 +455,7 @@ namespace mural {
     GLubyte stencilMask;
 
     // Find the width of the line as it is projected onto the screen.
-    float projectedLineWidth = getTransformScale(state->transform).x * state->lineWidth;
+    float projectedLineWidth = MuAffineTransformGetScale(state->transform) * state->lineWidth;
 
     // Figure out if we need to add line caps and set the cap texture coord for square or round caps.
     // For thin lines we disable texturing and line caps.
@@ -518,7 +501,7 @@ namespace mural {
     // To draw the line correctly with transformations, we need to construct the line
     // vertices from the untransformed points and only apply the transformation in
     // the last step (pushQuad) again.
-    glm::mat3 inverseTransform = glm::affineInverse(transform);
+    MuAffineTransform inverseTransform = MuAffineTransformInvert(transform);
 
 
     // Oh god, I'm so sorry... This code sucks quite a bit. I'd be surprised if I
@@ -526,7 +509,7 @@ namespace mural {
     // Calculating line miters for potentially closed paths is serious business!
     // And it doesn't even handle all the edge cases.
 
-    glm::vec2
+    MuVector2
       *transCurrent, *transNext,  // Pointers to current and next vertices on the line
       current, next,        // Untransformed current and next points
       firstMiter1, firstMiter2, // First miter vertices (left, right) needed for closed paths
@@ -537,7 +520,7 @@ namespace mural {
 
     // Keep track of min and max drawing points if we have fill object, so we can later
     // draw a quad with the minimum required size
-    glm::vec2 drawMin = minPos, drawMax = maxPos;
+    MuVector2 drawMin = minPos, drawMax = maxPos;
 
     for (path_t::iterator sp = paths.begin(); ; ++sp) {
       subpath_t &path = (sp == paths.end()) ? currentPath : *sp;
@@ -556,7 +539,7 @@ namespace mural {
       // miter, as well as the last segment's last miter outside the loop.
       if (addMiter && subPathIsClosed) {
         transNext = &path.points.at(path.points.size()-2);
-        next = applyTransform(*transNext, inverseTransform);
+        next = MuVector2ApplyTransform(*transNext, inverseTransform);
       }
 
       for (points_t::iterator vertex = path.points.begin(); vertex != path.points.end(); ++vertex) {
@@ -564,25 +547,25 @@ namespace mural {
         transNext = &(*vertex);
 
         current = next;
-        next = applyTransform(*transNext, inverseTransform);
+        next = MuVector2ApplyTransform(*transNext, inverseTransform);
 
         if (!transCurrent) { continue; }
 
         currentEdge = nextEdge;
         currentExt = nextExt;
-        nextEdge = glm::normalize(next - current);
-        nextExt = glm::vec2(-nextEdge.y * width2, nextEdge.x * width2);
+        nextEdge = MuVector2Normalize(MuVector2Sub(next, current));
+        nextExt = MuVector2(-nextEdge.y * width2, nextEdge.x * width2);
 
         if (firstInSubPath) {
-          firstMiter1 = miter21 = current + nextExt;
-          firstMiter2 = miter22 = current - nextExt;
+          firstMiter1 = miter21 = MuVector2Add(current, nextExt);
+          firstMiter2 = miter22 = MuVector2Sub(current, nextExt);
           firstInSubPath = false;
 
           // Start cap
           if (addCaps && !subPathIsClosed) {
-            glm::vec2 capExt(-nextExt.y, nextExt.x);
-            glm::vec2 cap11 = miter21 + capExt;
-            glm::vec2 cap12 = miter22 + capExt;
+            MuVector2 capExt(-nextExt.y, nextExt.x);
+            MuVector2 cap11 = MuVector2Add(miter21, capExt);
+            MuVector2 cap12 = MuVector2Add(miter22, capExt);
 
             if (state->lineCap == kMuLineCapSquare) {
               context->pushQuad(cap11, cap12, miter21, miter22, color, transform);
@@ -601,14 +584,14 @@ namespace mural {
 
         bool miterAdded = false;
         if (addMiter) {
-          glm::vec2 miterEdge = currentEdge + nextEdge;
-          float miterExt = (1 / glm::dot(miterEdge, miterEdge)) * state->lineWidth;
+          MuVector2 miterEdge = MuVector2Add(currentEdge, nextEdge);
+          float miterExt = (1 / MuVector2Dot(miterEdge, miterEdge)) * state->lineWidth;
 
           if (miterExt < miterLimit) {
             miterEdge.x *= miterExt;
             miterEdge.y *= miterExt;
-            miter21 = glm::vec2(current.x - miterEdge.y, current.y + miterEdge.x);
-            miter22 = glm::vec2(current.x + miterEdge.y, current.y - miterEdge.x);
+            miter21 = MuVector2(current.x - miterEdge.y, current.y + miterEdge.x);
+            miter22 = MuVector2(current.x + miterEdge.y, current.y - miterEdge.x);
 
             miterAdded = true;
             miterLimitExceeded = false;
@@ -629,8 +612,8 @@ namespace mural {
 
         // No miter added? Calculate the butt for the current segment
         if (!miterAdded) {
-          miter21 = current + currentExt;
-          miter22 = current - currentExt;
+          miter21 = MuVector2Add(current, currentExt);
+          miter22 = MuVector2Sub(current, currentExt);
         }
 
         if (ignoreFirstSegment) {
@@ -650,22 +633,22 @@ namespace mural {
 
         if (!addMiter || miterLimitExceeded) {
           // previous point can be approximated, good enough for distance comparison
-          glm::vec2 prev = current - currentEdge;
-          glm::vec2 p1, p2;
+          MuVector2 prev = MuVector2Sub(current, currentEdge);
+          MuVector2 p1, p2;
           float d1, d2;
 
           // calculate points to use for bevel
           // two points are possible for each edge - the one farthest away from the other line has to be used
 
           // calculate point for current edge
-          d1 = distanceToLineSegmentSquared(miter21, current, next);
-          d2 = distanceToLineSegmentSquared(miter22, current, next);
+          d1 = MuDistanceToLineSegmentSquared(miter21, current, next);
+          d2 = MuDistanceToLineSegmentSquared(miter22, current, next);
           p1 = (d1 > d2) ? miter21 : miter22;
 
           // calculate point for next edge
-          d1 = distanceToLineSegmentSquared(current + nextExt, current, prev);
-          d2 = distanceToLineSegmentSquared(current - nextExt, current, prev);
-          p2 = (d1 > d2) ? (current + nextExt) : (current - nextExt);
+          d1 = MuDistanceToLineSegmentSquared(MuVector2Add(current, nextExt), current, prev);
+          d2 = MuDistanceToLineSegmentSquared(MuVector2Sub(current, nextExt), current, prev);
+          p2 = (d1 > d2) ? MuVector2Add(current, nextExt) : MuVector2Sub(current, nextExt);
 
 
 
@@ -682,8 +665,8 @@ namespace mural {
         // No miter added? The "miter" for the next segment needs to be the butt for the next segment,
         // not the butt for the current one.
         if (!miterAdded) {
-          miter21 = current + nextExt;
-          miter22 = current - nextExt;
+          miter21 = MuVector2Add(current, nextExt);
+          miter22 = MuVector2Sub(current, nextExt);
         }
       } // for each subpath
 
@@ -694,28 +677,28 @@ namespace mural {
         miter12 = firstMiter2;
       }
       else {
-        glm::vec2 untransformedBack = applyTransform(path.points.back(), inverseTransform);
-        miter11 = untransformedBack + nextExt;
-        miter12 = untransformedBack - nextExt;
+        MuVector2 untransformedBack = MuVector2ApplyTransform(path.points.back(), inverseTransform);
+        miter11 = MuVector2Add(untransformedBack, nextExt);
+        miter12 = MuVector2Sub(untransformedBack, nextExt);
       }
 
       if ((!addMiter || firstMiterLimitExceeded) && subPathIsClosed) {
         float d1, d2;
-        glm::vec2 p1, p2,
-          firstNormal = firstMiter1 - firstMiter2, // unnormalized line normal for first edge
-          second = next + glm::vec2(firstNormal.y, -firstNormal.x); // approximated second point
+        MuVector2 p1, p2,
+          firstNormal = MuVector2Sub(firstMiter1, firstMiter2), // unnormalized line normal for first edge
+          second = MuVector2Add(next, MuVector2(firstNormal.y, -firstNormal.x)); // approximated second point
 
         // calculate points to use for bevel
         // two points are possible for each edge - the one farthest away from the other line has to be used
 
         // calculate point for current edge
-        d1 = distanceToLineSegmentSquared(miter12, next, second);
-        d2 = distanceToLineSegmentSquared(miter11, next, second);
+        d1 = MuDistanceToLineSegmentSquared(miter12, next, second);
+        d2 = MuDistanceToLineSegmentSquared(miter11, next, second);
         p2 = (d1 > d2) ? miter12 : miter11;
 
         // calculate point for next edge
-        d1 = distanceToLineSegmentSquared(firstMiter1, current, next);
-        d2 = distanceToLineSegmentSquared(firstMiter2, current, next);
+        d1 = MuDistanceToLineSegmentSquared(firstMiter1, current, next);
+        d2 = MuDistanceToLineSegmentSquared(firstMiter2, current, next);
         p1 = (d1 > d2) ? firstMiter1 : firstMiter2;
 
         if (state->lineJoin == kMuLineJoinRound) {
@@ -731,9 +714,9 @@ namespace mural {
       // End cap
       if (addCaps && !subPathIsClosed) {
         if (state->lineCap == kMuLineCapSquare) {
-          glm::vec2 capExt(nextExt.y, -nextExt.x);
-          glm::vec2 cap11 = miter11 + capExt;
-          glm::vec2 cap12 = miter12 + capExt;
+          MuVector2 capExt(nextExt.y, -nextExt.x);
+          MuVector2 cap11 = MuVector2Add(miter11, capExt);
+          MuVector2 cap12 = MuVector2Add(miter12, capExt);
 
           context->pushQuad(cap11, cap12, miter11, miter12, color, transform);
         }

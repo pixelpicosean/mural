@@ -26,13 +26,13 @@ namespace mural {
     public:
       MuCanvasGradientType type;
       MuTexture *texture = nullptr;
-      glm::vec2 p1, p2;
+      MuVector2 p1, p2;
       float r1 = 0.0f, r2 = 0.0f;
 
       /* Linear */
-      MuCanvasGradient(glm::vec2 p1, glm::vec2 p2) {}
+      MuCanvasGradient(MuVector2 p1, MuVector2 p2) {}
       /* Radial */
-      MuCanvasGradient(glm::vec2 p1, float r1, glm::vec2 p2, float r2) {}
+      MuCanvasGradient(MuVector2 p1, float r1, MuVector2 p2, float r2) {}
 
       void addStop(MuColorRGBA color, float pos) {}
       void rebuild() {}
