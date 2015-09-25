@@ -16,6 +16,11 @@ namespace mural {
     this->width = width;
     this->height = height;
     this->devicePixelRatio = devicePixelRatio;
+    this->bufferWidth = width * devicePixelRatio;
+    this->bufferHeight = height * devicePixelRatio;
+
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
+    glGetIntegerv(GL_RENDERBUFFER_BINDING, &defaultRBO);
 
     canvas = new MuCanvas();
     ctx = dynamic_cast<MuCanvasContext2D *>(canvas->getContext(kMuCanvasContextMode2D));

@@ -13,8 +13,12 @@ namespace mural {
   class AppController {
     public:
       short width = 0, height = 0;
+      short bufferWidth = 0, bufferHeight = 0;
       int devicePixelRatio = 1;
       float averageFPS = 0.0f;
+
+      GLint defaultFBO = -1;
+      GLint defaultRBO = -1;
 
       bool hasScreenCanvas = false;
       bool isPaused = false;
