@@ -30,9 +30,14 @@ namespace mural {
     }
   }
 
-  MuCanvas::MuCanvas():
-    useRetinaResolution(false)
-  {
+  NVGpaint MuCanvas::getTexture() {
+    if (renderingContext) {
+      return renderingContext->texture;
+    }
+    return NVGpaint();
+  }
+
+  MuCanvas::MuCanvas() {
     if (!app.hasScreenCanvas) {
       isScreenCanvas = true;
       app.hasScreenCanvas = true;

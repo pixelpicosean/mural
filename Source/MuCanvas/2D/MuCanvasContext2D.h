@@ -4,6 +4,7 @@
 #include "MuOpenGL.h"
 #include "MuNanoVG.h"
 
+#include "MuCanvas/MuDrawable.h"
 #include "MuCanvas/MuCanvasContext.h"
 
 #include <string>
@@ -13,6 +14,7 @@ namespace mural {
   class MuCanvasContext2D : public MuCanvasContext {
     public:
       bool imageSmoothingEnabled = false;
+      NVGpaint texture;
 
       void setWidth(int newWidth);
       void setHeight(int newHeight);
@@ -38,7 +40,7 @@ namespace mural {
       void scale(float x, float y);
       void transform(float m11, float m12, float m21, float m2, float dx, float dy);
       void setTransform(float m11, float m12, float m21, float m2, float dx, float dy);
-      void drawImage(NVGpaint image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh);
+      void drawImage(MuDrawable *drawable, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh);
       void fillRect(float x, float y, float w, float h);
       void strokeRect(float x, float y, float w, float h);
       void clearRect(float x, float y, float w, float h);
@@ -68,7 +70,6 @@ namespace mural {
       int bufferWidth = 200, bufferHeight = 150;
       NVGcontext *glContext = nullptr;
       nvg::Framebuffer *framebuffer = nullptr;
-      NVGpaint image;
 
       bool upsideDown = false;
   };

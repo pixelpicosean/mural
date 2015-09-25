@@ -2,12 +2,14 @@
 #define Mural_MuCanvasContext_h
 
 #include <cstdio>
+#include "MuNanoVG.h"
 
 namespace mural {
 
   class MuCanvasContext {
     public:
       bool needsPresenting = false;
+      NVGpaint texture;
 
       float backingStoreRatio = 1.0f;
 

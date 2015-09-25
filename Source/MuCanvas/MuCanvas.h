@@ -2,6 +2,7 @@
 #define Mural_MuCanvas_h
 
 #include "MuCanvasContext.h"
+#include "MuDrawable.h"
 
 namespace mural {
 
@@ -11,13 +12,15 @@ namespace mural {
     kMuCanvasContextModeWebGL
   };
 
-  class MuCanvas {
+  class MuCanvas : public MuDrawable {
     public:
       short getWidth() { return width; }
       void setWidth(short newWidth);
 
       short getHeight() { return height; }
       void setHeight(short newHeight);
+
+      NVGpaint getTexture();
 
       MuCanvas();
       ~MuCanvas();
