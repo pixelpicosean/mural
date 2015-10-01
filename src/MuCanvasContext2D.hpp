@@ -150,6 +150,8 @@ namespace mural {
       gl::VboMeshRef  vertexMesh;
 
       size_t numTriangles = 0;
+      gl::VboRef posVbo;
+      vec2 *vertexPos;
   };
 
 }

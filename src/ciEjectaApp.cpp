@@ -33,7 +33,6 @@ void ciEjectaApp::update() {
     ctx->create();
 
     // Draw something here
-    ctx->prepare();
     ctx->rect(10, 10, 40, 40);
     ctx->setFillColor(ColorAf{ 0.0f, 1.0f, 1.0f, 1.0f });
     ctx->fill();

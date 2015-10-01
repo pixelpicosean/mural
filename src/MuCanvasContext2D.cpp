@@ -29,29 +29,13 @@ namespace mural {
   }
 
   void MuCanvasContext2D::create() {
-    resizeTo(size.x, size.y);
-
     // Create mesh and batch
     vertexMesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
       gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2)
     });
     vertexBatch = gl::Batch::create(vertexMesh, gl::getStockShader(gl::ShaderDef()));
 
-    // Add some positions into it
-    numTriangles = 1;
-
-    gl::VboRef posVbo = vertexMesh->findAttrib(geom::POSITION)->second;
-    vec2 *positions = (vec2 *)posVbo->mapReplace();
-
-    positions[0] = vec2(10, 10);
-    positions[1] = vec2(110, 10);
-    positions[2] = vec2(110, 110);
-
-    positions[3] = vec2(10, 10);
-    positions[4] = vec2(110, 110);
-    positions[5] = vec2(10, 110);
-
-    posVbo->unmap();
+    resizeTo(size.x, size.y);
   }
 
   void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {
@@ -90,8 +74,6 @@ namespace mural {
     gl::color(state->fillColor);
 //    gl::drawSolid(state->path);
 
-    vertexBatch->draw(0, numTriangles * 6);
-
     flushBuffers();
   }
 
@@ -110,21 +92,40 @@ namespace mural {
   }
 
   void MuCanvasContext2D::rect(float x, float y, float w, float h) {
-    state->path.moveTo(x, y);
-    state->path.lineTo(x + w, y);
-    state->path.lineTo(x + w, y + h);
-    state->path.lineTo(x, y + h);
-    state->path.close();
+//    state->path.moveTo(x, y);
+//    state->path.lineTo(x + w, y);
+//    state->path.lineTo(x + w, y + h);
+//    state->path.lineTo(x, y + h);
+//    state->path.close();
+
+    vertexPos[0] = vec2(x, y);
+    vertexPos[1] = vec2(x + w, y);
+    vertexPos[2] = vec2(x, y + h);
+
+    vertexPos[3] = vec2(x + w, y);
+    vertexPos[4] = vec2(x, y + h);
+    vertexPos[5] = vec2(x + w, y + h);
+
+    numTriangles += 2;
   }
 
   void MuCanvasContext2D::prepare() {
     viewFramebuffer->bindFramebuffer();
     gl::viewport(bufferSize);
+
+    posVbo = vertexMesh->findAttrib(geom::POSITION)->second;
+    vertexPos = (vec2 *)posVbo->mapReplace();
+
     needsPresenting = true;
   }
 
   void MuCanvasContext2D::flushBuffers() {
+    posVbo->unmap();
+
+    vertexBatch->draw(0, numTriangles * 3);
+
     viewFramebuffer->unbindFramebuffer();
+
     needsPresenting = false;
   }
 
