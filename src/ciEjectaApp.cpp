@@ -20,6 +20,7 @@ class ciEjectaApp : public App {
 };
 
 void ciEjectaApp::setup() {
+  setWindowSize(640, 400);
   ctx = std::make_shared<mural::MuCanvasContext2D>(getWindowWidth(), getWindowHeight());
 }
 
