@@ -12,6 +12,8 @@
 
 namespace mural {
 
+  static const size_t MU_MAX_VERTICES = 2048;
+
   using namespace ci;
   using namespace ci::app;
 
@@ -142,6 +144,12 @@ namespace mural {
       gl::FboRef viewFramebuffer;
 
       MuCanvasState stateStack[MU_CANVAS_STATE_STACK_SIZE];
+
+      // Batch for drawing pathes
+      gl::BatchRef    vertexBatch;
+      gl::VboMeshRef  vertexMesh;
+
+      size_t numTriangles = 0;
   };
 
 }

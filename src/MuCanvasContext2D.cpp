@@ -30,6 +30,28 @@ namespace mural {
 
   void MuCanvasContext2D::create() {
     resizeTo(size.x, size.y);
+
+    // Create mesh and batch
+    vertexMesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2)
+    });
+    vertexBatch = gl::Batch::create(vertexMesh, gl::getStockShader(gl::ShaderDef()));
+
+    // Add some positions into it
+    numTriangles = 1;
+
+    gl::VboRef posVbo = vertexMesh->findAttrib(geom::POSITION)->second;
+    vec2 *positions = (vec2 *)posVbo->mapReplace();
+
+    positions[0] = vec2(10, 10);
+    positions[1] = vec2(110, 10);
+    positions[2] = vec2(110, 110);
+
+    positions[3] = vec2(10, 10);
+    positions[4] = vec2(110, 110);
+    positions[5] = vec2(10, 110);
+
+    posVbo->unmap();
   }
 
   void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {
@@ -66,7 +88,10 @@ namespace mural {
 
   void MuCanvasContext2D::fill() {
     gl::color(state->fillColor);
-    gl::drawSolid(state->path);
+//    gl::drawSolid(state->path);
+
+    vertexBatch->draw(0, numTriangles * 6);
+
     flushBuffers();
   }
 
