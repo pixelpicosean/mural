@@ -30,10 +30,12 @@ namespace mural {
 
   void MuCanvasContext2D::create() {
     // Create mesh and batch
-    vertexMesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
-      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2)
+    mesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2),
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::TEX_COORD_0, 2),
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::COLOR, 4)
     });
-    vertexBatch = gl::Batch::create(vertexMesh, gl::getStockShader(gl::ShaderDef()));
+    batch = gl::Batch::create(mesh, gl::getStockShader(gl::ShaderDef()));
 
     resizeTo(size.x, size.y);
   }
@@ -98,31 +100,38 @@ namespace mural {
 //    state->path.lineTo(x, y + h);
 //    state->path.close();
 
-    vertexPos[0] = vec2(x, y);
-    vertexPos[1] = vec2(x + w, y);
-    vertexPos[2] = vec2(x, y + h);
+    positions[0] = vec2(x, y);
+    positions[1] = vec2(x + w, y);
+    positions[2] = vec2(x, y + h);
 
-    vertexPos[3] = vec2(x + w, y);
-    vertexPos[4] = vec2(x, y + h);
-    vertexPos[5] = vec2(x + w, y + h);
+    positions[3] = vec2(x + w, y);
+    positions[4] = vec2(x, y + h);
+    positions[5] = vec2(x + w, y + h);
 
-    numTriangles += 2;
+    numVertices += 6;
   }
 
   void MuCanvasContext2D::prepare() {
     viewFramebuffer->bindFramebuffer();
     gl::viewport(bufferSize);
 
-    posVbo = vertexMesh->findAttrib(geom::POSITION)->second;
-    vertexPos = (vec2 *)posVbo->mapReplace();
+    positionVbo = mesh->findAttrib(geom::POSITION)->second;
+    texCoordVbo = mesh->findAttrib(geom::TEX_COORD_0)->second;
+    colorVbo = mesh->findAttrib(geom::COLOR)->second;
+
+    positions = (vec2 *)positionVbo->mapReplace();
+    texCoords = (vec2 *)texCoordVbo->mapReplace();
+    colors = (vec4 *)colorVbo->mapReplace();
 
     needsPresenting = true;
   }
 
   void MuCanvasContext2D::flushBuffers() {
-    posVbo->unmap();
+    positionVbo->unmap();
+    texCoordVbo->unmap();
+    colorVbo->unmap();
 
-    vertexBatch->draw(0, numTriangles * 3);
+    batch->draw(0, numVertices);
 
     viewFramebuffer->unbindFramebuffer();
 

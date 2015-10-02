@@ -146,12 +146,18 @@ namespace mural {
       MuCanvasState stateStack[MU_CANVAS_STATE_STACK_SIZE];
 
       // Batch for drawing pathes
-      gl::BatchRef    vertexBatch;
-      gl::VboMeshRef  vertexMesh;
+      gl::BatchRef    batch;
+      gl::VboMeshRef  mesh;
 
-      size_t numTriangles = 0;
-      gl::VboRef posVbo;
-      vec2 *vertexPos;
+      size_t numVertices = 0;
+
+      gl::VboRef positionVbo;
+      gl::VboRef texCoordVbo;
+      gl::VboRef colorVbo;
+
+      vec2 *positions;
+      vec2 *texCoords;
+      vec4 *colors;
   };
 
 }
