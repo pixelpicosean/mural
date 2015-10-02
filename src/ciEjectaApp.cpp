@@ -20,7 +20,6 @@ class ciEjectaApp : public App {
 };
 
 void ciEjectaApp::setup() {
-  setWindowSize(640, 400);
   ctx = std::make_shared<mural::MuCanvasContext2D>(getWindowWidth(), getWindowHeight());
 }
 
@@ -47,4 +46,8 @@ void ciEjectaApp::draw() {
   gl::draw(ctx->getTexture(), getWindowBounds());
 }
 
-CINDER_APP(ciEjectaApp, RendererGl)
+CINDER_APP(ciEjectaApp, RendererGl, [&](App::Settings *settings) {
+  settings->setWindowSize(640, 400);
+  settings->setResizable(false);
+  settings->setTitle("Mural");
+})
