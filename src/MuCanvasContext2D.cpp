@@ -67,6 +67,8 @@ namespace mural {
     gl::clear(GL_COLOR_BUFFER_BIT);
 
     needsPresenting = true;
+
+    flushBuffers();
   }
 
   void MuCanvasContext2D::bindVertexBuffer() {
@@ -85,14 +87,11 @@ namespace mural {
 
   void MuCanvasContext2D::fill() {
     gl::color(state->fillColor);
-//    gl::drawSolid(state->path);
-
     flushBuffers();
   }
 
   void MuCanvasContext2D::stroke() {
     gl::color(state->strokeColor);
-    gl::draw(state->path);
     flushBuffers();
   }
 
@@ -136,7 +135,9 @@ namespace mural {
     texCoordVbo->unmap();
     colorVbo->unmap();
 
-    batch->draw(0, vertexBufferIndex);
+    if (vertexBufferIndex > 0) {
+      batch->draw(0, vertexBufferIndex);
+    }
 
     viewFramebuffer->unbindFramebuffer();
 

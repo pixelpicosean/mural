@@ -7,6 +7,7 @@
 //
 
 #include "MuCanvas.hpp"
+#include "MuCanvasManager.hpp"
 
 namespace mural {
 
@@ -19,9 +20,12 @@ namespace mural {
   }
 
   MuCanvas::MuCanvas() {
-    size = getWindowSize();
+    if (!theCanvasManager.hasScreenCanvas) {
+      isScreenCanvas = true;
+      theCanvasManager.hasScreenCanvas = true;
 
-    isScreenCanvas = true;
+      size = getWindowSize();
+    }
   }
 
   MuCanvas::~MuCanvas() {
@@ -43,10 +47,16 @@ namespace mural {
     contextMode = mode;
 
     if (isScreenCanvas) {
+      // TODO: screen context
+      renderingContext = new MuCanvasContext2D(size.x, size.y);
+    }
+    else {
+      // TODO: texture context
       renderingContext = new MuCanvasContext2D(size.x, size.y);
     }
 
     renderingContext->create();
+    theCanvasManager.setCurrentRenderingContext(renderingContext);
 
     return renderingContext;
   }

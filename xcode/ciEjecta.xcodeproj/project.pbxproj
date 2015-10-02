@@ -18,6 +18,7 @@
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		1409BB071BBD03B00029F8D4 /* MuCanvasContext2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1409BB051BBD03B00029F8D4 /* MuCanvasContext2D.cpp */; settings = {ASSET_TAGS = (); }; };
 		14DCFB601BBEB496003C2144 /* MuCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */; settings = {ASSET_TAGS = (); }; };
+		14DCFB631BBEBB04003C2144 /* MuCanvasManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB621BBEBB04003C2144 /* MuCanvasManager.cpp */; settings = {ASSET_TAGS = (); }; };
 		14E9CABFC27A45F68F119D2B /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = D607336F84E44248845C6D51 /* CinderApp.icns */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -39,6 +40,8 @@
 		1409BB061BBD03B00029F8D4 /* MuCanvasContext2D.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasContext2D.hpp; path = ../src/MuCanvasContext2D.hpp; sourceTree = "<group>"; };
 		14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuCanvas.cpp; path = ../src/MuCanvas.cpp; sourceTree = "<group>"; };
 		14DCFB5F1BBEB496003C2144 /* MuCanvas.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvas.hpp; path = ../src/MuCanvas.hpp; sourceTree = "<group>"; };
+		14DCFB611BBEB942003C2144 /* MuCanvasManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasManager.hpp; path = ../src/MuCanvasManager.hpp; sourceTree = "<group>"; };
+		14DCFB621BBEBB04003C2144 /* MuCanvasManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuCanvasManager.cpp; path = ../src/MuCanvasManager.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
@@ -87,6 +90,8 @@
 				1409BB061BBD03B00029F8D4 /* MuCanvasContext2D.hpp */,
 				14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */,
 				14DCFB5F1BBEB496003C2144 /* MuCanvas.hpp */,
+				14DCFB611BBEB942003C2144 /* MuCanvasManager.hpp */,
+				14DCFB621BBEBB04003C2144 /* MuCanvasManager.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -230,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97464A5B7C954628AF0DA59B /* ciEjectaApp.cpp in Sources */,
+				14DCFB631BBEBB04003C2144 /* MuCanvasManager.cpp in Sources */,
 				14DCFB601BBEB496003C2144 /* MuCanvas.cpp in Sources */,
 				1409BB071BBD03B00029F8D4 /* MuCanvasContext2D.cpp in Sources */,
 			);

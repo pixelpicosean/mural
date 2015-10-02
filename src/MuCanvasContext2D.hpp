@@ -135,6 +135,8 @@ namespace mural {
         ) {}
       void flushBuffers();
 
+      void present() {}
+
     protected:
       bool needsPresenting = false;
 
