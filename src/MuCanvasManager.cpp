@@ -23,7 +23,7 @@ namespace mural {
   }
 
   void MuCanvasManager::drawScreenCanvas() {
-    if (hasScreenCanvas) {
+    if (hasScreenCanvas && screenRenderingContext) {
       setCurrentRenderingContext(screenRenderingContext);
       screenRenderingContext->present();
     }

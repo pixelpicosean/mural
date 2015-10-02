@@ -122,6 +122,10 @@ namespace mural {
   }
 
   void MuCanvasContext2D::prepare() {
+    if (needsPresenting) {
+      return;
+    }
+
     viewFramebuffer->bindFramebuffer();
     gl::viewport(bufferSize);
 
@@ -131,6 +135,10 @@ namespace mural {
   }
 
   void MuCanvasContext2D::flushBuffers() {
+    if (!needsPresenting) {
+      return;
+    }
+
     positionVbo->unmap();
     texCoordVbo->unmap();
     colorVbo->unmap();

@@ -9,6 +9,8 @@
 #include "MuCanvas.hpp"
 #include "MuCanvasManager.hpp"
 
+#include "MuCanvasContext2DScreen.hpp"
+
 namespace mural {
 
   gl::TextureRef MuCanvas::getTexture() {
@@ -47,8 +49,7 @@ namespace mural {
     contextMode = mode;
 
     if (isScreenCanvas) {
-      // TODO: screen context
-      renderingContext = new MuCanvasContext2D(size.x, size.y);
+      renderingContext = new MuCanvasContext2DScreen(size.x, size.y);
     }
     else {
       // TODO: texture context
@@ -57,6 +58,10 @@ namespace mural {
 
     renderingContext->create();
     theCanvasManager.setCurrentRenderingContext(renderingContext);
+
+    if (isScreenCanvas) {
+      theCanvasManager.setScreenRenderingContext(renderingContext);
+    }
 
     return renderingContext;
   }

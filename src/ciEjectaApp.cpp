@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 
 #include "MuCanvas.hpp"
+#include "MuCanvasManager.hpp"
 
 using namespace ci;
 using namespace ci::app;
@@ -40,8 +41,7 @@ void ciEjectaApp::update() {
 
 void ciEjectaApp::draw() {
 	gl::clear(Color(0, 0, 0));
-
-  gl::draw(canvas->getTexture(), getWindowBounds());
+  mural::theCanvasManager.drawScreenCanvas();
 }
 
 CINDER_APP(ciEjectaApp, RendererGl, [&](App::Settings *settings) {
