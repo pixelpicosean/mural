@@ -98,6 +98,7 @@ namespace mural {
       virtual void create();
       virtual void resizeTo(int width, int height);
       void resetFramebuffer();
+      void bindVertexBuffer();
 
       void save() {}
       void restore() {}
@@ -149,7 +150,7 @@ namespace mural {
       gl::BatchRef    batch;
       gl::VboMeshRef  mesh;
 
-      size_t numVertices = 0;
+      size_t vertexBufferIndex = 0;
 
       gl::VboRef positionVbo;
       gl::VboRef texCoordVbo;

@@ -37,6 +37,11 @@ namespace mural {
     });
     batch = gl::Batch::create(mesh, gl::getStockShader(gl::ShaderDef()));
 
+    // Save vertex buffers for each part for later use
+    positionVbo = mesh->findAttrib(geom::POSITION)->second;
+    texCoordVbo = mesh->findAttrib(geom::TEX_COORD_0)->second;
+    colorVbo = mesh->findAttrib(geom::COLOR)->second;
+
     resizeTo(size.x, size.y);
   }
 
@@ -62,6 +67,12 @@ namespace mural {
     gl::clear(GL_COLOR_BUFFER_BIT);
 
     needsPresenting = true;
+  }
+
+  void MuCanvasContext2D::bindVertexBuffer() {
+    positions = (vec2 *)positionVbo->mapReplace();
+    texCoords = (vec2 *)texCoordVbo->mapReplace();
+    colors = (vec4 *)colorVbo->mapReplace();
   }
 
   void MuCanvasContext2D::beginPath() {
@@ -108,20 +119,14 @@ namespace mural {
     positions[4] = vec2(x, y + h);
     positions[5] = vec2(x + w, y + h);
 
-    numVertices += 6;
+    vertexBufferIndex += 6;
   }
 
   void MuCanvasContext2D::prepare() {
     viewFramebuffer->bindFramebuffer();
     gl::viewport(bufferSize);
 
-    positionVbo = mesh->findAttrib(geom::POSITION)->second;
-    texCoordVbo = mesh->findAttrib(geom::TEX_COORD_0)->second;
-    colorVbo = mesh->findAttrib(geom::COLOR)->second;
-
-    positions = (vec2 *)positionVbo->mapReplace();
-    texCoords = (vec2 *)texCoordVbo->mapReplace();
-    colors = (vec4 *)colorVbo->mapReplace();
+    bindVertexBuffer();
 
     needsPresenting = true;
   }
@@ -131,11 +136,12 @@ namespace mural {
     texCoordVbo->unmap();
     colorVbo->unmap();
 
-    batch->draw(0, numVertices);
+    batch->draw(0, vertexBufferIndex);
 
     viewFramebuffer->unbindFramebuffer();
 
     needsPresenting = false;
+    vertexBufferIndex = 0;
   }
 
 }
