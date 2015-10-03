@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "MuCanvas2DTypes.hpp"
+
 #define MU_CANVAS_STATE_STACK_SIZE 16
 
 namespace mural {
@@ -62,7 +64,7 @@ namespace mural {
   };
 
   struct MuCanvasState {
-    mat3 transform;
+    MuAffineTransform transform;
 
 //    MuCompositeOperation globalCompositeOperation;
     ColorAf fillColor = ColorAf::white();
@@ -124,16 +126,17 @@ namespace mural {
       void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {}
 
       void prepare();
-      void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const mat3 &transform) {}
-      void pushQuad(ci::vec2 v1, ci::vec2 v2, ci::vec2 v3, ci::vec2 v4, const ColorAf &color, const mat3 &transform) {}
-      void pushRect(float x, float y, float w, float h, const ColorAf &color, const mat3 &transform) {}
+      void flushBuffers();
+
+      void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform);
+      void pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform);
+      void pushRect(float x, float y, float w, float h, const ColorAf &color, const MuAffineTransform &transform);
       void pushTexturedRect(
         float x, float y, float w, float h,
         float tx, float ty, float tw, float th,
         const ColorAf &color,
-        const mat3 &transform
-        ) {}
-      void flushBuffers();
+        const MuAffineTransform &transform
+      );
 
       virtual void present() {}
 

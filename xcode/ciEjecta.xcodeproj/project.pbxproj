@@ -48,6 +48,7 @@
 		14DCFB651BBEC124003C2144 /* MuCanvasContext2DScreen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasContext2DScreen.hpp; path = ../src/MuCanvasContext2DScreen.hpp; sourceTree = "<group>"; };
 		14DCFB671BBF759E003C2144 /* MuCanvasContext2DTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuCanvasContext2DTexture.cpp; path = ../src/MuCanvasContext2DTexture.cpp; sourceTree = "<group>"; };
 		14DCFB681BBF759E003C2144 /* MuCanvasContext2DTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasContext2DTexture.hpp; path = ../src/MuCanvasContext2DTexture.hpp; sourceTree = "<group>"; };
+		14DCFB6A1BBF8D1A003C2144 /* MuCanvas2DTypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MuCanvas2DTypes.hpp; path = ../src/MuCanvas2DTypes.hpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
@@ -102,6 +103,7 @@
 				14DCFB651BBEC124003C2144 /* MuCanvasContext2DScreen.hpp */,
 				14DCFB671BBF759E003C2144 /* MuCanvasContext2DTexture.cpp */,
 				14DCFB681BBF759E003C2144 /* MuCanvasContext2DTexture.hpp */,
+				14DCFB6A1BBF8D1A003C2144 /* MuCanvas2DTypes.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";

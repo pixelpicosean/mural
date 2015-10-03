@@ -110,12 +110,12 @@ namespace mural {
 //    state->path.lineTo(x, y + h);
 //    state->path.close();
 
-    positions[0] = vec2(x, y);
-    positions[1] = vec2(x + w, y);
-    positions[2] = vec2(x, y + h);
+    positions[0] = vec2(x    , y    );
+    positions[1] = vec2(x + w, y    );
+    positions[2] = vec2(x    , y + h);
 
-    positions[3] = vec2(x + w, y);
-    positions[4] = vec2(x, y + h);
+    positions[3] = vec2(x + w, y    );
+    positions[4] = vec2(x    , y + h);
     positions[5] = vec2(x + w, y + h);
 
     vertexBufferIndex += 6;
@@ -151,6 +151,154 @@ namespace mural {
 
     needsPresenting = false;
     vertexBufferIndex = 0;
+  }
+
+  void MuCanvasContext2D::pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform) {
+    if (vertexBufferIndex >= MU_MAX_VERTICES - 3) {
+      flushBuffers();
+    }
+
+    vec2 d1(x1, y1);
+    vec2 d2(x2, y2);
+    vec2 d3(x3, y3);
+
+    if (transform.isIdentity()) {
+      d1 = transform.applyTo(d1);
+      d2 = transform.applyTo(d2);
+      d3 = transform.applyTo(d3);
+    }
+
+    positions[vertexBufferIndex]      = d1;
+    positions[vertexBufferIndex + 1]  = d2;
+    positions[vertexBufferIndex + 2]  = d3;
+
+    texCoords[vertexBufferIndex]      = { 0, 0 };
+    texCoords[vertexBufferIndex + 1]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 2]  = { 0, 0 };
+
+    colors[vertexBufferIndex]     = color;
+    colors[vertexBufferIndex + 1] = color;
+    colors[vertexBufferIndex + 2] = color;
+
+    vertexBufferIndex += 3;
+  }
+
+  void MuCanvasContext2D::pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform) {
+    if (vertexBufferIndex >= MU_MAX_VERTICES - 6) {
+      flushBuffers();
+    }
+
+    if (!transform.isIdentity()) {
+      transform.applyTo(v1);
+      transform.applyTo(v2);
+      transform.applyTo(v3);
+      transform.applyTo(v4);
+    }
+
+    positions[vertexBufferIndex]      = v1;
+    positions[vertexBufferIndex + 1]  = v2;
+    positions[vertexBufferIndex + 2]  = v3;
+    positions[vertexBufferIndex + 3]  = v2;
+    positions[vertexBufferIndex + 4]  = v3;
+    positions[vertexBufferIndex + 5]  = v4;
+
+    texCoords[vertexBufferIndex]      = { 0, 0 };
+    texCoords[vertexBufferIndex + 1]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 2]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 3]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 4]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 5]  = { 0, 0 };
+
+    colors[vertexBufferIndex]     = color;
+    colors[vertexBufferIndex + 1] = color;
+    colors[vertexBufferIndex + 2] = color;
+    colors[vertexBufferIndex + 3] = color;
+    colors[vertexBufferIndex + 4] = color;
+    colors[vertexBufferIndex + 5] = color;
+
+    vertexBufferIndex += 6;
+  }
+
+  void MuCanvasContext2D::pushRect(float x, float y, float w, float h, const ColorAf &color, const MuAffineTransform &transform) {
+    if (vertexBufferIndex >= MU_MAX_VERTICES - 6) {
+      flushBuffers();
+    }
+
+    vec2 d11(x    , y    );
+    vec2 d21(x + w, y    );
+    vec2 d12(x    , y + h);
+    vec2 d22(x + w, y + h);
+
+    if (transform.isIdentity()) {
+      transform.applyTo(d11);
+      transform.applyTo(d12);
+      transform.applyTo(d21);
+      transform.applyTo(d22);
+    }
+
+    positions[vertexBufferIndex]      = d11;
+    positions[vertexBufferIndex + 1]  = d21;
+    positions[vertexBufferIndex + 2]  = d12;
+    positions[vertexBufferIndex + 3]  = d21;
+    positions[vertexBufferIndex + 4]  = d12;
+    positions[vertexBufferIndex + 5]  = d22;
+
+    texCoords[vertexBufferIndex]      = { 0, 0 };
+    texCoords[vertexBufferIndex + 1]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 2]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 3]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 4]  = { 0, 0 };
+    texCoords[vertexBufferIndex + 5]  = { 0, 0 };
+
+    colors[vertexBufferIndex]     = color;
+    colors[vertexBufferIndex + 1] = color;
+    colors[vertexBufferIndex + 2] = color;
+    colors[vertexBufferIndex + 3] = color;
+    colors[vertexBufferIndex + 4] = color;
+    colors[vertexBufferIndex + 5] = color;
+
+    vertexBufferIndex += 6;
+  }
+
+  void MuCanvasContext2D::pushTexturedRect(float x, float y, float w, float h, float tx, float ty, float tw, float th, const ColorAf &color, const MuAffineTransform &transform) {
+    if (vertexBufferIndex >= MU_MAX_VERTICES - 6) {
+      flushBuffers();
+    }
+
+    vec2 d11(x    , y    );
+    vec2 d21(x + w, y    );
+    vec2 d12(x    , y + h);
+    vec2 d22(x + w, y + h);
+
+    if (transform.isIdentity()) {
+      transform.applyTo(d11);
+      transform.applyTo(d12);
+      transform.applyTo(d21);
+      transform.applyTo(d22);
+    }
+
+    positions[vertexBufferIndex]      = d11;
+    positions[vertexBufferIndex + 1]  = d21;
+    positions[vertexBufferIndex + 2]  = d12;
+    positions[vertexBufferIndex + 3]  = d21;
+    positions[vertexBufferIndex + 4]  = d12;
+    positions[vertexBufferIndex + 5]  = d22;
+
+    texCoords[vertexBufferIndex]      = { tx     , ty      };
+    texCoords[vertexBufferIndex + 1]  = { tx + tw, ty      };
+    texCoords[vertexBufferIndex + 2]  = { tx     , ty + th };
+    texCoords[vertexBufferIndex + 3]  = { tx + tw, ty      };
+    texCoords[vertexBufferIndex + 4]  = { tx     , ty + th };
+    texCoords[vertexBufferIndex + 5]  = { tx + tw, ty + th };
+
+    colors[vertexBufferIndex]     = color;
+    colors[vertexBufferIndex + 1] = color;
+    colors[vertexBufferIndex + 2] = color;
+    colors[vertexBufferIndex + 3] = color;
+    colors[vertexBufferIndex + 4] = color;
+    colors[vertexBufferIndex + 5] = color;
+
+    vertexBufferIndex += 6;
   }
 
 }
