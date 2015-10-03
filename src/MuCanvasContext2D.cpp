@@ -7,6 +7,7 @@
 //
 
 #include "MuCanvasContext2D.hpp"
+#include "MuCanvasManager.hpp"
 
 namespace mural {
 
@@ -89,7 +90,6 @@ namespace mural {
   void MuCanvasContext2D::bindVertexBuffer() {
     positions = (vec2 *)positionVbo->mapReplace();
     texCoords = (vec2 *)texCoordVbo->mapReplace();
-    colors = (vec4 *)colorVbo->mapReplace();
   }
 
   void MuCanvasContext2D::save() {
@@ -147,13 +147,13 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
-     // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    setProgram(theCanvasManager.getGlsl2DFlat());
 
-     ColorAf cc = blendFillColor(state);
-     pushRect(x, y, w, h,
-       cc,
-       state->transform
-     );
+    ColorAf cc = blendFillColor(state);
+    pushRect(x, y, w, h,
+      cc,
+      state->transform
+    );
   }
 
   void MuCanvasContext2D::strokeRect(float x, float y, float w, float h) {
@@ -167,12 +167,12 @@ namespace mural {
     tempPath.lineTo(x    , y + h);
     tempPath.close();
 
-    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    setProgram(theCanvasManager.getGlsl2DFlat());
     tempPath.drawLinesToContext(this);
   }
 
   void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {
-    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    setProgram(theCanvasManager.getGlsl2DFlat());
 
     MuCompositeOperation oldOp = state->globalCompositeOperation;
     globalCompositeOperation = kMuCompositeOperationDestinationOut;
@@ -191,12 +191,12 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fill() {
-    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    setProgram(theCanvasManager.getGlsl2DFlat());
     path->drawPolygonsToContext(this, kMuPathPolygonTargetColor);
   }
 
   void MuCanvasContext2D::stroke() {
-    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    setProgram(theCanvasManager.getGlsl2DFlat());
     path->drawLinesToContext(this);
   }
 
@@ -394,6 +394,12 @@ namespace mural {
     colors[vertexBufferIndex + 5] = color;
 
     vertexBufferIndex += 6;
+  }
+
+  void MuCanvasContext2D::setProgram(const gl::GlslProgRef &glsl) {
+    if (glsl != batch->getGlslProg()) {
+      batch->replaceGlslProg(glsl);
+    }
   }
 
 }

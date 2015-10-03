@@ -21,6 +21,10 @@ namespace mural {
       MuCanvasContext2D *getScreenRenderingContext() { return screenRenderingContext; }
       void setScreenRenderingContext(MuCanvasContext2D *renderingContext) { screenRenderingContext = renderingContext; }
 
+      ci::gl::GlslProgRef getGlsl2DFlat() {
+        return glsl2DFlat;
+      }
+
       void drawScreenCanvas();
 
       static MuCanvasManager &instance() {
@@ -32,7 +36,9 @@ namespace mural {
       MuCanvasContext2D *currentRenderingContext = nullptr;
       MuCanvasContext2D *screenRenderingContext = nullptr;
 
-      MuCanvasManager() {}
+      ci::gl::GlslProgRef glsl2DFlat = nullptr;
+
+      MuCanvasManager();
       ~MuCanvasManager() {}
 
       MuCanvasManager(MuCanvasManager const&) {}

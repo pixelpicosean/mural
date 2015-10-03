@@ -32,10 +32,16 @@ void ciEjectaApp::update() {
 
     // Draw something here
     ctx->rect(10, 10, 40, 40);
-    ctx->setStrokeColor(ColorAf{ 1.0f, 0.0f, 1.0f, 1.0f });
-    ctx->stroke();
+
 //    ctx->setFillColor(ColorAf{ 0.0f, 1.0f, 1.0f, 1.0f });
 //    ctx->fill();
+
+    ctx->setStrokeColor(ColorAf{ 1.0f, 0.0f, 1.0f, 1.0f });
+    ctx->state->lineWidth = 4;
+    ctx->stroke();
+
+//    ctx->setFillColor(ColorAf{ 0.0f, 1.0f, 1.0f, 1.0f });
+//    ctx->fillRect(10, 10, 40, 40);
 
     finished = true;
   }

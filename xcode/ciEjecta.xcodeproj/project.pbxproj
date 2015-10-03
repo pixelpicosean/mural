@@ -108,10 +108,10 @@
 				14DCFB651BBEC124003C2144 /* MuCanvasContext2DScreen.hpp */,
 				14DCFB671BBF759E003C2144 /* MuCanvasContext2DTexture.cpp */,
 				14DCFB681BBF759E003C2144 /* MuCanvasContext2DTexture.hpp */,
+				14DCFB6E1BBFB048003C2144 /* MuCanvas2DTypes.cpp */,
 				14DCFB6A1BBF8D1A003C2144 /* MuCanvas2DTypes.hpp */,
 				14DCFB6B1BBF97C7003C2144 /* MuPath.cpp */,
 				14DCFB6C1BBF97C7003C2144 /* MuPath.hpp */,
-				14DCFB6E1BBFB048003C2144 /* MuCanvas2DTypes.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";

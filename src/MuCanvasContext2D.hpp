@@ -205,6 +205,8 @@ namespace mural {
       vec2 *positions;
       vec2 *texCoords;
       vec4 *colors;
+
+      void setProgram(const gl::GlslProgRef &glsl);
   };
 
 }

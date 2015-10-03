@@ -315,7 +315,7 @@ namespace mural {
       context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, blendFillColor(state), MuAffineTransform::identity);
     }
 
-     context->flushBuffers();
+    context->flushBuffers();
   }
 
   void MuPath::drawArcTo(MuCanvasContext2D *context, const vec2 &point, const vec2 &p1, const vec2 &p2, const ColorAf &color) {
