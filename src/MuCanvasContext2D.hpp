@@ -136,6 +136,7 @@ namespace mural {
       virtual void resizeTo(int width, int height);
       void resetFramebuffer();
       void bindVertexBuffer();
+      void unbindVertexBuffer();
 
       void save();
       void restore();
@@ -162,6 +163,7 @@ namespace mural {
 
       void prepare();
       void flushBuffers();
+      void finish();
 
       void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform);
       void pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform);
@@ -179,7 +181,8 @@ namespace mural {
       virtual void present() {}
 
     protected:
-      bool needsPresenting = false;
+      bool frameBufferBinded = false;
+      bool vboMapped = false;
 
       ivec2 size = { 200, 150 };
       float devicePixelRatio = 1.0f;

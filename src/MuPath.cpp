@@ -287,6 +287,7 @@ namespace mural {
     if (longestSubpath < 3 && currentPath.points.size() < 3) { return; }
 
     MuCanvasState *state = context->state;
+    context->flushBuffers();
 
     if (state->fillObject && target == kMuPathPolygonTargetColor) {
       // If we have a fill pattern or gradient, we have to do some extra work to unproject the

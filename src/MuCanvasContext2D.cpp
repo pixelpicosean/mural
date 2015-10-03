@@ -82,14 +82,31 @@ namespace mural {
     gl::clearColor(ColorAf::zero());
     gl::clear(GL_COLOR_BUFFER_BIT);
 
-    needsPresenting = true;
-
     flushBuffers();
   }
 
   void MuCanvasContext2D::bindVertexBuffer() {
+    if (vboMapped) {
+      return;
+    }
+
     positions = (vec2 *)positionVbo->mapReplace();
     texCoords = (vec2 *)texCoordVbo->mapReplace();
+    colors = (vec4 *)colorVbo->mapReplace();
+
+    vboMapped = true;
+  }
+
+  void MuCanvasContext2D::unbindVertexBuffer() {
+    if (!vboMapped) {
+      return;
+    }
+
+    positionVbo->unmap();
+    texCoordVbo->unmap();
+    colorVbo->unmap();
+
+    vboMapped = false;
   }
 
   void MuCanvasContext2D::save() {
@@ -149,9 +166,8 @@ namespace mural {
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
     setProgram(theCanvasManager.getGlsl2DFlat());
 
-    ColorAf cc = blendFillColor(state);
     pushRect(x, y, w, h,
-      cc,
+      blendFillColor(state),
       state->transform
     );
   }
@@ -217,35 +233,33 @@ namespace mural {
   }
 
   void MuCanvasContext2D::prepare() {
-    if (needsPresenting) {
-      return;
+    if (!frameBufferBinded) {
+      viewFramebuffer->bindFramebuffer();
+      gl::viewport(bufferSize);
+      frameBufferBinded = true;
     }
 
-    viewFramebuffer->bindFramebuffer();
-    gl::viewport(bufferSize);
-
     bindVertexBuffer();
-
-    needsPresenting = true;
   }
 
   void MuCanvasContext2D::flushBuffers() {
-    if (!needsPresenting) {
+    if (vertexBufferIndex == 0) {
       return;
     }
 
-    positionVbo->unmap();
-    texCoordVbo->unmap();
-    colorVbo->unmap();
+    unbindVertexBuffer();
 
-    if (vertexBufferIndex > 0) {
-      batch->draw(0, vertexBufferIndex);
-    }
-
-    viewFramebuffer->unbindFramebuffer();
-
-    needsPresenting = false;
+    batch->draw(0, vertexBufferIndex);
     vertexBufferIndex = 0;
+  }
+
+  void MuCanvasContext2D::finish() {
+    flushBuffers();
+
+    if (frameBufferBinded) {
+      viewFramebuffer->unbindFramebuffer();
+      frameBufferBinded = false;
+    }
   }
 
   void MuCanvasContext2D::pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform) {

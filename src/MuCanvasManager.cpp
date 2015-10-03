@@ -16,7 +16,7 @@ namespace mural {
   void MuCanvasManager::setCurrentRenderingContext(mural::MuCanvasContext2D *renderingContext) {
     if (renderingContext != currentRenderingContext) {
       if (currentRenderingContext) {
-        currentRenderingContext->flushBuffers();
+        currentRenderingContext->finish();
       }
 
       renderingContext->prepare();
