@@ -10,6 +10,7 @@
 #include "MuCanvasManager.hpp"
 
 #include "MuCanvasContext2DScreen.hpp"
+#include "MuCanvasContext2DTexture.hpp"
 
 namespace mural {
 
@@ -52,8 +53,7 @@ namespace mural {
       renderingContext = new MuCanvasContext2DScreen(size.x, size.y);
     }
     else {
-      // TODO: texture context
-      renderingContext = new MuCanvasContext2D(size.x, size.y);
+      renderingContext = new MuCanvasContext2DTexture(size.x, size.y);
     }
 
     renderingContext->create();
