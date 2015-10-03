@@ -87,6 +87,8 @@ namespace mural {
 
       return p;
     }
+
+    static MuAffineTransform identity;
   };
 
   static inline float distanceToLineSegmentSquared(const vec2 &p, const vec2 &v, const vec2 &w) {

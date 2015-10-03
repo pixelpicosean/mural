@@ -10,6 +10,21 @@
 
 namespace mural {
 
+  const MuCompositeOperationFunc MuCompositeOperationFuncs[] = {
+    [kMuCompositeOperationSourceOver] = {GL_ONE, GL_ONE_MINUS_SRC_ALPHA, 1},
+    [kMuCompositeOperationLighter] = {GL_ONE, GL_ONE_MINUS_SRC_ALPHA, 0},
+    [kMuCompositeOperationDarker] = {GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA, 1},
+    [kMuCompositeOperationDestinationOut] = {GL_ZERO, GL_ONE_MINUS_SRC_ALPHA, 1},
+    [kMuCompositeOperationDestinationOver] = {GL_ONE_MINUS_DST_ALPHA, GL_ONE, 1},
+    [kMuCompositeOperationSourceAtop] = {GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1},
+    [kMuCompositeOperationXOR] = {GL_ONE_MINUS_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1},
+    [kMuCompositeOperationCopy] = {GL_ONE, GL_ZERO, 1},
+    [kMuCompositeOperationSourceIn] = {GL_DST_ALPHA, GL_ZERO, 1},
+    [kMuCompositeOperationDestinationIn] = {GL_ZERO, GL_SRC_ALPHA, 1},
+    [kMuCompositeOperationSourceOut] = {GL_ONE_MINUS_DST_ALPHA, GL_ZERO, 1},
+    [kMuCompositeOperationDestinationAtop] = {GL_ONE_MINUS_DST_ALPHA, GL_SRC_ALPHA, 1}
+  };
+
   MuCanvasContext2D::MuCanvasContext2D(int width, int height):
     size(width, height)
   {
@@ -77,48 +92,128 @@ namespace mural {
     colors = (vec4 *)colorVbo->mapReplace();
   }
 
+  void MuCanvasContext2D::save() {
+    if (stateIndex == MU_CANVAS_STATE_STACK_SIZE - 1) {
+      printf("Warning: MU_CANVAS_STATE_STACK_SIZE (%d) reached", MU_CANVAS_STATE_STACK_SIZE);
+      return;
+    }
+
+    stateStack[stateIndex + 1] = stateStack[stateIndex];
+    stateIndex++;
+    state = &stateStack[stateIndex];
+  }
+
+  void MuCanvasContext2D::restore() {
+    if (stateIndex == 0) { return; }
+
+    MuCompositeOperation oldCompositeOp = state->globalCompositeOperation;
+
+    // Load state from stack
+    stateIndex--;
+    state = &stateStack[stateIndex];
+
+    path->transform = state->transform;
+
+    // Set Composite op, if different
+    if (state->globalCompositeOperation != oldCompositeOp) {
+      globalCompositeOperation = state->globalCompositeOperation;
+    }
+  }
+
+  void MuCanvasContext2D::rotate(float angle) {
+    state->transform.rotate(angle);
+    path->transform = state->transform;
+  }
+
+  void MuCanvasContext2D::translate(float x, float y) {
+    state->transform.translate(x, y);
+    path->transform = state->transform;
+  }
+
+  void MuCanvasContext2D::scale(float x, float y) {
+    state->transform.scale(x, y);
+    path->transform = state->transform;
+  }
+
+  void MuCanvasContext2D::transform(float m11, float m12, float m21, float m22, float dx, float dy) {
+    MuAffineTransform t(m11, m12, m21, m22, dx, dy);
+    t.concat(state->transform);
+    path->transform = state->transform = t;
+  }
+
+  void MuCanvasContext2D::setTransform(float m11, float m12, float m21, float m22, float dx, float dy) {
+    state->transform = MuAffineTransform(m11, m12, m21, m22, dx, dy);
+    path->transform = state->transform;
+  }
+
+  void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
+     // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+
+     ColorAf cc = blendFillColor(state);
+     pushRect(x, y, w, h,
+       cc,
+       state->transform
+     );
+  }
+
+  void MuCanvasContext2D::strokeRect(float x, float y, float w, float h) {
+    MuPath tempPath;
+
+    tempPath.transform = state->transform;
+
+    tempPath.moveTo(x    , y    );
+    tempPath.lineTo(x + w, y    );
+    tempPath.lineTo(x + w, y + h);
+    tempPath.lineTo(x    , y + h);
+    tempPath.close();
+
+    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    tempPath.drawLinesToContext(this);
+  }
+
+  void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {
+    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+
+    MuCompositeOperation oldOp = state->globalCompositeOperation;
+    globalCompositeOperation = kMuCompositeOperationDestinationOut;
+
+    pushRect(x, y, w, h, ColorAf::white(), state->transform);
+
+    globalCompositeOperation = oldOp;
+  }
+
   void MuCanvasContext2D::beginPath() {
-    state->path.clear();
+    path->reset();
   }
 
   void MuCanvasContext2D::closePath() {
-    state->path.close();
+    path->close();
   }
 
   void MuCanvasContext2D::fill() {
-    gl::color(state->fillColor);
-    flushBuffers();
+    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    path->drawPolygonsToContext(this, kMuPathPolygonTargetColor);
   }
 
   void MuCanvasContext2D::stroke() {
-    gl::color(state->strokeColor);
-    flushBuffers();
+    // setProgram(theSharedOpenGLContext.getGLProgram2DFlat());
+    path->drawLinesToContext(this);
   }
 
   void MuCanvasContext2D::moveTo(float x, float y) {
-    state->path.moveTo(x, y);
+    path->moveTo(x, y);
   }
 
   void MuCanvasContext2D::lineTo(float x, float y) {
-    state->path.lineTo(x, y);
+    path->lineTo(x, y);
   }
 
   void MuCanvasContext2D::rect(float x, float y, float w, float h) {
-//    state->path.moveTo(x, y);
-//    state->path.lineTo(x + w, y);
-//    state->path.lineTo(x + w, y + h);
-//    state->path.lineTo(x, y + h);
-//    state->path.close();
-
-    positions[0] = vec2(x    , y    );
-    positions[1] = vec2(x + w, y    );
-    positions[2] = vec2(x    , y + h);
-
-    positions[3] = vec2(x + w, y    );
-    positions[4] = vec2(x    , y + h);
-    positions[5] = vec2(x + w, y + h);
-
-    vertexBufferIndex += 6;
+    path->moveTo(x    , y    );
+    path->lineTo(x + w, y    );
+    path->lineTo(x + w, y + h);
+    path->lineTo(x    , y + h);
+    path->close();
   }
 
   void MuCanvasContext2D::prepare() {
