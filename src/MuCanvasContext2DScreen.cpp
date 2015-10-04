@@ -27,6 +27,8 @@ namespace mural {
   void MuCanvasContext2DScreen::present() {
     finish();
 
+    // TODO: clear to `style.backgroundColor`
+    gl::clear(ColorAf::zero());
     gl::viewport(0, 0, getWindowWidth(), getWindowHeight());
     gl::draw(getTexture(), getWindowBounds());
   }

@@ -64,14 +64,11 @@ void ciEjectaApp::update() {
     ctx->fill();
     ctx->restore();
 
-    ctx->finish();
-
     finished = true;
   }
 }
 
 void ciEjectaApp::draw() {
-	gl::clear(Color(0, 0, 0));
   mural::theCanvasManager.drawScreenCanvas();
 }
 
