@@ -296,7 +296,7 @@ namespace mural {
       for (auto p: paths) {
         tri.addPolyLine(p);
       }
-      gl::color(state->fillColor);
+      gl::ScopedColor c(state->fillColor);
       gl::draw(tri.calcMesh());
     }
   }
