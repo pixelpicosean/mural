@@ -34,13 +34,35 @@ void ciEjectaApp::draw() {
   if (!finished) {
     auto ctx = canvas->getContext(mural::kMuCanvasContextMode2D);
 
-    // Draw something here
-    ctx->setFillColor(ColorAf(0.0f, 1.0f, 1.0f, 1.0f));
-    ctx->setStrokeColor(ColorAf(1.0f, 0.0f, 1.0f, 1.0f));
-    ctx->state->lineWidth = 1;
+    // Tests
+    // - LineCap
+    auto testLineCap = [&]() {
+      ctx->setStrokeColor(ColorAf(0.0f, 1.0f, 1.0f, 1.0f));
+      ctx->state->lineWidth = 40;
 
-    ctx->arc(320, 200, 80, 0, M_PI * 2, false);
-    ctx->stroke();
+      // - Butt
+      ctx->state->lineCap = mural::kMuLineCapButt;
+
+      ctx->moveTo(200, 100);
+      ctx->lineTo(640 - 200, 100);
+      ctx->stroke();
+
+      // - Squire
+      ctx->state->lineCap = mural::kMuLineCapSquare;
+
+      ctx->moveTo(200, 200);
+      ctx->lineTo(640 - 200, 200);
+      ctx->stroke();
+
+      // - Round
+      ctx->state->lineCap = mural::kMuLineCapRound;
+
+      ctx->moveTo(200, 300);
+      ctx->lineTo(640 - 200, 300);
+      ctx->stroke();
+    };
+
+    testLineCap();
 
     finished = true;
   }
