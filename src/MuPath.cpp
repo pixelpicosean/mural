@@ -290,33 +290,20 @@ namespace mural {
     context->flushBuffers();
 
     if (state->fillObject && target == kMuPathPolygonTargetColor) {
-      // If we have a fill pattern or gradient, we have to do some extra work to unproject the
-      // Quad we're drawing, so we can then project it _with_ the pattern/gradient again
-
-      MuAffineTransform inverse = transform;
-      inverse.invert();
-
-      vec2 p1(minPos);
-      inverse.applyTo(p1);
-      vec2 p2(maxPos.x, minPos.y);
-      inverse.applyTo(p2);
-      vec2 p3(minPos.x, maxPos.y);
-      inverse.applyTo(p3);
-      vec2 p4(maxPos);
-      inverse.applyTo(p4);
-
-      // Find the unprojected min/max
-      vec2 tmin(std::min(p1.x, std::min(p2.x,std::min(p3.x, p4.x))), std::min(p1.y, std::min(p2.y,std::min(p3.y, p4.y))));
-      vec2 tmax(std::max(p1.x, std::max(p2.x,std::max(p3.x, p4.x))), std::max(p1.y, std::max(p2.y,std::max(p3.y, p4.y))));
-
-      // context->pushFilledRect(tmin.x, tmin.y, tmax.x-tmin.x, tmax.y-tmin.y, state->fillObject, blendWhiteColor(state), transform);
       console() << "Filled rect is not supported yet!" << std::endl;
     }
     else {
-      context->pushRect(minPos.x, minPos.y, maxPos.x-minPos.x, maxPos.y-minPos.y, blendFillColor(state), MuAffineTransform::identity);
+      PolyLine2f pl;
+      for (auto p: paths) {
+        console() << "points: " << p.points.size() << std::endl;
+        for (auto point: p.points) {
+          pl.push_back(point);
+        }
+      }
+      console() << "points of polyline: " << pl.size() << std::endl;
+      gl::color(state->fillColor);
+      gl::drawSolid(pl);
     }
-
-    context->flushBuffers();
   }
 
   void MuPath::drawArcTo(MuCanvasContext2D *context, const vec2 &point, const vec2 &p1, const vec2 &p2, const ColorAf &color) {

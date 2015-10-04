@@ -38,32 +38,36 @@ void ciEjectaApp::update() {
     // ctx->state->lineJoin = mural::kMuLineJoinRound;
 
     ctx->rect(100, 100, 100, 100);
-    // ctx->fill();
+    ctx->fill();
+    ctx->finish();
 
-    ctx->stroke();
-    // ctx->fill();
+//    ctx->flushBuffers();
+//    ctx->unbindVertexBuffer();
 
-    // ctx->rect(220, 100, 100, 100);
-    // ctx->fill();
-    // ctx->stroke();
-
-    ctx->fillRect(220, 100, 100, 100);
-
-    ctx->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
-    ctx->state->lineWidth = 4;
-    ctx->strokeRect(160, 220, 100, 100);
-
-    ctx->translate(320, 100);
-    ctx->save();
-    ctx->setStrokeColor(ColorAf(0.5f, 10.f, 0.5f, 1.0f));
-    ctx->beginPath();
-    ctx->moveTo(20, 0);
-    ctx->lineTo(120, 0);
-    ctx->lineTo(120, 100);
-    ctx->closePath();
-    ctx->stroke();
-    // ctx->fill();
-    ctx->restore();
+//    ctx->stroke();
+//    // ctx->fill();
+//
+//    // ctx->rect(220, 100, 100, 100);
+//    // ctx->fill();
+//    // ctx->stroke();
+//
+//    ctx->fillRect(220, 100, 100, 100);
+//
+//    ctx->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
+//    ctx->state->lineWidth = 4;
+//    ctx->strokeRect(160, 220, 100, 100);
+//
+//    ctx->translate(320, 100);
+//    ctx->save();
+//    ctx->setStrokeColor(ColorAf(0.5f, 10.f, 0.5f, 1.0f));
+//    ctx->beginPath();
+//    ctx->moveTo(20, 0);
+//    ctx->lineTo(120, 0);
+//    ctx->lineTo(120, 100);
+//    ctx->closePath();
+//    ctx->stroke();
+//    // ctx->fill();
+//    ctx->restore();
 
     finished = true;
   }
