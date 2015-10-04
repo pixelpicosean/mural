@@ -27,7 +27,10 @@ void ciEjectaApp::setup() {
 
 void ciEjectaApp::mouseDown(MouseEvent event) {}
 
-void ciEjectaApp::update() {
+void ciEjectaApp::update() {}
+
+void ciEjectaApp::draw() {
+  // - TEST BEGIN -----------------------------------------------------
   if (!finished) {
     auto ctx = canvas->getContext(mural::kMuCanvasContextMode2D);
 
@@ -66,9 +69,8 @@ void ciEjectaApp::update() {
 
     finished = true;
   }
-}
+  // - TEST END --------------------------------------------------------
 
-void ciEjectaApp::draw() {
   mural::theCanvasManager.drawScreenCanvas();
 }
 
