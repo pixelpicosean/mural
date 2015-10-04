@@ -8,6 +8,7 @@
 
 #include "MuPath.hpp"
 #include "MuCanvasContext2D.hpp"
+#include "cinder/Triangulate.h"
 
 namespace mural {
 
@@ -17,7 +18,7 @@ namespace mural {
 
   void MuPath::push(vec2 v) {
     // Ignore this point if it's identical to the last
-    if ((v.x == lastPushed.x && v.y == lastPushed.y) && !currentPath.points.empty()) {
+    if ((v.x == lastPushed.x && v.y == lastPushed.y) && currentPath.size() > 0) {
       return;
     }
     lastPushed = v;
@@ -26,14 +27,13 @@ namespace mural {
     minPos.y = std::min(minPos.y, v.y);
     maxPos.x = std::max(maxPos.x, v.x);
     maxPos.y = std::max(maxPos.y, v.y);
-    currentPath.points.push_back(v);
+    currentPath.push_back(v);
   }
 
   void MuPath::reset() {
     longestSubpath = 0;
     paths.clear();
-    currentPath.isClosed = false;
-    currentPath.points.clear();
+    currentPath = PolyLine2f();
 
     currentPos = vec2(0.0f, 0.0f);
 
@@ -42,21 +42,20 @@ namespace mural {
   }
 
   void MuPath::close() {
-    currentPath.isClosed = true;
-    if (currentPath.points.size()) {
-      currentPos = currentPath.points.front();
+    currentPath.setClosed(true);
+    if (currentPath.size()) {
+      currentPos = *currentPath.begin();
       push(currentPos);
     }
     endSubPath();
   }
 
   void MuPath::endSubPath() {
-    if (currentPath.points.size() > 1) {
+    if (currentPath.size() > 1) {
       paths.push_back(currentPath);
-      longestSubpath = std::max(longestSubpath, (unsigned int)currentPath.points.size());
+      longestSubpath = std::max(longestSubpath, (unsigned int)currentPath.size());
     }
-    currentPath.points.clear();
-    currentPath.isClosed = false;
+    currentPath = PolyLine2f();
   }
 
   void MuPath::moveTo(float x, float y) {
@@ -284,25 +283,21 @@ namespace mural {
   }
 
   void MuPath::drawPolygonsToContext(MuCanvasContext2D *context, MuPathPolygonTarget target) {
-    if (longestSubpath < 3 && currentPath.points.size() < 3) { return; }
+    if (longestSubpath < 3 && currentPath.size() < 3) { return; }
 
     MuCanvasState *state = context->state;
     context->flushBuffers();
 
     if (state->fillObject && target == kMuPathPolygonTargetColor) {
-      console() << "Filled rect is not supported yet!" << std::endl;
+      console() << "Pattern or gradient based polygon fill is not supported yet!" << std::endl;
     }
     else {
-      PolyLine2f pl;
+      Triangulator tri;
       for (auto p: paths) {
-        console() << "points: " << p.points.size() << std::endl;
-        for (auto point: p.points) {
-          pl.push_back(point);
-        }
+        tri.addPolyLine(p);
       }
-      console() << "points of polyline: " << pl.size() << std::endl;
       gl::color(state->fillColor);
-      gl::drawSolid(pl);
+      gl::draw(tri.calcMesh());
     }
   }
 
@@ -405,10 +400,10 @@ namespace mural {
     vec2 drawMin = minPos, drawMax = maxPos;
 
     for (path_t::iterator sp = paths.begin(); ; ++sp) {
-      subpath_t &path = (sp == paths.end()) ? currentPath : *sp;
-      if (sp == paths.end() && currentPath.points.size() <= 1) break;
+      PolyLine2f &path = (sp == paths.end()) ? currentPath : *sp;
+      if (sp == paths.end() && currentPath.size() <= 1) break;
 
-      bool subPathIsClosed = path.isClosed;
+      bool subPathIsClosed = path.isClosed();
       bool ignoreFirstSegment = addMiter && subPathIsClosed;
       bool firstInSubPath = true;
       bool miterLimitExceeded = false, firstMiterLimitExceeded = false;
@@ -420,12 +415,12 @@ namespace mural {
       // the first segment will be computed and used to draw the first segment's first
       // miter, as well as the last segment's last miter outside the loop.
       if (addMiter && subPathIsClosed) {
-        transNext = &path.points.at(path.points.size()-2);
+        transNext = &path.getPoints().at(path.size() - 2);
         next = *transNext;
         inverseTransform.applyTo(next);
       }
 
-      for (points_t::iterator vertex = path.points.begin(); vertex != path.points.end(); ++vertex) {
+      for (auto vertex = path.begin(); vertex != path.end(); ++vertex) {
         transCurrent = transNext;
         transNext = &(*vertex);
 
@@ -551,7 +546,7 @@ namespace mural {
         miter12 = firstMiter2;
       }
       else {
-        vec2 untransformedBack(path.points.back());
+        vec2 untransformedBack(path.getPoints().back());
         inverseTransform.applyTo(untransformedBack);
         miter11 = untransformedBack + nextExt;
         miter12 = untransformedBack - nextExt;

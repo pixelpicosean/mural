@@ -21,6 +21,7 @@ namespace mural {
 
   using ci::vec2;
   using ci::ColorAf;
+  using ci::PolyLine2f;
 
   enum MuPathPolygonTarget {
     kMuPathPolygonTargetColor,
@@ -32,13 +33,8 @@ namespace mural {
     kMuPathFillRuleEvenOdd
   };
 
-  // We're using the C++ std::vector here to store our points.
-  typedef std::vector<vec2> points_t;
-  typedef struct {
-    points_t points;
-    bool isClosed;
-  } subpath_t;
-  typedef std::vector<subpath_t> path_t;
+  // We're using the PolyLine to store paths
+  typedef std::vector<PolyLine2f> path_t;
 
   class MuCanvasContext2D;
   class MuPath {
@@ -72,7 +68,7 @@ namespace mural {
 
       float distanceTolerance = 0.0f;
 
-      subpath_t currentPath;
+      PolyLine2f currentPath;
       path_t paths;
 
       void drawArcTo(MuCanvasContext2D *context, const vec2 &point, const vec2 &p1, const vec2 &p2, const ColorAf &color);
