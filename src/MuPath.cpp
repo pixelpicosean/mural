@@ -264,12 +264,12 @@ namespace mural {
 
     // Calculate the number of steps, based on the radius, scaling and the span
     float size = radius * transform.getScale() * 5;
-    float maxSteps = MU_PATH_MAX_STEPS_FOR_CIRCLE * fabsf(span)/(2 * M_PI);
-    int steps = std::max(MU_PATH_MIN_STEPS_FOR_CIRCLE, (size / (200+size)) * maxSteps);
+    float maxSteps = MU_PATH_MAX_STEPS_FOR_CIRCLE * fabsf(span) / (2 * M_PI);
+    int steps = std::max(MU_PATH_MIN_STEPS_FOR_CIRCLE, (size / (200 + size)) * maxSteps);
 
     float stepSize = span / (float)steps;
     float angle = startAngle;
-    for( int i = 0; i < steps; i++, angle += stepSize ) {
+    for (int i = 0; i < steps; i++, angle += stepSize) {
       vec2 pos(x + cosf(angle) * radius, y + sinf(angle) * radius);
       currentPos = transform.applyTo(pos);
       push(currentPos);
@@ -315,7 +315,7 @@ namespace mural {
     // colinear vectors (for caps) need to be handled seperately
     float angle2;
     if (v1.x == -v2.x && v1.y == -v2.y) {
-      angle2 = 3.14;
+      angle2 = M_PI;
     }
     else {
       angle2 = acosf(v1.x * v2.x + v1.y * v2.y);
@@ -335,10 +335,10 @@ namespace mural {
     }
 
     // calculate direction
-    float direction = (v2.x*v1.y - v2.y*v1.x < 0) ? -1 : 1;
+    float direction = (v2.x * v1.y - v2.y * v1.x < 0) ? -1 : 1;
 
     // calculate angle step
-    float step = (angle2/numSteps) * direction;
+    float step = (angle2 / numSteps) * direction;
 
     // starting point
     float angle = angle1;

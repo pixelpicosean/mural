@@ -156,10 +156,10 @@ namespace mural {
       void moveTo(float x, float y);
       void lineTo(float x, float y);
       void rect(float x, float y, float w, float h);
-      void bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y) {}
-      void quadraticCurveTo(float cpx, float cpy, float x, float y) {}
-      void arcTo(float x1, float y1, float x2, float y2, float radius) {}
-      void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {}
+      void bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y);
+      void quadraticCurveTo(float cpx, float cpy, float x, float y);
+      void arcTo(float x1, float y1, float x2, float y2, float radius);
+      void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise);
 
       void prepare();
       void flushBuffers();

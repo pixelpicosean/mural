@@ -232,6 +232,24 @@ namespace mural {
     path->close();
   }
 
+  void MuCanvasContext2D::bezierCurveTo(float cpx1, float cpy1, float cpx2, float cpy2, float x, float y) {
+    float scale = state->transform.getScale();
+    path->bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x, y, scale);
+  }
+
+  void MuCanvasContext2D::quadraticCurveTo(float cpx, float cpy, float x, float y) {
+    float scale = state->transform.getScale();
+    path->quadraticCurveTo(cpx, cpy, x, y, scale);
+  }
+
+  void MuCanvasContext2D::arcTo(float x1, float y1, float x2, float y2, float radius) {
+    path->arcTo(x1, y1, x2, y2, radius);
+  }
+
+  void MuCanvasContext2D::arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {
+    path->arc(x, y, radius, startAngle, endAngle, antiClockwise);
+  }
+
   void MuCanvasContext2D::prepare() {
     if (!frameBufferBinded) {
       viewFramebuffer->bindFramebuffer();
