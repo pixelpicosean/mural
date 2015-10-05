@@ -5,10 +5,13 @@
 #include "MuCanvas.hpp"
 #include "MuCanvasManager.hpp"
 #include "MuCanvasContext2D.hpp"
+#include "MuImage.hpp"
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
+
+using namespace mural;
 
 class ciEjectaApp : public App {
   public:
@@ -61,8 +64,43 @@ void ciEjectaApp::draw() {
       ctx->lineTo(640 - 200, 300);
       ctx->stroke();
     };
+    // - LineJoin
+    auto testLineJoin = [&]() {
+      ctx->setStrokeColor(ColorAf(0.0f, 1.0f, 1.0f, 1.0f));
+      ctx->state->lineWidth = 40;
 
-    testLineCap();
+      MuLineJoin lineJoin[] = {
+        kMuLineJoinRound,
+        kMuLineJoinBevel,
+        kMuLineJoinMiter,
+      };
+
+      for (int i = 0; i < 3; i++) {
+        ctx->state->lineJoin = lineJoin[i];
+        ctx->beginPath();
+        ctx->moveTo(80, 30 + i * 120);
+        ctx->lineTo(200, 130 + i * 120);
+        ctx->lineTo(320, 30 + i * 120);
+        ctx->lineTo(440, 130 + i * 120);
+        ctx->lineTo(560, 30 + i * 120);
+        ctx->stroke();
+      }
+    };
+
+    // - Image
+    auto testImage = [&] {
+      auto img = new MuImage();
+      img->onLoad([&](MuImage *img) {
+        auto tex = img->getTexture();
+        console() << "Image loaded, size: (" << tex->getWidth() << ", " << tex->getHeight() << ")" << std::endl;
+      });
+
+      img->setSrc("green-block.png");
+    };
+
+    // testLineCap();
+    // testLineJoin();
+    testImage();
 
     finished = true;
   }

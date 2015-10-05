@@ -17,6 +17,7 @@
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		1409BB071BBD03B00029F8D4 /* MuCanvasContext2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1409BB051BBD03B00029F8D4 /* MuCanvasContext2D.cpp */; settings = {ASSET_TAGS = (); }; };
+		1450B3721BC256F7007B1F2D /* MuImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1450B3701BC256F7007B1F2D /* MuImage.cpp */; settings = {ASSET_TAGS = (); }; };
 		14DCFB601BBEB496003C2144 /* MuCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */; settings = {ASSET_TAGS = (); }; };
 		14DCFB631BBEBB04003C2144 /* MuCanvasManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB621BBEBB04003C2144 /* MuCanvasManager.cpp */; settings = {ASSET_TAGS = (); }; };
 		14DCFB661BBEC124003C2144 /* MuCanvasContext2DScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB641BBEC124003C2144 /* MuCanvasContext2DScreen.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -42,6 +43,8 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1409BB051BBD03B00029F8D4 /* MuCanvasContext2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuCanvasContext2D.cpp; path = ../src/MuCanvasContext2D.cpp; sourceTree = "<group>"; };
 		1409BB061BBD03B00029F8D4 /* MuCanvasContext2D.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasContext2D.hpp; path = ../src/MuCanvasContext2D.hpp; sourceTree = "<group>"; };
+		1450B3701BC256F7007B1F2D /* MuImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuImage.cpp; path = ../src/MuImage.cpp; sourceTree = "<group>"; };
+		1450B3711BC256F7007B1F2D /* MuImage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuImage.hpp; path = ../src/MuImage.hpp; sourceTree = "<group>"; };
 		14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuCanvas.cpp; path = ../src/MuCanvas.cpp; sourceTree = "<group>"; };
 		14DCFB5F1BBEB496003C2144 /* MuCanvas.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvas.hpp; path = ../src/MuCanvas.hpp; sourceTree = "<group>"; };
 		14DCFB611BBEB942003C2144 /* MuCanvasManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasManager.hpp; path = ../src/MuCanvasManager.hpp; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 				14DCFB6A1BBF8D1A003C2144 /* MuCanvas2DTypes.hpp */,
 				14DCFB6B1BBF97C7003C2144 /* MuPath.cpp */,
 				14DCFB6C1BBF97C7003C2144 /* MuPath.hpp */,
+				1450B3701BC256F7007B1F2D /* MuImage.cpp */,
+				1450B3711BC256F7007B1F2D /* MuImage.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -255,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14DCFB661BBEC124003C2144 /* MuCanvasContext2DScreen.cpp in Sources */,
+				1450B3721BC256F7007B1F2D /* MuImage.cpp in Sources */,
 				14DCFB691BBF759E003C2144 /* MuCanvasContext2DTexture.cpp in Sources */,
 				97464A5B7C954628AF0DA59B /* ciEjectaApp.cpp in Sources */,
 				14DCFB631BBEBB04003C2144 /* MuCanvasManager.cpp in Sources */,
