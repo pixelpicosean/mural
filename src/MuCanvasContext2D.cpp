@@ -163,6 +163,29 @@ namespace mural {
     path->transform = state->transform;
   }
 
+  void MuCanvasContext2D::drawImage(const gl::TextureRef &image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
+    auto tw = image->getWidth();
+    auto th = image->getHeight();
+
+    setProgram(theCanvasManager.getGlsl2DTexture());
+    setTexture(image);
+    pushTexturedRect(dx, dy, dw, dh, sx/tw, sy/th, sw/tw, sh/th, blendWhiteColor(state), state->transform);
+  }
+
+  void MuCanvasContext2D::drawImage(const gl::TextureRef &image, float dx, float dy) {
+    auto tw = image->getWidth();
+    auto th = image->getHeight();
+
+    drawImage(image, 0.0f, 0.0f, tw, th, dx, dy, tw, th);
+  }
+
+  void MuCanvasContext2D::drawImage(const gl::TextureRef &image, float dx, float dy, float dw, float dh) {
+    auto tw = image->getWidth();
+    auto th = image->getHeight();
+
+    drawImage(image, 0.0f, 0.0f, tw, th, dx, dy, dw, dh);
+  }
+
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
     setProgram(theCanvasManager.getGlsl2DFlat());
 
@@ -392,6 +415,10 @@ namespace mural {
       flushBuffers();
     }
 
+    // Flip y of the texture for Canvas2D drawing
+    ty = 1 - ty;
+    th *= -1;
+
     vec2 d11(x    , y    );
     vec2 d21(x + w, y    );
     vec2 d12(x    , y + h);
@@ -432,6 +459,22 @@ namespace mural {
     if (glsl != batch->getGlslProg()) {
       batch->replaceGlslProg(glsl);
     }
+  }
+
+  void MuCanvasContext2D::setTexture(const gl::Texture2dRef &texture) {
+    if (texture == currentTexture) {
+      return;
+    }
+
+    flushBuffers();
+
+    currentTexture = texture;
+    currentTexture->bind();
+
+    // TODO: set to linear when imageSmoothEnabled is true
+    currentTexture->setMagFilter(GL_NEAREST);
+    currentTexture->setMinFilter(GL_NEAREST);
+    currentTexture->setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
   }
 
 }

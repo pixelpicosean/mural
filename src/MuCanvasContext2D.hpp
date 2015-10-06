@@ -145,7 +145,9 @@ namespace mural {
       void scale(float x, float y);
       void transform(float m11, float m12, float m21, float m2, float dx, float dy);
       void setTransform(float m11, float m12, float m21, float m2, float dx, float dy);
-      void drawImage(gl::TextureRef image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {}
+      void drawImage(const gl::TextureRef &image, float dx, float dy);
+      void drawImage(const gl::TextureRef &image, float dx, float dy, float dw, float dh);
+      void drawImage(const gl::TextureRef &image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh);
       void fillRect(float x, float y, float w, float h);
       void strokeRect(float x, float y, float w, float h);
       void clearRect(float x, float y, float w, float h);
@@ -188,16 +190,18 @@ namespace mural {
       float devicePixelRatio = 1.0f;
 
       ivec2 bufferSize = { 200, 150 };
-      gl::FboRef viewFramebuffer;
+      gl::FboRef viewFramebuffer = nullptr;
 
       int stateIndex = 0;
       MuCanvasState stateStack[MU_CANVAS_STATE_STACK_SIZE];
 
       std::shared_ptr<MuPath> path = std::make_shared<MuPath>();
 
+      gl::Texture2dRef currentTexture = nullptr;
+
       // Batch for drawing pathes
-      gl::BatchRef    batch;
-      gl::VboMeshRef  mesh;
+      gl::BatchRef    batch = nullptr;
+      gl::VboMeshRef  mesh = nullptr;
 
       size_t vertexBufferIndex = 0;
 
@@ -210,6 +214,7 @@ namespace mural {
       vec4 *colors;
 
       void setProgram(const gl::GlslProgRef &glsl);
+      void setTexture(const gl::Texture2dRef &texture);
   };
 
 }
