@@ -13,10 +13,10 @@ using namespace std;
 
 using namespace mural;
 
-class ciEjectaApp : public App {
+class MuralApp : public App {
   public:
     void setup() override;
-    void mouseDown( MouseEvent event ) override;
+    void mouseDown(MouseEvent event) override;
     void update() override;
     void draw() override;
   protected:
@@ -24,15 +24,15 @@ class ciEjectaApp : public App {
     bool finished = false;
 };
 
-void ciEjectaApp::setup() {
+void MuralApp::setup() {
   canvas = std::make_shared<mural::MuCanvas>();
 }
 
-void ciEjectaApp::mouseDown(MouseEvent event) {}
+void MuralApp::mouseDown(MouseEvent event) {}
 
-void ciEjectaApp::update() {}
+void MuralApp::update() {}
 
-void ciEjectaApp::draw() {
+void MuralApp::draw() {
   // - TEST BEGIN -----------------------------------------------------
   if (!finished) {
     auto ctx = canvas->getContext(mural::kMuCanvasContextMode2D);
@@ -128,7 +128,7 @@ void ciEjectaApp::draw() {
   mural::theCanvasManager.drawScreenCanvas();
 }
 
-CINDER_APP(ciEjectaApp, RendererGl, [&](App::Settings *settings) {
+CINDER_APP(MuralApp, RendererGl, [&](App::Settings *settings) {
   settings->setWindowSize(640, 400);
   settings->setResizable(false);
   settings->setTitle("Mural");
