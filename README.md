@@ -65,7 +65,12 @@ I always prefer [Trello][trello] for project management, the tasks list can be f
 
 ## Build and Run
 
-Coming soon.
+1. Download [Cinder][Cinder] latest version (0.9.0) or clone its `master` branch
+2. Create an `apps` folder inside your cinder folder
+3. Clone Mural into the `apps` folder, so you'll have `apps/Mural`
+4. Now open the project file, and have fun
+
+(You can also put Mural to any path and set the `CINDER_PATH` config from the project file)
 
 ## Supported Platforms
 
