@@ -32,27 +32,48 @@ namespace mural {
   }
 
   MuCanvasManager::MuCanvasManager() {
+    // Vertex Shader - General
+    auto vs = CI_GLSL(150,
+      uniform mat4 ciModelViewProjection;
+
+      in vec2 ciPosition;
+      in highp vec2 ciTexCoord0;
+      in lowp vec4 ciColor;
+
+      out vec2 TexCoord0;
+      out vec4 color;
+
+      void main() {
+        gl_Position = ciModelViewProjection * vec4(ciPosition, 0.0, 1.0);
+        TexCoord0 = ciTexCoord0;
+        color = ciColor;
+      }
+    );
+
+    // Fragment Shader - Flat
     glsl2DFlat = gl::GlslProg::create(gl::GlslProg::Format()
-      .vertex(CI_GLSL(150,
-        uniform mat4 ciModelViewProjection;
-
-        in vec2 ciPosition;
-        in highp vec2 ciTexCoord0;
-        in lowp vec4 ciColor;
-
-        out vec4 color;
-
-        void main() {
-          gl_Position = ciModelViewProjection * vec4(ciPosition, 0.0, 1.0);
-          color = ciColor;
-        }
-      ))
+      .vertex(vs)
       .fragment(CI_GLSL(150,
         in vec4 color;
         out vec4 oColor;
 
         void main() {
           oColor = color;
+        }
+      ))
+    );
+
+    // Fragment Shader - Texture
+    glsl2DTexture = gl::GlslProg::create(gl::GlslProg::Format()
+      .vertex(vs)
+      .fragment(CI_GLSL(150,
+        uniform sampler2D uTex0;
+
+        in vec2 TexCoord0;
+        out vec4 oColor;
+        
+        void main() {
+          oColor = texture(uTex0, TexCoord0);
         }
       ))
     );
