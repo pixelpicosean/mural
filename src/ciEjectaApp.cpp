@@ -90,6 +90,7 @@ void ciEjectaApp::draw() {
     // - Image
     auto testImage = [&] {
       auto img = new MuImage();
+
       img->onLoad([&](MuImage *img) {
         auto tex = img->getTexture();
         console() << "Image loaded, size: (" << tex->getWidth() << ", " << tex->getHeight() << ")" << std::endl;
@@ -98,9 +99,27 @@ void ciEjectaApp::draw() {
       img->setSrc("green-block.png");
     };
 
+    // - drawImage
+    auto testImageDrawing = [&] {
+      auto img = new MuImage();
+
+      img->onLoad([&](MuImage *img) {
+        auto tex = img->getTexture();
+        auto sw = tex->getWidth();
+        auto sh = tex->getHeight();
+        console() << "texture size: " << sw << ", " << sh << std::endl;
+        ctx->drawImage(tex, 100, 100);
+        ctx->drawImage(tex, 100, 200, 128, 64);
+        ctx->drawImage(tex, 32, 16, 32, 16, 100, 300, 64, 32);
+      });
+
+      img->setSrc("green-block.png");
+    };
+
     // testLineCap();
     // testLineJoin();
-    testImage();
+    // testImage();
+    testImageDrawing();
 
     finished = true;
   }
