@@ -59,6 +59,11 @@ GREAT power, I'll recommend you to try it yourself.
 - [ ] createRadialGradient
 - [ ] createPattern
 
+### Timers
+
+- [x] setTimeout, setInterval, clearTimeout, clearInterval
+- [ ] requestAnimationFrame
+
 ## Progress of developing
 
 I always prefer [Trello][trello] for project management, the tasks list can be found here [Mural at Trello][mural-trello]
