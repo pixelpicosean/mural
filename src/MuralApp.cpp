@@ -6,6 +6,7 @@
 #include "MuCanvasManager.hpp"
 #include "MuCanvasContext2D.hpp"
 #include "MuImage.hpp"
+#include "MuTimer.hpp"
 
 using namespace ci;
 using namespace ci::app;
@@ -30,7 +31,9 @@ void MuralApp::setup() {
 
 void MuralApp::mouseDown(MouseEvent event) {}
 
-void MuralApp::update() {}
+void MuralApp::update() {
+  theScheduler.update();
+}
 
 void MuralApp::draw() {
   // - TEST BEGIN -----------------------------------------------------
@@ -116,10 +119,36 @@ void MuralApp::draw() {
       img->setSrc("green-block.png");
     };
 
+    // - Non-block timer
+    auto testTimer = [&] {
+      auto canceledTimer = theScheduler.setTimeout([&] {
+        console() << "You won't see this line!\n";
+      }, 2000);
+
+      theScheduler.setTimeout([&, canceledTimer] {
+        console() << "Timer [" << canceledTimer << "] is canceled now.\n";
+        theScheduler.clearTimeout(canceledTimer);
+      }, 1000);
+
+      auto looped = theScheduler.setInterval([&] {
+        console() << "<Looped> 600ms\n";
+      }, 600);
+
+      theScheduler.setTimeout([&, looped] {
+        theScheduler.clearInterval(looped);
+        console() << "Looped timer [" << looped << "] is cancled now, it should have logged 4 times.\n";
+      }, 2500);
+
+      console() << "Canceled timer id: " << canceledTimer << '\n'
+                << "Looped timer:  " << looped << '\n'
+                << std::endl;
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
-    testImageDrawing();
+    // testImageDrawing();
+    testTimer();
 
     finished = true;
   }
