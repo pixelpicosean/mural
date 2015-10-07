@@ -28,6 +28,25 @@ namespace mural {
     removeTimer(id);
   }
 
+  unsigned int MuTimer::requestAnimationFrame(const std::function<void ()> &cb) {
+    auto id = rafCallbackQueue.size();
+
+    auto e = std::make_shared<RAFEvent>(cb, false);
+
+    rafCallbackQueue.push_back(e);
+    rafCallbackHash[id] = e;
+
+    return id;
+  }
+
+  void MuTimer::cancelAnimationFrame(unsigned int id) {
+    auto e = rafCallbackHash.find(id);
+    if (e != rafCallbackHash.end()) {
+      e->second->second = true;
+      rafCallbackHash.erase(e);
+    }
+  }
+
   unsigned int MuTimer::addTimer(const std::function<void ()> &cb, unsigned int ms, bool loop) {
     auto e = std::make_shared<TimeEvent>(cb, ms, loop);
 
@@ -75,6 +94,20 @@ namespace mural {
 
       removeTimer(t->id);
     }
+  }
+
+  void MuTimer::animate() {
+    // Invoke not canceled callbacks of current frame
+    auto num = rafCallbackQueue.size();
+    for (auto i = 0; i < num; i++) {
+      auto e = rafCallbackQueue.front();
+      if (!e->second) {
+        e->first();
+      }
+    }
+
+    // Remove callbacks of current frame
+    rafCallbackQueue.erase(rafCallbackQueue.begin(), rafCallbackQueue.begin() + num);
   }
 
 }

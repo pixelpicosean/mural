@@ -54,17 +54,28 @@ namespace mural {
         }
       };
 
+      // callback, canceled
+      typedef std::pair<std::function<void()>, bool> RAFEvent;
+      typedef std::shared_ptr<RAFEvent> RAFEventRef;
+
     public:
+      // Browser-like timer functions
       unsigned int setTimeout(const std::function<void()> &cb, unsigned int ms);
       void clearTimeout(unsigned int id);
 
       unsigned int setInterval(const std::function<void()> &cb, unsigned int ms);
       void clearInterval(unsigned int id);
 
+      unsigned int requestAnimationFrame(const std::function<void()> &cb);
+      void cancelAnimationFrame(unsigned int id);
+
+      // Direct timer functions
       unsigned int addTimer(const std::function<void()> &cb, unsigned int ms, bool loop);
       void removeTimer(unsigned int id);
 
+      // Internal functions which will be called by app
       void update();
+      void animate();
 
       static MuTimer &instance() {
         static MuTimer inst;
@@ -78,6 +89,10 @@ namespace mural {
       std::priority_queue<TimeEventRef, std::vector<TimeEventRef>, event_less> timerQueueB;
 
       std::map<unsigned int, TimeEventRef> timerHash;
+
+      // requestAnimationFrame timers
+      std::deque<RAFEventRef> rafCallbackQueue;
+      std::map<unsigned int, RAFEventRef> rafCallbackHash;
 
     private:
       MuTimer() {}

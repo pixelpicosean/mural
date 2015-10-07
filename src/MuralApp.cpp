@@ -139,6 +139,10 @@ void MuralApp::draw() {
         console() << "Looped timer [" << looped << "] is cancled now, it should have logged 4 times.\n";
       }, 2500);
 
+      theScheduler.requestAnimationFrame([&] {
+        console() << "requestAnimationFrame" << std::endl;
+      });
+
       console() << "Canceled timer id: " << canceledTimer << '\n'
                 << "Looped timer:  " << looped << '\n'
                 << std::endl;
@@ -154,7 +158,8 @@ void MuralApp::draw() {
   }
   // - TEST END --------------------------------------------------------
 
-  mural::theCanvasManager.drawScreenCanvas();
+  theScheduler.animate();
+  theCanvasManager.drawScreenCanvas();
 }
 
 CINDER_APP(MuralApp, RendererGl, [&](App::Settings *settings) {
