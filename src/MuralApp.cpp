@@ -8,6 +8,8 @@
 #include "MuImage.hpp"
 #include "MuTimer.hpp"
 
+#include <random>
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -148,11 +150,89 @@ void MuralApp::draw() {
                 << std::endl;
     };
 
+    auto testCurves = [&] {
+      ctx->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
+      ctx->state->lineWidth = 20;
+      ctx->state->lineCap = kMuLineCapRound;
+
+      ctx->beginPath();
+      ctx->moveTo(120.5, 130);
+      ctx->quadraticCurveTo(150.8, 130, 160.6, 150.5);
+      ctx->quadraticCurveTo(190, 250.0, 210.5, 160.5);
+      ctx->quadraticCurveTo(240, 100.5, 290, 70.5);
+
+      ctx->stroke();
+    };
+
+    auto testComplexCurves = [&] {
+      std::random_device r;
+      std::seed_seq seed{r(),r(),r(),r(),r(),r()};
+      std::mt19937 eng{seed};
+      std::uniform_int_distribution<> dist(0, 1);
+
+      auto w = 640;
+      auto h = 400;
+      auto w2 = w / 2;
+      auto h2 = h / 2;
+
+      int maxCurves = 70;
+
+      struct Curve {
+        float current = 0.0f;
+        float inc = 0.0f;
+        Curve(float curr = 0.0f, float i = 0.0f): current(curr), inc(i) {}
+      };
+
+      Curve curves[70];
+      for (auto i = 0; i < 70; i++) {
+        curves[i] = {
+          dist(eng) * 1000.0f,           // current
+          dist(eng) * 0.005f + 0.002f    // inc
+        };
+      }
+
+      auto anim = [=, &curves] {
+        // ctx->clearRect(0.0f, 0.0f, getWindowWidth(), getWindowHeight());
+
+        float p[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+        for (auto i = 0; i < maxCurves; i++ ) {
+          auto curve = curves[i];
+          curve.current += curve.inc;
+          for (auto j = 0; j < 4; j += 2) {
+            auto a = sinf(curve.current * (j + 3) * 373 * 0.0001f);
+            auto b = sinf(curve.current * (j + 5) * 927 * 0.0002f);
+            auto c = sinf(curve.current * (j + 5) * 573 * 0.0001f);
+            p[j] = (a * a * b + c * a + b) * w * c + w2;
+            p[j + 1] = (a * b * b + c - a * b *c) * h2 + h2;
+          }
+
+          ctx->prepare();
+          ctx->beginPath();
+          ctx->moveTo(p[0], p[1]);
+          ctx->bezierCurveTo(p[2], p[3], p[4], p[5], p[6], p[7]);
+          ctx->setStrokeColor(ColorAf::white());
+          ctx->stroke();
+        }
+      };
+
+      // anim();
+
+      // theScheduler.setTimeout(anim, 400);
+      // theScheduler.setTimeout(anim, 800);
+      // theScheduler.setTimeout(anim, 1200);
+      // theScheduler.setTimeout(anim, 1600);
+      // theScheduler.setTimeout(anim, 2400);
+
+      theScheduler.setInterval(anim, 800);
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
     // testImageDrawing();
-    testTimer();
+    // testTimer();
+    testCurves();
+    // testComplexCurves();
 
     finished = true;
   }
