@@ -77,6 +77,23 @@ namespace mural {
         }
       ))
     );
+
+    // Fragment Shader - Pattern
+    glsl2DPattern = gl::GlslProg::create(gl::GlslProg::Format()
+      .vertex(vs)
+      .fragment(CI_GLSL(150,
+        uniform sampler2D uTex0;
+
+        in vec4 color;
+        in vec2 TexCoord0;
+
+        out vec4 oColor;
+
+        void main() {
+          oColor = texture(uTex0, mod(TexCoord0, vec2(1.0, 1.0))) * color;
+        }
+      ))
+    );
   }
 
 }
