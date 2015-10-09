@@ -25,7 +25,7 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] fillStyle (pattern)
 - [ ] strokeStyle, fillStyle (gradient)
 - [ ] globalAlpha
-- [x] lineWidth
+- [ ] globalCompositeOperation
 - [x] save, restore
 - [x] beginPath, closePath
 - [x] moveTo, lineTo
@@ -41,15 +41,15 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] quadraticCurveTo
 - [x] setTrasform
 - [x] transform
-- [ ] globalCompositeOperation
-- [ ] font
-- [ ] texAlign
 - [ ] createImageData
 - [ ] getImageData
+- [ ] putImageData
+- [x] lineWidth
 - [x] lineCap
 - [ ] lineJoin
 - [ ] miterLimit
-- [ ] putImageData
+- [ ] font
+- [ ] texAlign
 - [ ] textBaseline
 - [ ] measureText
 - [ ] imageSmoothingEnabled
@@ -81,8 +81,8 @@ I always prefer [Trello][trello] for project management, the tasks list can be f
 
 ## Supported Platforms
 
-It'll first support Windows and OSX. Linux,
-iOS and Android version are planned (as soon as the `master` branch and
+Windows and OSX are on the top priority while Linux,
+iOS and Android supports are planned (as soon as the `master` branch and
 Cinder support for Linux/Android are stable enough).
 
 ---
