@@ -21,7 +21,9 @@ GREAT power, I'll recommend you to try it yourself.
 
 ### CanvasRenderingContext2D API
 
-- [ ] strokeStyle, fillStyle (only color support for now)
+- [x] strokeStyle, fillStyle (color)
+- [x] fillStyle (pattern)
+- [ ] strokeStyle, fillStyle (gradient)
 - [ ] globalAlpha
 - [x] lineWidth
 - [x] save, restore
