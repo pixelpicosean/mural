@@ -71,6 +71,8 @@ namespace mural {
   };
   extern const MuCompositeOperationFunc MuCompositeOperationFuncs[];
 
+  class MuCanvasPattern;
+
   struct MuFillable {
     virtual ~MuFillable() {}
   };
@@ -80,9 +82,9 @@ namespace mural {
 
     MuCompositeOperation globalCompositeOperation = kMuCompositeOperationSourceOver;
     ColorAf fillColor = ColorAf::white();
-    std::shared_ptr<MuFillable> fillObject = nullptr;
+    MuFillable *fillObject = nullptr;
     ColorAf strokeColor = ColorAf::white();
-    std::shared_ptr<MuFillable> *strokeObject = nullptr;
+    MuFillable *strokeObject = nullptr;
     float globalAlpha = 1.0f;
 
     float lineWidth = 1.0f;
@@ -170,9 +172,9 @@ namespace mural {
       void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform);
       void pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform);
       void pushRect(float x, float y, float w, float h, const ColorAf &color, const MuAffineTransform &transform);
-      void pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, const ColorAf &color, MuAffineTransform transform) {}
+      void pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, const ColorAf &color, MuAffineTransform transform);
       // void pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, const ColorAf &color, MuAffineTransform transform);
-      // void pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, const ColorAf &color, MuAffineTransform transform);
+      void pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, const ColorAf &color, MuAffineTransform transform);
       void pushTexturedRect(
         float x, float y, float w, float h,
         float tx, float ty, float tw, float th,

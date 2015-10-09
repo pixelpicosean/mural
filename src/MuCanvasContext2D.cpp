@@ -8,6 +8,7 @@
 
 #include "MuCanvasContext2D.hpp"
 #include "MuCanvasManager.hpp"
+#include "MuCanvasPattern.hpp"
 
 namespace mural {
 
@@ -187,12 +188,17 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
-    setProgram(theCanvasManager.getGlsl2DFlat());
+    if (state->fillObject) {
+      pushFilledRect(x, y, w, h, state->fillObject, blendWhiteColor(state), state->transform);
+    }
+    else {
+      setProgram(theCanvasManager.getGlsl2DFlat());
 
-    pushRect(x, y, w, h,
-      blendFillColor(state),
-      state->transform
-    );
+      pushRect(x, y, w, h,
+        blendFillColor(state),
+        state->transform
+      );
+    }
   }
 
   void MuCanvasContext2D::strokeRect(float x, float y, float w, float h) {
@@ -408,6 +414,43 @@ namespace mural {
     colors[vertexBufferIndex + 5] = color;
 
     vertexBufferIndex += 6;
+  }
+
+  void MuCanvasContext2D::pushFilledRect(float x, float y, float w, float h, mural::MuFillable *fillable, const ColorAf &color, mural::MuAffineTransform transform) {
+    MuCanvasPattern *pattern = dynamic_cast<MuCanvasPattern *>(fillable);
+    if (pattern) {
+      pushPatternedRect(x, y, w, h, pattern, color, transform);
+      return;
+    }
+
+    // MuCanvasGradient *gradient = ...
+  }
+
+  void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, mural::MuCanvasPattern *pattern, const ColorAf &color, mural::MuAffineTransform transform) {
+    auto texture = pattern->texture;
+    float tw = texture->getWidth();
+    float th = texture->getHeight();
+    float pw = w;
+    float ph = h;
+
+    if (!(pattern->repeat & kMuCanvasPatternRepeatX)) {
+      pw = std::min(tw - x, w);
+    }
+    if (!(pattern->repeat & kMuCanvasPatternRepeatY)) {
+      ph = std::min(th - y, h);
+    }
+
+    if (pw > 0 && ph > 0) {
+      setProgram(theCanvasManager.getGlsl2DPattern());
+      setTexture(texture);
+
+      pushTexturedRect(x, y, pw, ph, x / tw, y / th, pw / tw, ph / th, color, transform);
+    }
+
+    if (pw < w || ph < h) {
+      setProgram(theCanvasManager.getGlsl2DFlat());
+      pushRect(x, y, w, h, ColorAf::zero(), transform);
+    }
   }
 
   void MuCanvasContext2D::pushTexturedRect(float x, float y, float w, float h, float tx, float ty, float tw, float th, const ColorAf &color, const MuAffineTransform &transform) {
