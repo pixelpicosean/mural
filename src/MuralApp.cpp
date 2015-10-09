@@ -7,6 +7,7 @@
 #include "MuCanvasContext2D.hpp"
 #include "MuImage.hpp"
 #include "MuTimer.hpp"
+#include "MuCanvasPattern.hpp"
 
 #include <random>
 
@@ -226,13 +227,42 @@ void MuralApp::draw() {
       theScheduler.setInterval(anim, 800);
     };
 
+    auto testPatternFill = [&] {
+      auto img = new MuImage();
+
+      img->onLoad([&](MuImage *img) {
+        auto tex = img->getTexture();
+
+        MuCanvasPattern repeatX(tex, kMuCanvasPatternRepeatX);
+        MuCanvasPattern repeatY(tex, kMuCanvasPatternRepeatY);
+
+        MuCanvasPattern noRepeat(tex, kMuCanvasPatternNoRepeat);
+        MuCanvasPattern repeatXY(tex, kMuCanvasPatternRepeat);
+
+        ctx->state->fillObject = &noRepeat;
+        ctx->fillRect(0, 0, 320, 200);
+
+        ctx->state->fillObject = &repeatX;
+        ctx->fillRect(320, 0, 320, 200);
+
+        ctx->state->fillObject = &repeatY;
+        ctx->fillRect(0, 200, 320, 200);
+
+        ctx->state->fillObject = &repeatXY;
+        ctx->fillRect(320, 200, 320, 200);
+      });
+
+      img->setSrc("ball.png");
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
     // testImageDrawing();
     // testTimer();
-    testCurves();
+    // testCurves();
     // testComplexCurves();
+    testPatternFill();
 
     finished = true;
   }
