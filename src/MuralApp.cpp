@@ -34,9 +34,7 @@ void MuralApp::setup() {
 
 void MuralApp::mouseDown(MouseEvent event) {}
 
-void MuralApp::update() {
-  theScheduler.update();
-}
+void MuralApp::update() {}
 
 void MuralApp::draw() {
   // - TEST BEGIN -----------------------------------------------------
@@ -227,7 +225,7 @@ void MuralApp::draw() {
       theScheduler.setInterval(anim, 800);
     };
 
-    auto testPatternFill = [&] {
+    auto testPatternFill = [=] {
       auto img = new MuImage();
 
       img->onLoad([&](MuImage *img) {
@@ -268,6 +266,7 @@ void MuralApp::draw() {
   }
   // - TEST END --------------------------------------------------------
 
+  theScheduler.update();
   theScheduler.animate();
   theCanvasManager.drawScreenCanvas();
 }
