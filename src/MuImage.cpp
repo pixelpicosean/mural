@@ -7,6 +7,7 @@
 //
 
 #include "MuImage.hpp"
+#include "MuTimer.hpp"
 
 namespace mural {
 
@@ -30,16 +31,21 @@ namespace mural {
   void MuImage::onLoad(const std::function<void (MuImage *)> callback) {
     loadCallback = callback;
     if (texture) {
-      // TODO: use timer to invoke the callback instead
-      callback(this);
+      theScheduler.setTimeout(std::bind(callback, this), 0);
     }
   }
 
   void MuImage::beginLoad() {
     loading = true;
+
     texture = gl::Texture2d::create(loadImage(loadAsset(path)));
 
-    // TODO: use timer to invoke the callback instead
+    theScheduler.setTimeout(std::bind(&MuImage::endLoad, this), 0);
+  }
+
+  void MuImage::endLoad() {
+    loading = false;
+
     if (loadCallback) {
       loadCallback(this);
     }

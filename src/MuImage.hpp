@@ -31,6 +31,7 @@ namespace mural {
       std::function<void(MuImage *)> loadCallback;
 
       void beginLoad();
+      void endLoad();
   };
 
 }
