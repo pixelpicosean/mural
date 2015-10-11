@@ -64,7 +64,7 @@ GREAT power, I'll recommend you to try it yourself.
 ### Timers
 
 - [x] setTimeout, setInterval, clearTimeout, clearInterval
-- [x] requestAnimationFrame (can not call rAF in a callback :/)
+- [x] requestAnimationFrame
 
 ## Progress of developing
 
