@@ -75,7 +75,7 @@ namespace mural {
 
       // Internal functions which will be called by app
       void update();
-      void animate();
+      /* void animate(); */
 
       static MuTimer &instance() {
         static MuTimer inst;
@@ -91,8 +91,8 @@ namespace mural {
       std::map<unsigned int, TimeEventRef> timerHash;
 
       // requestAnimationFrame timers
-      std::deque<RAFEventRef> rafCallbackQueue;
-      std::map<unsigned int, RAFEventRef> rafCallbackHash;
+      // std::deque<RAFEventRef> rafCallbackQueue;
+      // std::map<unsigned int, RAFEventRef> rafCallbackHash;
 
     private:
       MuTimer() {}
