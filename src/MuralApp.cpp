@@ -17,6 +17,15 @@ using namespace std;
 
 using namespace mural;
 
+int timeCount = 5;
+void animate() {
+  console() << "raf(" << timeCount << ")\n";
+  timeCount -= 1;
+  if (timeCount > 0) {
+    theScheduler.requestAnimationFrame(animate);
+  }
+}
+
 class MuralApp : public App {
   public:
     void setup() override;
@@ -140,9 +149,7 @@ void MuralApp::draw() {
         console() << "Looped timer [" << looped << "] is cancled now, it should have logged 4 times.\n";
       }, 2500);
 
-      theScheduler.requestAnimationFrame([&] {
-        console() << "requestAnimationFrame" << std::endl;
-      });
+      theScheduler.requestAnimationFrame(animate);
 
       console() << "Canceled timer id: " << canceledTimer << '\n'
                 << "Looped timer:  " << looped << '\n'
@@ -257,17 +264,16 @@ void MuralApp::draw() {
     // testLineJoin();
     // testImage();
     // testImageDrawing();
-    // testTimer();
+    testTimer();
     // testCurves();
     // testComplexCurves();
-    testPatternFill();
+    // testPatternFill();
 
     finished = true;
   }
   // - TEST END --------------------------------------------------------
 
   theScheduler.update();
-  theScheduler.animate();
   theCanvasManager.drawScreenCanvas();
 }
 
