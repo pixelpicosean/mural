@@ -104,19 +104,25 @@ void MuralApp::draw() {
     auto testImage = [&] {
       auto img = new MuImage();
 
-      img->onLoad([&](MuImage *img) {
+      img->on("load", [&](MuImage *img) {
         auto tex = img->getTexture();
         console() << "Image loaded, size: (" << tex->getWidth() << ", " << tex->getHeight() << ")" << std::endl;
       });
 
       img->setSrc("green-block.png");
+
+      img = new MuImage();
+      img->on("error", [&](MuImage *img) {
+        console() << "Failed to load image \"" << img->getSrc() << "\"" << std::endl;
+      });
+      img->setSrc("not-exist.png");
     };
 
     // - drawImage
     auto testImageDrawing = [&] {
       auto img = new MuImage();
 
-      img->onLoad([&](MuImage *img) {
+      img->on("load", [&](MuImage *img) {
         auto tex = img->getTexture();
         auto sw = tex->getWidth();
         auto sh = tex->getHeight();
@@ -235,7 +241,7 @@ void MuralApp::draw() {
     auto testPatternFill = [=] {
       auto img = new MuImage();
 
-      img->onLoad([&](MuImage *img) {
+      img->on("load", [&](MuImage *img) {
         auto tex = img->getTexture();
 
         MuCanvasPattern repeatX(tex, kMuCanvasPatternRepeatX);
@@ -262,9 +268,9 @@ void MuralApp::draw() {
 
     // testLineCap();
     // testLineJoin();
-    // testImage();
+    testImage();
     // testImageDrawing();
-    testTimer();
+    // testTimer();
     // testCurves();
     // testComplexCurves();
     // testPatternFill();
