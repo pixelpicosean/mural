@@ -21,10 +21,8 @@ namespace mural {
 
       Texture2dRef getTexture() const { return texture; }
 
-      void on(const std::string &event, const std::function<void(MuImage *)> &callback);
-      void off(const std::string &event, const std::function<void(MuImage *)> &callback) {}
-      void addEventListener(const std::string &event, const std::function<void(MuImage *)> &callback);
-      void removeEventListener(const std::string &event, const std::function<void(MuImage *)> &callback);
+      ci::signals::Connection on(const std::string &event, const std::function<void(MuImage *)> &callback);
+      ci::signals::Connection addEventListener(const std::string &event, const std::function<void(MuImage *)> &callback);
 
       MuImage() {}
 

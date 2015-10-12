@@ -28,24 +28,23 @@ namespace mural {
     }
   }
 
-  void MuImage::on(const std::string &event, const std::function<void (MuImage *)> &callback) {
+  ci::signals::Connection MuImage::on(const std::string &event, const std::function<void (MuImage *)> &callback) {
+    ci::signals::Connection c;
     if (event == "load") {
-      loadSignal.connect(callback);
+      c = loadSignal.connect(callback);
       if (texture) {
         loadSignal.emit(this);
       }
     }
     else if (event == "error") {
-      errorSignal.connect(callback);
+      c = errorSignal.connect(callback);
     }
+
+    return c;
   }
 
-  void MuImage::addEventListener(const std::string &event, const std::function<void (MuImage *)> &callback) {
-    on(event, callback);
-  }
-
-  void MuImage::removeEventListener(const std::string &event, const std::function<void (MuImage *)> &callback) {
-    off(event, callback);
+  ci::signals::Connection MuImage::addEventListener(const std::string &event, const std::function<void (MuImage *)> &callback) {
+    return on(event, callback);
   }
 
   void MuImage::beginLoad() {
