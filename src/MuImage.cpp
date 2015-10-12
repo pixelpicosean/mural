@@ -28,26 +28,51 @@ namespace mural {
     }
   }
 
-  void MuImage::onLoad(const std::function<void (MuImage *)> callback) {
-    loadCallback = callback;
-    if (texture) {
-      theScheduler.setTimeout(std::bind(callback, this), 0);
+  void MuImage::on(const std::string &event, const std::function<void (MuImage *)> &callback) {
+    if (event == "load") {
+      loadSignal.connect(callback);
+      if (texture) {
+        loadSignal.emit(this);
+      }
     }
+    else if (event == "error") {
+      errorSignal.connect(callback);
+    }
+  }
+
+  void MuImage::addEventListener(const std::string &event, const std::function<void (MuImage *)> &callback) {
+    on(event, callback);
+  }
+
+  void MuImage::removeEventListener(const std::string &event, const std::function<void (MuImage *)> &callback) {
+    off(event, callback);
   }
 
   void MuImage::beginLoad() {
     loading = true;
 
-    texture = gl::Texture2d::create(loadImage(loadAsset(path)));
+    DataSourceRef img = nullptr;
+    try {
+      img = loadAsset(path);
+    } catch (AssetLoadExc e) {}
 
-    theScheduler.setTimeout(std::bind(&MuImage::endLoad, this), 0);
+    if (img) {
+      texture = gl::Texture2d::create(loadImage(img));
+      theScheduler.setTimeout(std::bind(&MuImage::endLoad, this, true), 0);
+    }
+    else {
+      theScheduler.setTimeout(std::bind(&MuImage::endLoad, this, false), 0);
+    }
   }
 
-  void MuImage::endLoad() {
+  void MuImage::endLoad(bool success) {
     loading = false;
 
-    if (loadCallback) {
-      loadCallback(this);
+    if (success) {
+      loadSignal.emit(this);
+    }
+    else {
+      errorSignal.emit(this);
     }
   }
 

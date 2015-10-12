@@ -8,6 +8,7 @@
 
 #include <string>
 #include <functional>
+#include <map>
 
 namespace mural {
 
@@ -20,7 +21,10 @@ namespace mural {
 
       Texture2dRef getTexture() const { return texture; }
 
-      void onLoad(const std::function<void(MuImage *)> callback);
+      void on(const std::string &event, const std::function<void(MuImage *)> &callback);
+      void off(const std::string &event, const std::function<void(MuImage *)> &callback) {}
+      void addEventListener(const std::string &event, const std::function<void(MuImage *)> &callback);
+      void removeEventListener(const std::string &event, const std::function<void(MuImage *)> &callback);
 
       MuImage() {}
 
@@ -28,10 +32,12 @@ namespace mural {
       Texture2dRef texture = nullptr;
       std::string path = "";
       bool loading = false;
-      std::function<void(MuImage *)> loadCallback;
+
+      ci::signals::Signal<void(MuImage *)> loadSignal;
+      ci::signals::Signal<void(MuImage *)> errorSignal;
 
       void beginLoad();
-      void endLoad();
+      void endLoad(bool success);
   };
 
 }
