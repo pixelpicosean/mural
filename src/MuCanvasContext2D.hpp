@@ -11,6 +11,8 @@
 #include "MuCanvas2DTypes.hpp"
 #include "MuPath.hpp"
 
+#include <string>
+
 #define MU_CANVAS_STATE_STACK_SIZE 16
 
 namespace mural {
@@ -123,23 +125,64 @@ namespace mural {
 
   class MuCanvasContext2D {
     public:
-      MuCanvasState *state;
+      // Properties
       MuCompositeOperation globalCompositeOperation = kMuCompositeOperationSourceOver;
 
       virtual const gl::TextureRef getTexture();
 
-      void setFillColor(const ColorAf &color);
-      void setStrokeColor(const ColorAf &color);
+      void setFillColor(const ColorAf& color);
+      const ColorAf& getFillColor();
 
+      void setStrokeColor(const ColorAf& color);
+      const ColorAf& getStrokeColor();
+
+      void setFillObject(MuFillable *obj);
+      MuFillable* getFillObject();
+
+      void setStrokeObject(MuFillable *obj);
+      MuFillable* getStrokeObject();
+
+      void setGlobalAlpha(float alpha);
+      float getGlobalAlpha();
+
+      void setLineWidth(float width);
+      float getLineWidth();
+
+      void setMiterLimit(float limit);
+      float getMiterLimit();
+
+      void setLineCap(MuLineCap cap);
+      void setLineCap(const std::string& cap);
+      MuLineCap getLineCap();
+
+      void setLineJoin(MuLineJoin join);
+      void setLineJoin(const std::string& join);
+      MuLineJoin getLineJoin();
+
+      void setGlobalCompositeOperation(MuCompositeOperation comp);
+      void setGlobalCompositeOperation(const std::string& comp);
+      MuCompositeOperation getGlobalCompositeOperation();
+
+      void setTextAlign(MuTextAlign align);
+      void setTextAlign(const std::string& align);
+      MuTextAlign getTextAlign();
+
+      void setTextBaseline(MuTextBaseline baseline);
+      void setTextBaseline(const std::string& baseline);
+      MuTextBaseline getTextBaseline();
+
+      // Ctor
       MuCanvasContext2D(int width, int height);
       virtual ~MuCanvasContext2D() {}
 
+      // Lifecycle methods
       virtual void create();
       virtual void resizeTo(int width, int height);
       void resetFramebuffer();
       void bindVertexBuffer();
       void unbindVertexBuffer();
 
+      // Drawing APIs
       void save();
       void restore();
       void rotate(float angle);
@@ -165,10 +208,13 @@ namespace mural {
       void arcTo(float x1, float y1, float x2, float y2, float radius);
       void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise);
 
+      // Utils
       void prepare();
       void flushBuffers();
       void finish();
+      virtual void present() {}
 
+      // Vertex push methods
       void pushTri(float x1, float y1, float x2, float y2, float x3, float y3, const ColorAf &color, const MuAffineTransform &transform);
       void pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform);
       void pushRect(float x, float y, float w, float h, const ColorAf &color, const MuAffineTransform &transform);
@@ -182,8 +228,6 @@ namespace mural {
         const MuAffineTransform &transform
       );
 
-      virtual void present() {}
-
     protected:
       bool frameBufferBinded = false;
       bool vboMapped = false;
@@ -196,6 +240,7 @@ namespace mural {
 
       int stateIndex = 0;
       MuCanvasState stateStack[MU_CANVAS_STATE_STACK_SIZE];
+      MuCanvasState *state;
 
       std::shared_ptr<MuPath> path = std::make_shared<MuPath>();
 
@@ -217,6 +262,8 @@ namespace mural {
 
       void setProgram(const gl::GlslProgRef &glsl);
       void setTexture(const gl::Texture2dRef &texture);
+
+      friend MuPath;
   };
 
 }

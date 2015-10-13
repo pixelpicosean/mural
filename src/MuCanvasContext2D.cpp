@@ -33,20 +33,210 @@ namespace mural {
     state = &stateStack[0];
   }
 
+  // Properties
   const gl::TextureRef MuCanvasContext2D::getTexture() {
     theCanvasManager.setCurrentRenderingContext(this);
     finish();
     return viewFramebuffer->getColorTexture();
   }
 
-  void MuCanvasContext2D::setFillColor(const ColorAf &color) {
+  void MuCanvasContext2D::setFillColor(const ColorAf& color) {
     state->fillColor = color;
+    state->fillObject = nullptr;
   }
 
-  void MuCanvasContext2D::setStrokeColor(const ColorAf &color) {
+  const ColorAf& MuCanvasContext2D::getFillColor() {
+    return state->fillColor;
+  }
+
+  void MuCanvasContext2D::setStrokeColor(const ColorAf& color) {
     state->strokeColor = color;
+    state->strokeObject = nullptr;
   }
 
+  const ColorAf& MuCanvasContext2D::getStrokeColor() {
+    return state->strokeColor;
+  }
+
+  void MuCanvasContext2D::setFillObject(MuFillable *obj) {
+    state->fillObject = obj;
+  }
+
+  MuFillable* MuCanvasContext2D::getFillObject() {
+    return state->fillObject;
+  }
+
+  void MuCanvasContext2D::setStrokeObject(mural::MuFillable *obj) {
+    state->strokeObject = obj;
+  }
+
+  MuFillable* MuCanvasContext2D::getStrokeObject() {
+    return state->strokeObject;
+  }
+
+  void MuCanvasContext2D::setGlobalAlpha(float alpha) {
+    state->globalAlpha = std::min(1.0f, std::max(alpha, 0.0f));
+  }
+
+  float MuCanvasContext2D::getGlobalAlpha() {
+    return state->globalAlpha;
+  }
+
+  void MuCanvasContext2D::setLineWidth(float width) {
+    state->lineWidth = width;
+  }
+
+  float MuCanvasContext2D::getLineWidth() {
+    return state->lineWidth;
+  }
+
+  void MuCanvasContext2D::setMiterLimit(float limit) {
+    state->miterLimit = limit;
+  }
+
+  float MuCanvasContext2D::getMiterLimit() {
+    return state->miterLimit;
+  }
+
+  void MuCanvasContext2D::setLineCap(MuLineCap cap) {
+    state->lineCap = cap;
+  }
+
+  void MuCanvasContext2D::setLineCap(const std::string &cap) {
+    if (cap == "butt") {
+      state->lineCap = kMuLineCapButt;
+    }
+    else if (cap == "round") {
+      state->lineCap = kMuLineCapRound;
+    }
+    else if (cap == "square") {
+      state->lineCap = kMuLineCapSquare;
+    }
+  }
+
+  void MuCanvasContext2D::setLineJoin(MuLineJoin join) {
+    state->lineJoin = join;
+  }
+
+  void MuCanvasContext2D::setLineJoin(const std::string &join) {
+    if (join == "miter") {
+      state->lineJoin = kMuLineJoinMiter;
+    }
+    else if (join == "bevel") {
+      state->lineJoin = kMuLineJoinBevel;
+    }
+    else if (join == "round") {
+      state->lineJoin = kMuLineJoinRound;
+    }
+  }
+
+  MuLineJoin MuCanvasContext2D::getLineJoin() {
+    return state->lineJoin;
+  }
+
+  void MuCanvasContext2D::setGlobalCompositeOperation(MuCompositeOperation comp) {
+    state->globalCompositeOperation = comp;
+  }
+
+  void MuCanvasContext2D::setGlobalCompositeOperation(const std::string &comp) {
+    if (comp == "source-over") {
+      state->globalCompositeOperation = kMuCompositeOperationSourceOver;
+    }
+    else if (comp == "lighter") {
+      state->globalCompositeOperation = kMuCompositeOperationLighter;
+    }
+    else if (comp == "darker") {
+      state->globalCompositeOperation = kMuCompositeOperationDarker;
+    }
+    else if (comp == "destination-out") {
+      state->globalCompositeOperation = kMuCompositeOperationDestinationOut;
+    }
+    else if (comp == "destination-over") {
+      state->globalCompositeOperation = kMuCompositeOperationDestinationOver;
+    }
+    else if (comp == "source-atop") {
+      state->globalCompositeOperation = kMuCompositeOperationSourceAtop;
+    }
+    else if (comp == "xor") {
+      state->globalCompositeOperation = kMuCompositeOperationXOR;
+    }
+    else if (comp == "copy") {
+      state->globalCompositeOperation = kMuCompositeOperationCopy;
+    }
+    else if (comp == "source-in") {
+      state->globalCompositeOperation = kMuCompositeOperationSourceIn;
+    }
+    else if (comp == "destination-in") {
+      state->globalCompositeOperation = kMuCompositeOperationDestinationIn;
+    }
+    else if (comp == "source-out") {
+      state->globalCompositeOperation = kMuCompositeOperationSourceOut;
+    }
+    else if (comp == "destination-atop") {
+      state->globalCompositeOperation = kMuCompositeOperationDestinationAtop;
+    }
+  }
+
+  MuCompositeOperation MuCanvasContext2D::getGlobalCompositeOperation() {
+    return state->globalCompositeOperation;
+  }
+
+  void MuCanvasContext2D::setTextAlign(MuTextAlign align) {
+    state->textAlign = align;
+  }
+
+  void MuCanvasContext2D::setTextAlign(const std::string &align) {
+    if (align == "start") {
+      state->textAlign = kMuTextAlignStart;
+    }
+    else if (align == "end") {
+      state->textAlign = kMuTextAlignEnd;
+    }
+    else if (align == "left") {
+      state->textAlign = kMuTextAlignLeft;
+    }
+    else if (align == "center") {
+      state->textAlign = kMuTextAlignCenter;
+    }
+    else if (align == "right") {
+      state->textAlign = kMuTextAlignRight;
+    }
+  }
+
+  MuTextAlign MuCanvasContext2D::getTextAlign() {
+    return state->textAlign;
+  }
+
+  void MuCanvasContext2D::setTextBaseline(MuTextBaseline baseline) {
+    state->textBaseline = baseline;
+  }
+
+  void MuCanvasContext2D::setTextBaseline(const std::string &baseline) {
+    if (baseline == "alphabetic") {
+      state->textBaseline = kMuTextBaselineAlphabetic;
+    }
+    else if (baseline == "middle") {
+      state->textBaseline = kMuTextBaselineMiddle;
+    }
+    else if (baseline == "top") {
+      state->textBaseline = kMuTextBaselineTop;
+    }
+    else if (baseline == "hanging") {
+      state->textBaseline = kMuTextBaselineHanging;
+    }
+    else if (baseline == "bottom") {
+      state->textBaseline = kMuTextBaselineBottom;
+    }
+    else if (baseline == "ideographic") {
+      state->textBaseline = kMuTextBaselineIdeographic;
+    }
+  }
+
+  MuTextBaseline MuCanvasContext2D::getTextBaseline() {
+    return state->textBaseline;
+  }
+
+  // Lifecycle methods
   void MuCanvasContext2D::create() {
     // Create mesh and batch
     mesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
