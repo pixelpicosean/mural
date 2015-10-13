@@ -22,7 +22,7 @@ namespace mural {
     return nullptr;
   }
 
-  MuCanvas::MuCanvas() {
+  MuCanvas::MuCanvas(int width, int height): size(width, height) {
     if (!theCanvasManager.hasScreenCanvas) {
       isScreenCanvas = true;
       theCanvasManager.hasScreenCanvas = true;

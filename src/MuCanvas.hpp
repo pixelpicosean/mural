@@ -30,7 +30,7 @@ namespace mural {
       int getHeight() { return size.y; }
       void setHeight(int newHeight) { size.y = newHeight; }
 
-      MuCanvas();
+      MuCanvas(int width = 200, int height = 150);
       ~MuCanvas();
 
       MuCanvasContext2D *getContext(MuCanvasContextMode mode);

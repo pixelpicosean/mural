@@ -20,6 +20,7 @@ namespace mural {
     console() <<
       "Creating TextureCanvas (2D):\n" <<
       "  size:        " << size.x << 'x' << size.y << '\n' <<
+      "  buffer size: " << bufferSize.x << 'x' << bufferSize.y << '\n' <<
       std::endl;
   }
   
