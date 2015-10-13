@@ -46,8 +46,8 @@ GREAT power, I'll recommend you to try it yourself.
 - [ ] putImageData
 - [x] lineWidth
 - [x] lineCap
-- [ ] lineJoin
-- [ ] miterLimit
+- [x] lineJoin
+- [x] miterLimit
 - [ ] font
 - [ ] texAlign
 - [ ] textBaseline
