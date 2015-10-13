@@ -165,6 +165,8 @@ namespace mural {
   }
 
   void MuCanvasContext2D::drawImage(const gl::TextureRef &image, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     auto tw = image->getWidth();
     auto th = image->getHeight();
 
@@ -188,6 +190,8 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fillRect(float x, float y, float w, float h) {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     if (state->fillObject) {
       pushFilledRect(x, y, w, h, state->fillObject, blendWhiteColor(state), state->transform);
     }
@@ -202,6 +206,8 @@ namespace mural {
   }
 
   void MuCanvasContext2D::strokeRect(float x, float y, float w, float h) {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     MuPath tempPath;
 
     tempPath.transform = state->transform;
@@ -217,6 +223,8 @@ namespace mural {
   }
 
   void MuCanvasContext2D::clearRect(float x, float y, float w, float h) {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     setProgram(theCanvasManager.getGlsl2DFlat());
 
     MuCompositeOperation oldOp = state->globalCompositeOperation;
@@ -236,11 +244,15 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fill() {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     setProgram(theCanvasManager.getGlsl2DFlat());
     path->drawPolygonsToContext(this, kMuPathPolygonTargetColor);
   }
 
   void MuCanvasContext2D::stroke() {
+    theCanvasManager.setCurrentRenderingContext(this);
+
     setProgram(theCanvasManager.getGlsl2DFlat());
     path->drawLinesToContext(this);
   }
