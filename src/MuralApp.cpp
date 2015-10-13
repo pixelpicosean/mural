@@ -34,11 +34,17 @@ class MuralApp : public App {
     void draw() override;
   protected:
     std::shared_ptr<mural::MuCanvas> canvas;
+    std::shared_ptr<mural::MuCanvas> canvas2;
+
     bool finished = false;
 };
 
 void MuralApp::setup() {
+  // Screen canvas
   canvas = std::make_shared<mural::MuCanvas>();
+
+  // Texture canvas
+  canvas2 = std::make_shared<mural::MuCanvas>(getWindowWidth(), getWindowHeight());
 }
 
 void MuralApp::mouseDown(MouseEvent event) {}
@@ -205,13 +211,41 @@ void MuralApp::draw() {
       img->setSrc("ball.png");
     };
 
+    auto testTextureContext = [&] {
+      // Draw something to the canvas context
+      ctx->state->fillColor = { 1.0f, 0.0f, 1.0f, 1.0f };
+      ctx->fillRect(0, 0, canvas->getWidth(), canvas->getHeight());
+
+      // Draw to an offline texture canvas
+      auto ctx2 = canvas2->getContext(kMuCanvasContextMode2D);
+//      ctx2->state->strokeColor = { 0.0f, 1.0f, 1.0f, 1.0f };
+//      ctx2->state->lineWidth = 40;
+//      ctx2->state->lineJoin = kMuLineJoinRound;
+//
+//      ctx2->beginPath();
+//      ctx2->moveTo(20, 20);
+//      ctx2->lineTo(620, 20);
+//      ctx2->lineTo(320, 380);
+//      ctx2->closePath();
+//
+//      ctx2->stroke();
+      ctx2->state->fillColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+      ctx2->fillRect(0, 0, 320, 200);
+
+      // Draw the offline texture canvas to screen canvas
+      auto tex = ctx2->getTexture();
+      console() << "texture size: (" << tex->getWidth() << ", " << tex->getHeight() << ")" << endl;
+      ctx->drawImage(tex, 0, 0);
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
-    testImageDrawing();
+    // testImageDrawing();
     // testTimer();
     // testCurves();
     // testPatternFill();
+    testTextureContext();
 
     finished = true;
   }
