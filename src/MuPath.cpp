@@ -10,6 +10,8 @@
 #include "MuCanvasContext2D.hpp"
 #include "cinder/Triangulate.h"
 
+using namespace std;
+
 namespace mural {
 
   MuPath::MuPath() {
@@ -318,19 +320,19 @@ namespace mural {
       angle2 = M_PI;
     }
     else {
-      angle2 = acosf(v1.x * v2.x + v1.y * v2.y);
+      angle2 = acos(v1.x * v2.x + v1.y * v2.y);
     }
 
     // 1 step per 5 pixel
     float pxScale = state->transform.getScale();
-    int numSteps = ceilf((angle2 * width2 * pxScale) / 5.0f);
+    int numSteps = ceil((angle2 * width2 * pxScale) / 5.0f);
 
     if (numSteps == 1) {
       context->pushTri(p1.x, p1.y, point.x, point.y, p2.x, p2.y, color, transform);
       return;
     }
-    // avoid MuPath::"triangular" look
-    else if (numSteps == 3 && fabsf(angle2) > M_PI_2) {
+    // avoid "triangular" look
+    else if (numSteps == 3 && abs(angle2) > M_PI_2) {
       numSteps = 4;
     }
 
@@ -343,12 +345,12 @@ namespace mural {
     // starting point
     float angle = angle1;
 
-    vec2 arcP1(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
+    vec2 arcP1(point.x + cos(angle) * width2, point.y - sin(angle) * width2);
     vec2 arcP2;
 
     for (int i = 0; i < numSteps; i++) {
       angle += step;
-      arcP2 = vec2(point.x + cosf(angle) * width2, point.y - sinf(angle) * width2);
+      arcP2 = vec2(point.x + cos(angle) * width2, point.y - sin(angle) * width2);
 
       context->pushTri(arcP1.x, arcP1.y, point.x, point.y, arcP2.x, arcP2.y, color, transform);
 
