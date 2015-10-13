@@ -61,24 +61,24 @@ void MuralApp::draw() {
     // - LineCap
     auto testLineCap = [&]() {
       ctx->setStrokeColor(ColorAf(0.0f, 1.0f, 1.0f, 1.0f));
-      ctx->state->lineWidth = 40;
+      ctx->setLineWidth(40);
 
       // - Butt
-      ctx->state->lineCap = mural::kMuLineCapButt;
+      ctx->setLineCap("butt");
 
       ctx->moveTo(200, 100);
       ctx->lineTo(640 - 200, 100);
       ctx->stroke();
 
       // - Squire
-      ctx->state->lineCap = mural::kMuLineCapSquare;
+      ctx->setLineCap("square");
 
       ctx->moveTo(200, 200);
       ctx->lineTo(640 - 200, 200);
       ctx->stroke();
 
       // - Round
-      ctx->state->lineCap = mural::kMuLineCapRound;
+      ctx->setLineCap("round");
 
       ctx->moveTo(200, 300);
       ctx->lineTo(640 - 200, 300);
@@ -87,16 +87,16 @@ void MuralApp::draw() {
     // - LineJoin
     auto testLineJoin = [&]() {
       ctx->setStrokeColor(ColorAf(0.0f, 1.0f, 1.0f, 1.0f));
-      ctx->state->lineWidth = 40;
+      ctx->setLineWidth(40);
 
-      MuLineJoin lineJoin[] = {
-        kMuLineJoinRound,
-        kMuLineJoinBevel,
-        kMuLineJoinMiter,
+      std::string lineJoin[] = {
+        "round",
+        "bevel",
+        "miter",
       };
 
       for (int i = 0; i < 3; i++) {
-        ctx->state->lineJoin = lineJoin[i];
+        ctx->setLineJoin(lineJoin[i]);
         ctx->beginPath();
         ctx->moveTo(80, 30 + i * 120);
         ctx->lineTo(200, 130 + i * 120);
@@ -171,8 +171,8 @@ void MuralApp::draw() {
 
     auto testCurves = [&] {
       ctx->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
-      ctx->state->lineWidth = 20;
-      ctx->state->lineCap = kMuLineCapRound;
+      ctx->setLineWidth(20);
+      ctx->setLineCap("round");
 
       ctx->beginPath();
       ctx->moveTo(120.5, 130);
@@ -196,16 +196,16 @@ void MuralApp::draw() {
         MuCanvasPattern noRepeat(tex, kMuCanvasPatternNoRepeat);
         MuCanvasPattern repeatXY(tex, kMuCanvasPatternRepeat);
 
-        ctx->state->fillObject = &noRepeat;
+        ctx->setFillObject(&noRepeat);
         ctx->fillRect(0, 0, 320, 200);
 
-        ctx->state->fillObject = &repeatX;
+        ctx->setFillObject(&repeatX);
         ctx->fillRect(320, 0, 320, 200);
 
-        ctx->state->fillObject = &repeatY;
+        ctx->setFillObject(&repeatY);
         ctx->fillRect(0, 200, 320, 200);
 
-        ctx->state->fillObject = &repeatXY;
+        ctx->setFillObject(&repeatXY);
         ctx->fillRect(320, 200, 320, 200);
       });
 
@@ -214,31 +214,31 @@ void MuralApp::draw() {
 
     auto testTextureContext = [&] {
       // Fill the screen canvas first, so we can see whether something has been drawn to it
-      ctx->state->fillColor = { 1.0f, 0.0f, 1.0f, 1.0f };
+      ctx->setFillColor({ 1.0f, 0.0f, 1.0f, 1.0f });
       ctx->fillRect(0, 0, canvas->getWidth(), canvas->getHeight());
 
       // Draw to an offline texture canvas
-      ctx2->state->fillColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+      ctx2->setFillColor({ 1.0f, 1.0f, 0.0f, 1.0f });
       ctx2->fillRect(0, 0, 320, 200);
 
       // Draw the offline texture canvas to screen canvas
       ctx->drawImage(ctx2->getTexture(), 160, 100);
 
       // Draw something again to the texture canvas
-      ctx2->state->strokeColor = { 0.0f, 1.0f, 1.0f, 1.0f };
-      ctx2->state->lineWidth = 10;
-      ctx2->state->lineJoin = kMuLineJoinRound;
+      ctx2->setStrokeColor({ 0.0f, 1.0f, 1.0f, 1.0f });
+      ctx2->setLineWidth(10);
+      ctx2->setLineJoin("round");
       ctx2->strokeRect(20, 20, 100, 100);
 
       // And draw texture canvas to screen canvas again
       ctx->drawImage(ctx2->getTexture(), 0, 0, 200, 200);
 
       // And draw some primitives to screen canvas to see whether it is broken
-      ctx->state->strokeColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-      ctx->state->fillColor = { 0.25f, 0.65f, 0.1f, 1.0f };
-      ctx->state->lineWidth = 20;
-      ctx->state->lineCap = kMuLineCapRound;
-      ctx->state->lineJoin = kMuLineJoinMiter;
+      ctx->setStrokeColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+      ctx->setFillColor({ 0.25f, 0.65f, 0.1f, 1.0f });
+      ctx->setLineWidth(20);
+      ctx->setLineCap("round");
+      ctx->setLineJoin("miter");
       ctx->beginPath();
       ctx->moveTo(200, 20);
       ctx->lineTo(200, 200);
