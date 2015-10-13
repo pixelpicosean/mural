@@ -267,8 +267,8 @@ void MuralApp::draw() {
     };
 
     // testLineCap();
-    // testLineJoin();
-    testImage();
+    testLineJoin();
+    // testImage();
     // testImageDrawing();
     // testTimer();
     // testCurves();
