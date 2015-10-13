@@ -92,12 +92,12 @@ namespace mural {
   };
 
   static inline float distanceToLineSegmentSquared(const vec2 &p, const vec2 &v, const vec2 &w) {
-    float l2 = glm::distance(v, w);
-    if (l2 == 0) return glm::distance(p, v);
+    float l2 = glm::distance2(v, w);
+    if (l2 == 0) return glm::distance2(p, v);
     float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
-    if (t < 0) return glm::distance(p, v);
-    if (t > 1) return glm::distance(p, w);
-    return glm::distance(p, vec2(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
+    if (t < 0) return glm::distance2(p, v);
+    if (t > 1) return glm::distance2(p, w);
+    return glm::distance2(p, vec2(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
   }
 
   static inline float distanceToLineSegment(const vec2 &p, const vec2 &v, const vec2 &w) {
