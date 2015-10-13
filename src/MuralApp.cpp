@@ -55,6 +55,7 @@ void MuralApp::draw() {
   // - TEST BEGIN -----------------------------------------------------
   if (!finished) {
     auto ctx = canvas->getContext(mural::kMuCanvasContextMode2D);
+    auto ctx2 = canvas2->getContext(mural::kMuCanvasContextMode2D);
 
     // Tests
     // - LineCap
@@ -212,30 +213,39 @@ void MuralApp::draw() {
     };
 
     auto testTextureContext = [&] {
-      // Draw something to the canvas context
+      // Fill the screen canvas first, so we can see whether something has been drawn to it
       ctx->state->fillColor = { 1.0f, 0.0f, 1.0f, 1.0f };
       ctx->fillRect(0, 0, canvas->getWidth(), canvas->getHeight());
 
       // Draw to an offline texture canvas
-      auto ctx2 = canvas2->getContext(kMuCanvasContextMode2D);
-//      ctx2->state->strokeColor = { 0.0f, 1.0f, 1.0f, 1.0f };
-//      ctx2->state->lineWidth = 40;
-//      ctx2->state->lineJoin = kMuLineJoinRound;
-//
-//      ctx2->beginPath();
-//      ctx2->moveTo(20, 20);
-//      ctx2->lineTo(620, 20);
-//      ctx2->lineTo(320, 380);
-//      ctx2->closePath();
-//
-//      ctx2->stroke();
       ctx2->state->fillColor = { 1.0f, 1.0f, 0.0f, 1.0f };
       ctx2->fillRect(0, 0, 320, 200);
 
       // Draw the offline texture canvas to screen canvas
-      auto tex = ctx2->getTexture();
-      console() << "texture size: (" << tex->getWidth() << ", " << tex->getHeight() << ")" << endl;
-      ctx->drawImage(tex, 0, 0);
+      ctx->drawImage(ctx2->getTexture(), 160, 100);
+
+      // Draw something again to the texture canvas
+      ctx2->state->strokeColor = { 0.0f, 1.0f, 1.0f, 1.0f };
+      ctx2->state->lineWidth = 10;
+      ctx2->state->lineJoin = kMuLineJoinRound;
+      ctx2->strokeRect(20, 20, 100, 100);
+
+      // And draw texture canvas to screen canvas again
+      ctx->drawImage(ctx2->getTexture(), 0, 0, 200, 200);
+
+      // And draw some primitives to screen canvas to see whether it is broken
+      ctx->state->strokeColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+      ctx->state->fillColor = { 0.25f, 0.65f, 0.1f, 1.0f };
+      ctx->state->lineWidth = 20;
+      ctx->state->lineCap = kMuLineCapRound;
+      ctx->state->lineJoin = kMuLineJoinMiter;
+      ctx->beginPath();
+      ctx->moveTo(200, 20);
+      ctx->lineTo(200, 200);
+      ctx->lineTo(150, 300);
+      ctx->lineTo(100, 100);
+      ctx->closePath();
+      ctx->fill();
     };
 
     // testLineCap();
