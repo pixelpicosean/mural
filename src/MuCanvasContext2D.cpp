@@ -34,6 +34,7 @@ namespace mural {
   }
 
   const gl::TextureRef MuCanvasContext2D::getTexture() {
+    theCanvasManager.setCurrentRenderingContext(this);
     finish();
     return viewFramebuffer->getColorTexture();
   }
@@ -513,6 +514,7 @@ namespace mural {
 
   void MuCanvasContext2D::setProgram(const gl::GlslProgRef &glsl) {
     if (glsl != batch->getGlslProg()) {
+      flushBuffers();
       batch->replaceGlslProg(glsl);
     }
   }
