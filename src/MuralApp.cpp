@@ -183,6 +183,57 @@ void MuralApp::draw() {
       ctx->stroke();
     };
 
+    auto testComplexCurves = [&] {
+      auto w = 640;
+      auto h = 400;
+      auto w2 = w / 2;
+      auto h2 = h / 2;
+
+      int maxCurves = 70;
+
+      struct Curve {
+        float current = 0.0f;
+        float inc = 0.0f;
+        Color color = { rand() * 1.0f / RAND_MAX, rand() * 1.0f / RAND_MAX, rand() * 1.0f / RAND_MAX };
+        Curve(float curr = 0.0f, float i = 0.0f): current(curr), inc(i) {}
+      };
+
+      std::vector<Curve*> curves;
+      for (auto i = 0; i < 70; i++) {
+        curves.push_back(new Curve {
+          (rand() * 1.0f / RAND_MAX) * 1000.0f,           // current
+          (rand() * 1.0f / RAND_MAX) * 0.005f + 0.002f    // inc
+        });
+      }
+
+      ctx->setGlobalCompositeOperation("lighter");
+
+      auto anim = [=] {
+        ctx->clearRect(0.0f, 0.0f, getWindowWidth(), getWindowHeight());
+
+        float p[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+        for (auto i = 0; i < maxCurves; i++ ) {
+          auto curve = curves[i];
+          curve->current += curve->inc;
+          for (auto j = 0; j < 4; j += 2) {
+            auto a = sinf(curve->current * (j + 3) * 373 * 0.0001f);
+            auto b = sinf(curve->current * (j + 5) * 927 * 0.0002f);
+            auto c = sinf(curve->current * (j + 5) * 573 * 0.0001f);
+            p[j] = (a * a * b + c * a + b) * w * c + w2;
+            p[j + 1] = (a * b * b + c - a * b *c) * h2 + h2;
+          }
+
+          ctx->prepare();
+          ctx->beginPath();
+          ctx->moveTo(p[0], p[1]);
+          ctx->bezierCurveTo(p[2], p[3], p[4], p[5], p[6], p[7]);
+          ctx->setStrokeColor(curve->color);
+          ctx->stroke();
+        }
+      };
+
+      theScheduler.setInterval(anim, 1000 / 60.0f);
+    };
 
     auto testPatternFill = [=] {
       auto img = new MuImage();
@@ -281,9 +332,10 @@ void MuralApp::draw() {
     // testImageDrawing();
     // testTimer();
     // testCurves();
+    testComplexCurves();
     // testPatternFill();
     // testTextureContext();
-    testGlobalCompositeOperation();
+    // testGlobalCompositeOperation();
 
     finished = true;
   }
