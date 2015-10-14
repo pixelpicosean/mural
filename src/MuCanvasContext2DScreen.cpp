@@ -27,6 +27,10 @@ namespace mural {
   void MuCanvasContext2DScreen::present() {
     finish();
 
+    // Reset composite operation for drawing
+    MuCompositeOperation op = kMuCompositeOperationSourceOver;
+    glBlendFunc(MuCompositeOperationFuncs[op].source, MuCompositeOperationFuncs[op].destination);
+
     // TODO: clear to `style.backgroundColor`
     gl::clear(ColorAf::zero());
     gl::viewport(0, 0, getWindowWidth(), getWindowHeight());
