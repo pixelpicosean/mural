@@ -133,46 +133,60 @@ namespace mural {
     return state->lineJoin;
   }
 
-  void MuCanvasContext2D::setGlobalCompositeOperation(MuCompositeOperation comp) {
-    state->globalCompositeOperation = comp;
+  void MuCanvasContext2D::setGlobalCompositeOperation(MuCompositeOperation op) {
+    // Same composite operation or switching between SourceOver <> Lighter? We don't
+    // have to flush and set the blend mode then, but we still need to update the state,
+    // as the alphaFactor may be different.
+    if (op == state->globalCompositeOperation ||
+       (op == kMuCompositeOperationLighter && state->globalCompositeOperation == kMuCompositeOperationSourceOver) ||
+       (op == kMuCompositeOperationSourceOver && state->globalCompositeOperation == kMuCompositeOperationLighter)
+    ) {
+      state->globalCompositeOperation = op;
+      return;
+    }
+
+    flushBuffers();
+
+    glBlendFunc(MuCompositeOperationFuncs[op].source, MuCompositeOperationFuncs[op].destination);
+    state->globalCompositeOperation = op;
   }
 
   void MuCanvasContext2D::setGlobalCompositeOperation(const std::string &comp) {
     if (comp == "source-over") {
-      state->globalCompositeOperation = kMuCompositeOperationSourceOver;
+      setGlobalCompositeOperation(kMuCompositeOperationSourceOver);
     }
     else if (comp == "lighter") {
-      state->globalCompositeOperation = kMuCompositeOperationLighter;
+      setGlobalCompositeOperation(kMuCompositeOperationLighter);
     }
     else if (comp == "darker") {
-      state->globalCompositeOperation = kMuCompositeOperationDarker;
+      setGlobalCompositeOperation(kMuCompositeOperationDarker);
     }
     else if (comp == "destination-out") {
-      state->globalCompositeOperation = kMuCompositeOperationDestinationOut;
+      setGlobalCompositeOperation(kMuCompositeOperationDestinationOut);
     }
     else if (comp == "destination-over") {
-      state->globalCompositeOperation = kMuCompositeOperationDestinationOver;
+      setGlobalCompositeOperation(kMuCompositeOperationDestinationOver);
     }
     else if (comp == "source-atop") {
-      state->globalCompositeOperation = kMuCompositeOperationSourceAtop;
+      setGlobalCompositeOperation(kMuCompositeOperationSourceAtop);
     }
     else if (comp == "xor") {
-      state->globalCompositeOperation = kMuCompositeOperationXOR;
+      setGlobalCompositeOperation(kMuCompositeOperationXOR);
     }
     else if (comp == "copy") {
-      state->globalCompositeOperation = kMuCompositeOperationCopy;
+      setGlobalCompositeOperation(kMuCompositeOperationCopy);
     }
     else if (comp == "source-in") {
-      state->globalCompositeOperation = kMuCompositeOperationSourceIn;
+      setGlobalCompositeOperation(kMuCompositeOperationSourceIn);
     }
     else if (comp == "destination-in") {
-      state->globalCompositeOperation = kMuCompositeOperationDestinationIn;
+      setGlobalCompositeOperation(kMuCompositeOperationDestinationIn);
     }
     else if (comp == "source-out") {
-      state->globalCompositeOperation = kMuCompositeOperationSourceOut;
+      setGlobalCompositeOperation(kMuCompositeOperationSourceOut);
     }
     else if (comp == "destination-atop") {
-      state->globalCompositeOperation = kMuCompositeOperationDestinationAtop;
+      setGlobalCompositeOperation(kMuCompositeOperationDestinationAtop);
     }
   }
 
@@ -325,7 +339,7 @@ namespace mural {
 
     // Set Composite op, if different
     if (state->globalCompositeOperation != oldCompositeOp) {
-      globalCompositeOperation = state->globalCompositeOperation;
+      setGlobalCompositeOperation(state->globalCompositeOperation);
     }
   }
 
@@ -419,11 +433,11 @@ namespace mural {
     setProgram(theCanvasManager.getGlsl2DFlat());
 
     MuCompositeOperation oldOp = state->globalCompositeOperation;
-    globalCompositeOperation = kMuCompositeOperationDestinationOut;
+    setGlobalCompositeOperation(kMuCompositeOperationDestinationOut);
 
     pushRect(x, y, w, h, ColorAf::white(), state->transform);
 
-    globalCompositeOperation = oldOp;
+    setGlobalCompositeOperation(oldOp);
   }
 
   void MuCanvasContext2D::beginPath() {
@@ -488,6 +502,9 @@ namespace mural {
       gl::viewport(bufferSize);
       frameBufferBinded = true;
     }
+
+    MuCompositeOperation op = state->globalCompositeOperation;
+    glBlendFunc(MuCompositeOperationFuncs[op].source, MuCompositeOperationFuncs[op].destination);
 
     bindVertexBuffer();
   }

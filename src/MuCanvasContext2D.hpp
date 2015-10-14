@@ -126,8 +126,6 @@ namespace mural {
   class MuCanvasContext2D {
     public:
       // Properties
-      MuCompositeOperation globalCompositeOperation = kMuCompositeOperationSourceOver;
-
       virtual const gl::TextureRef getTexture();
 
       void setFillColor(const ColorAf& color);
