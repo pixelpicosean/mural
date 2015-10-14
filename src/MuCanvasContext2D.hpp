@@ -74,6 +74,7 @@ namespace mural {
   extern const MuCompositeOperationFunc MuCompositeOperationFuncs[];
 
   class MuCanvasPattern;
+  class MuCanvasGradient;
 
   struct MuFillable {
     virtual ~MuFillable() {}
@@ -217,7 +218,7 @@ namespace mural {
       void pushQuad(vec2 v1, vec2 v2, vec2 v3, vec2 v4, const ColorAf &color, const MuAffineTransform &transform);
       void pushRect(float x, float y, float w, float h, const ColorAf &color, const MuAffineTransform &transform);
       void pushFilledRect(float x, float y, float w, float h, MuFillable *fillable, const ColorAf &color, MuAffineTransform transform);
-      // void pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, const ColorAf &color, MuAffineTransform transform);
+      void pushGradientRect(float x, float y, float w, float h, MuCanvasGradient *gradient, const ColorAf &color, MuAffineTransform transform);
       void pushPatternedRect(float x, float y, float w, float h, MuCanvasPattern *pattern, const ColorAf &color, MuAffineTransform transform);
       void pushTexturedRect(
         float x, float y, float w, float h,

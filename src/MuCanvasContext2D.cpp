@@ -9,6 +9,7 @@
 #include "MuCanvasContext2D.hpp"
 #include "MuCanvasManager.hpp"
 #include "MuCanvasPattern.hpp"
+#include "MuCanvasGradient.hpp"
 
 namespace mural {
 
@@ -643,8 +644,13 @@ namespace mural {
       return;
     }
 
-    // MuCanvasGradient *gradient = ...
+    MuCanvasGradient *gradient = dynamic_cast<MuCanvasGradient *>(fillable);
+    if (gradient) {
+      pushGradientRect(x, y, w, h, gradient, color, transform);
+    }
   }
+
+  void MuCanvasContext2D::pushGradientRect(float x, float y, float w, float h, mural::MuCanvasGradient *gradient, const ColorAf &color, mural::MuAffineTransform transform) {}
 
   void MuCanvasContext2D::pushPatternedRect(float x, float y, float w, float h, mural::MuCanvasPattern *pattern, const ColorAf &color, mural::MuAffineTransform transform) {
     auto texture = pattern->texture;
