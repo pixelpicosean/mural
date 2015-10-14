@@ -17,8 +17,6 @@
 
 namespace mural {
 
-  static const size_t MU_MAX_VERTICES = 2048;
-
   using namespace ci;
   using namespace ci::app;
 

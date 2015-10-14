@@ -10,12 +10,18 @@
 
 namespace mural {
 
+  static const size_t MU_MAX_VERTICES = 2048;
+
   using ci::gl::GlslProgRef;
 
   class MuCanvasContext2D;
   class MuCanvasManager {
     public:
       bool hasScreenCanvas = false;
+
+      // Batch for drawing pathes
+      ci::gl::BatchRef    batch = nullptr;
+      ci::gl::VboMeshRef  mesh = nullptr;
 
       MuCanvasContext2D *getCurrentRenderingContext() { return currentRenderingContext; }
       void setCurrentRenderingContext(MuCanvasContext2D *renderingContext);

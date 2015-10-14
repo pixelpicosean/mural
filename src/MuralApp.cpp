@@ -332,9 +332,9 @@ void MuralApp::draw() {
     // testImageDrawing();
     // testTimer();
     // testCurves();
-    testComplexCurves();
+    // testComplexCurves();
     // testPatternFill();
-    // testTextureContext();
+    testTextureContext();
     // testGlobalCompositeOperation();
 
     finished = true;

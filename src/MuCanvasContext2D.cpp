@@ -252,13 +252,9 @@ namespace mural {
 
   // Lifecycle methods
   void MuCanvasContext2D::create() {
-    // Create mesh and batch
-    mesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
-      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2),
-      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::TEX_COORD_0, 2),
-      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::COLOR, 4)
-    });
-    batch = gl::Batch::create(mesh, gl::getStockShader(gl::ShaderDef()));
+    // Get reference of the shared mesh and batch
+    mesh = theCanvasManager.mesh;
+    batch = theCanvasManager.batch;
 
     // Save vertex buffers for each part for later use
     positionVbo = mesh->findAttrib(geom::POSITION)->second;
@@ -284,7 +280,7 @@ namespace mural {
   }
 
   void MuCanvasContext2D::resetFramebuffer() {
-    prepare();
+    theCanvasManager.setCurrentRenderingContext(this);
 
     gl::clearColor(ColorAf::zero());
     gl::clear(GL_COLOR_BUFFER_BIT);
@@ -523,6 +519,8 @@ namespace mural {
 
   void MuCanvasContext2D::finish() {
     flushBuffers();
+
+    unbindVertexBuffer();
 
     if (frameBufferBinded) {
       viewFramebuffer->unbindFramebuffer();

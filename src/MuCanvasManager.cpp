@@ -32,6 +32,14 @@ namespace mural {
   }
 
   MuCanvasManager::MuCanvasManager() {
+    // Create shared mesh and batch for canvas contexts
+    mesh = gl::VboMesh::create(MU_MAX_VERTICES, GL_TRIANGLES, {
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::POSITION, 2),
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::TEX_COORD_0, 2),
+      gl::VboMesh::Layout().usage(GL_DYNAMIC_DRAW).attrib(geom::COLOR, 4)
+    });
+    batch = gl::Batch::create(mesh, gl::getStockShader(gl::ShaderDef()));
+
     // Vertex Shader - General
     auto vs = CI_GLSL(150,
       uniform mat4 ciModelViewProjection;

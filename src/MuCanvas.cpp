@@ -57,7 +57,6 @@ namespace mural {
     }
 
     renderingContext->create();
-    theCanvasManager.setCurrentRenderingContext(renderingContext);
 
     if (isScreenCanvas) {
       theCanvasManager.setScreenRenderingContext(renderingContext);
