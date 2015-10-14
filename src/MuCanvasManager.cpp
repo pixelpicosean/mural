@@ -18,10 +18,10 @@ namespace mural {
       if (currentRenderingContext) {
         currentRenderingContext->finish();
       }
-
-      renderingContext->prepare();
-      currentRenderingContext = renderingContext;
     }
+
+    renderingContext->prepare();
+    currentRenderingContext = renderingContext;
   }
 
   void MuCanvasManager::drawScreenCanvas() {
