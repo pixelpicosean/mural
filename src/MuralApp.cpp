@@ -248,6 +248,33 @@ void MuralApp::draw() {
       ctx->fill();
     };
 
+    auto testGlobalCompositeOperation = [&] {
+      float x = 32.0f, y = 10.0f, offset = 40.0f, size = 80.0f;
+
+      std::vector<std::vector<std::string> > op = {
+        { "source-over",      "lighter",        "darken",     "destination-out",  },
+        { "destination-over", "source-atop",    "xor",        "copy",             },
+        { "source-in",        "destination-in", "source-out", "destination-atop", },
+      };
+
+      int r = 0, q = 0;
+      for (auto i = op.begin(); i != op.end(); ++i, ++r) {
+        q = 0;
+        for (auto j = (*i).begin(); j != (*i).end(); ++j, ++q) {
+          float ltX = x + q * 152;
+          float ltY = y + 130 * r;
+
+          ctx->setGlobalCompositeOperation(*j);
+
+          ctx->setFillColor("blue");
+          ctx->fillRect(ltX, ltY, size, size);
+
+          ctx->setFillColor("red");
+          ctx->fillRect(ltX + offset, ltY + offset, size, size);
+        }
+      }
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
@@ -255,7 +282,8 @@ void MuralApp::draw() {
     // testTimer();
     // testCurves();
     // testPatternFill();
-    testTextureContext();
+    // testTextureContext();
+    testGlobalCompositeOperation();
 
     finished = true;
   }
