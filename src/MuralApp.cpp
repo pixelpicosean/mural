@@ -214,18 +214,18 @@ void MuralApp::draw() {
 
     auto testTextureContext = [&] {
       // Fill the screen canvas first, so we can see whether something has been drawn to it
-      ctx->setFillColor({ 1.0f, 0.0f, 1.0f, 1.0f });
+      ctx->setFillColor("plum");
       ctx->fillRect(0, 0, canvas->getWidth(), canvas->getHeight());
 
       // Draw to an offline texture canvas
-      ctx2->setFillColor({ 1.0f, 1.0f, 0.0f, 1.0f });
+      ctx2->setFillColor("lightsteelblue");
       ctx2->fillRect(0, 0, 320, 200);
 
       // Draw the offline texture canvas to screen canvas
       ctx->drawImage(ctx2->getTexture(), 160, 100);
 
       // Draw something again to the texture canvas
-      ctx2->setStrokeColor({ 0.0f, 1.0f, 1.0f, 1.0f });
+      ctx2->setStrokeColor("cyan");
       ctx2->setLineWidth(10);
       ctx2->setLineJoin("round");
       ctx2->strokeRect(20, 20, 100, 100);
@@ -234,8 +234,8 @@ void MuralApp::draw() {
       ctx->drawImage(ctx2->getTexture(), 0, 0, 200, 200);
 
       // And draw some primitives to screen canvas to see whether it is broken
-      ctx->setStrokeColor({ 0.0f, 0.0f, 0.0f, 1.0f });
-      ctx->setFillColor({ 0.25f, 0.65f, 0.1f, 1.0f });
+      ctx->setStrokeColor("black");
+      ctx->setFillColor("teal");
       ctx->setLineWidth(20);
       ctx->setLineCap("round");
       ctx->setLineJoin("miter");
