@@ -35,7 +35,6 @@ namespace mural {
 
   // Properties
   const gl::TextureRef MuCanvasContext2D::getTexture() {
-    theCanvasManager.setCurrentRenderingContext(this);
     finish();
     return viewFramebuffer->getColorTexture();
   }
