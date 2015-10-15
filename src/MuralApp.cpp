@@ -333,16 +333,55 @@ void MuralApp::draw() {
       }
     };
 
+    auto testMSAA = [&] {
+      auto c0 = std::make_shared<MuCanvas>(320, 400);
+      c0->msaaEnabled = false;
+      auto ctx0 = c0->getContext(kMuCanvasContextMode2D);
+
+      ctx0->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
+      ctx0->setLineWidth(20);
+      ctx0->setLineCap("round");
+
+      ctx0->beginPath();
+      ctx0->moveTo(120.5, 130);
+      ctx0->quadraticCurveTo(150.8, 130, 160.6, 150.5);
+      ctx0->quadraticCurveTo(190, 250.0, 210.5, 160.5);
+      ctx0->quadraticCurveTo(240, 100.5, 290, 70.5);
+
+      ctx0->stroke();
+
+      auto c16 = std::make_shared<MuCanvas>(320, 400);
+      c16->msaaEnabled = true;
+      c16->msaaSamples = 16;
+      auto ctx16 = c16->getContext(kMuCanvasContextMode2D);
+
+      ctx16->setStrokeColor(ColorAf(1.0f, 1.0f, 0.0f, 1.0f));
+      ctx16->setLineWidth(20);
+      ctx16->setLineCap("round");
+
+      ctx16->beginPath();
+      ctx16->moveTo(120.5, 130);
+      ctx16->quadraticCurveTo(150.8, 130, 160.6, 150.5);
+      ctx16->quadraticCurveTo(190, 250.0, 210.5, 160.5);
+      ctx16->quadraticCurveTo(240, 100.5, 290, 70.5);
+
+      ctx16->stroke();
+
+      ctx->drawImage(ctx0->getTexture(), 0, 0);
+      ctx->drawImage(ctx16->getTexture(), 320, 0);
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
     // testImageDrawing();
     // testTimer();
     // testCurves();
-    testComplexCurves();
+    // testComplexCurves();
     // testPatternFill();
     // testTextureContext();
     // testGlobalCompositeOperation();
+    testMSAA();
 
     finished = true;
   }
