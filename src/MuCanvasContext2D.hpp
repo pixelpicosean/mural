@@ -125,6 +125,9 @@ namespace mural {
   class MuCanvasContext2D {
     public:
       // Properties
+      bool msaaEnabled = false;
+      int msaaSamples = 2;
+
       virtual const gl::TextureRef getTexture();
 
       void setFillColor(const ColorAf& color);

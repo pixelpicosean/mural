@@ -274,7 +274,12 @@ namespace mural {
     bufferSize.y = size.y * devicePixelRatio;
 
     viewFramebuffer = nullptr;
-    viewFramebuffer = gl::Fbo::create(bufferSize.x, bufferSize.y);
+
+    gl::Fbo::Format format;
+    if (msaaEnabled) {
+      format.setSamples(msaaSamples);
+    }
+    viewFramebuffer = gl::Fbo::create(bufferSize.x, bufferSize.y, format);
 
     resetFramebuffer();
   }

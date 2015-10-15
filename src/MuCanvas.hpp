@@ -22,6 +22,9 @@ namespace mural {
 
   class MuCanvas {
     public:
+      bool msaaEnabled = false;
+      int msaaSamples = 2;
+
       gl::TextureRef getTexture();
 
       int getWidth() { return size.x; }

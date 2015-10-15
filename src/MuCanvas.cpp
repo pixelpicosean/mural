@@ -56,6 +56,9 @@ namespace mural {
       renderingContext = new MuCanvasContext2DTexture(size.x, size.y);
     }
 
+    renderingContext->msaaEnabled = msaaEnabled;
+    renderingContext->msaaSamples = msaaSamples;
+
     renderingContext->create();
 
     if (isScreenCanvas) {
