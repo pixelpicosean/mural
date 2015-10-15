@@ -207,9 +207,17 @@ void MuralApp::draw() {
       }
 
       ctx->setGlobalCompositeOperation("lighter");
+      ctx->setLineWidth(2.0f);
+      ctx->setGlobalAlpha(0.5f);
+
+      ctx->setFillColor(ColorAf::hex(0x0000000));
 
       auto anim = [=] {
         ctx->clearRect(0.0f, 0.0f, getWindowWidth(), getWindowHeight());
+
+        ctx->setGlobalCompositeOperation("source-over");
+        ctx->fillRect(0, 0, canvas->getWidth(), canvas->getHeight());
+        // ctx->setGlobalAlpha(0.5f);
 
         float p[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
         for (auto i = 0; i < maxCurves; i++ ) {
@@ -223,7 +231,6 @@ void MuralApp::draw() {
             p[j + 1] = (a * b * b + c - a * b *c) * h2 + h2;
           }
 
-          ctx->prepare();
           ctx->beginPath();
           ctx->moveTo(p[0], p[1]);
           ctx->bezierCurveTo(p[2], p[3], p[4], p[5], p[6], p[7]);
@@ -332,9 +339,9 @@ void MuralApp::draw() {
     // testImageDrawing();
     // testTimer();
     // testCurves();
-    // testComplexCurves();
+    testComplexCurves();
     // testPatternFill();
-    testTextureContext();
+    // testTextureContext();
     // testGlobalCompositeOperation();
 
     finished = true;
