@@ -42,6 +42,8 @@ class MuralApp : public App {
 void MuralApp::setup() {
   // Screen canvas
   canvas = std::make_shared<mural::MuCanvas>();
+  canvas->msaaSamples = 4;
+  canvas->msaaEnabled = true;
 
   // Texture canvas
   canvas2 = std::make_shared<mural::MuCanvas>(getWindowWidth(), getWindowHeight());
@@ -206,11 +208,11 @@ void MuralApp::draw() {
         });
       }
 
-      ctx->setGlobalCompositeOperation("lighter");
+      //ctx->setGlobalCompositeOperation("lighter");
       ctx->setLineWidth(2.0f);
       ctx->setGlobalAlpha(0.5f);
 
-      ctx->setFillColor(ColorAf::hex(0x0000000));
+      ctx->setFillColor(ColorAf::hex(0x000000));
 
       auto anim = [=] {
         ctx->clearRect(0.0f, 0.0f, getWindowWidth(), getWindowHeight());
@@ -371,6 +373,47 @@ void MuralApp::draw() {
       ctx->drawImage(ctx16->getTexture(), 320, 0);
     };
 
+    auto pong = [=] {
+      auto imgBall = new MuImage();
+      auto imgPaddle = new MuImage();
+
+      auto start = [=] {
+        auto texBall = imgBall->getTexture();
+        auto texPaddle = imgPaddle->getTexture();
+
+        ctx->drawImage(texBall, canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+
+        ctx->save();
+        ctx->translate(100, canvas->getHeight() * 0.5f);
+        ctx->rotate(M_PI_2);
+        ctx->drawImage(texPaddle, -texPaddle->getWidth() * 0.5f, -texPaddle->getHeight() * 0.5f);
+        ctx->restore();
+
+        ctx->save();
+        ctx->translate(canvas->getWidth() - 100, canvas->getHeight() * 0.5f);
+        ctx->rotate(-M_PI_2);
+        ctx->drawImage(texPaddle, -texPaddle->getWidth() * 0.5f, -texPaddle->getHeight() * 0.5f);
+        ctx->restore();
+      };
+
+      auto onload = [=](MuImage *img) {
+        static int count = 0;
+        count++;
+
+        console() << "load " << count << std::endl;
+
+        if (count == 2) {
+          start();
+        }
+      };
+
+      imgBall->on("load", onload);
+      imgBall->setSrc("ball.png");
+
+      imgPaddle->on("load", onload);
+      imgPaddle->setSrc("paddle.png");
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
@@ -381,7 +424,8 @@ void MuralApp::draw() {
     // testPatternFill();
     // testTextureContext();
     // testGlobalCompositeOperation();
-    testMSAA();
+    // testMSAA();
+    pong();
 
     finished = true;
   }
