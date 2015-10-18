@@ -542,7 +542,7 @@ namespace mural {
     vec2 d2(x2, y2);
     vec2 d3(x3, y3);
 
-    if (transform.isIdentity()) {
+    if (!transform.isIdentity()) {
       d1 = transform.applyTo(d1);
       d2 = transform.applyTo(d2);
       d3 = transform.applyTo(d3);
@@ -609,7 +609,7 @@ namespace mural {
     vec2 d12(x    , y + h);
     vec2 d22(x + w, y + h);
 
-    if (transform.isIdentity()) {
+    if (!transform.isIdentity()) {
       transform.applyTo(d11);
       transform.applyTo(d12);
       transform.applyTo(d21);
@@ -696,7 +696,7 @@ namespace mural {
     vec2 d12(x    , y + h);
     vec2 d22(x + w, y + h);
 
-    if (transform.isIdentity()) {
+    if (!transform.isIdentity()) {
       transform.applyTo(d11);
       transform.applyTo(d12);
       transform.applyTo(d21);
