@@ -414,6 +414,36 @@ void MuralApp::draw() {
       imgPaddle->setSrc("paddle.png");
     };
 
+    auto testTransform = [&] {
+      auto imgPaddle = new MuImage();
+      imgPaddle->on("load", [&](MuImage *img) {
+        auto tex = img->getTexture();
+
+        float offset = 160.0f;
+
+        // Translate
+        ctx->save();
+        ctx->translate(canvas->getWidth() * 0.5f - offset, canvas->getHeight() * 0.5f);
+        ctx->drawImage(tex, -tex->getWidth() * 0.5f, -tex->getHeight() * 0.5f);
+        ctx->restore();
+
+        // Rotate
+        ctx->save();
+        ctx->translate(canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+        ctx->rotate(M_PI * 0.2f);
+        ctx->drawImage(tex, -tex->getWidth() * 0.5f, -tex->getHeight() * 0.5f);
+        ctx->restore();
+
+        // Scale
+        ctx->save();
+        ctx->translate(canvas->getWidth() * 0.5f + offset, canvas->getHeight() * 0.5f);
+        ctx->scale(1.5f, 1.5f);
+        ctx->drawImage(tex, -tex->getWidth() * 0.5f, -tex->getHeight() * 0.5f);
+        ctx->restore();
+      });
+      imgPaddle->setSrc("paddle.png");
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
@@ -425,7 +455,8 @@ void MuralApp::draw() {
     // testTextureContext();
     // testGlobalCompositeOperation();
     // testMSAA();
-    pong();
+    // pong();
+    testTransform();
 
     finished = true;
   }
