@@ -379,16 +379,21 @@ void MuralApp::draw() {
         auto texBall = imgBall->getTexture();
         auto texPaddle = imgPaddle->getTexture();
 
-        ctx->drawImage(texBall, canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+        float paddleOffset = 40;
 
         ctx->save();
-        ctx->translate(100, canvas->getHeight() * 0.5f);
+        ctx->translate(canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+        ctx->drawImage(texBall, -texBall->getWidth() * 0.5f, -texBall->getHeight() * 0.5f);
+        ctx->restore();
+
+        ctx->save();
+        ctx->translate(paddleOffset, canvas->getHeight() * 0.5f);
         ctx->rotate(M_PI_2);
         ctx->drawImage(texPaddle, -texPaddle->getWidth() * 0.5f, -texPaddle->getHeight() * 0.5f);
         ctx->restore();
 
         ctx->save();
-        ctx->translate(canvas->getWidth() - 100, canvas->getHeight() * 0.5f);
+        ctx->translate(canvas->getWidth() - paddleOffset, canvas->getHeight() * 0.5f);
         ctx->rotate(-M_PI_2);
         ctx->drawImage(texPaddle, -texPaddle->getWidth() * 0.5f, -texPaddle->getHeight() * 0.5f);
         ctx->restore();
@@ -453,8 +458,8 @@ void MuralApp::draw() {
     // testTextureContext();
     // testGlobalCompositeOperation();
     // testMSAA();
-    // pong();
-    testTransform();
+    pong();
+    // testTransform();
 
     finished = true;
   }
