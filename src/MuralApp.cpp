@@ -42,8 +42,6 @@ class MuralApp : public App {
 void MuralApp::setup() {
   // Screen canvas
   canvas = std::make_shared<mural::MuCanvas>();
-  canvas->msaaSamples = 4;
-  canvas->msaaEnabled = true;
 
   // Texture canvas
   canvas2 = std::make_shared<mural::MuCanvas>(getWindowWidth(), getWindowHeight());
