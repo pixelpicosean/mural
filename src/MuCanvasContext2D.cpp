@@ -740,6 +740,7 @@ namespace mural {
     }
 
     flushBuffers();
+    bindVertexBuffer();
 
     currentTexture = texture;
     currentTexture->bind();
