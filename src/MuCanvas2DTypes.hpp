@@ -32,10 +32,15 @@ namespace mural {
       float fSin = sin(angle);
       float fCos = cos(angle);
 
-      a = a * fCos + c * fSin;
-      b = b * fCos + d * fSin;
-      c = c * fCos - a * fSin;
-      d = d * fCos - b * fSin;
+      float res_a = a * fCos + c * fSin;
+      float res_b = b * fCos + d * fSin;
+      float res_c = c * fCos - a * fSin;
+      float res_d = d * fCos - b * fSin;
+
+      a = res_a;
+      b = res_b;
+      c = res_c;
+      d = res_d;
     }
 
     void scale(float sx, float sy) {
@@ -46,12 +51,19 @@ namespace mural {
     }
 
     void concat(const MuAffineTransform &t) {
-      a = a * t.a + b * t.c;
-      b = a * t.b + b * t.d;
-      c = c * t.a + d * t.c;
-      d = c * t.b + d * t.d;
-      tx = tx * t.a + ty * t.c + t.tx;
-      ty = tx * t.b + ty * t.d + t.ty;
+      float res_a = a * t.a + b * t.c;
+      float res_b = a * t.b + b * t.d;
+      float res_c = c * t.a + d * t.c;
+      float res_d = c * t.b + d * t.d;
+      float res_tx = tx * t.a + ty * t.c + t.tx;
+      float res_ty = tx * t.b + ty * t.d + t.ty;
+
+      a = res_a;
+      b = res_b;
+      c = res_c;
+      d = res_d;
+      tx = res_tx;
+      ty = res_ty;
     }
 
     void invert() {
@@ -82,8 +94,11 @@ namespace mural {
     }
 
     vec2 &applyTo(vec2 &p) const {
-      p.x = a * p.x + c * p.y + tx;
-      p.y = b * p.x + d * p.y + ty;
+      float res_x = a * p.x + c * p.y + tx;
+      float res_y = b * p.x + d * p.y + ty;
+
+      p.x = res_x;
+      p.y = res_y;
 
       return p;
     }
