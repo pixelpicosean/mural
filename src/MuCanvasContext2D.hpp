@@ -208,6 +208,9 @@ namespace mural {
       void arcTo(float x1, float y1, float x2, float y2, float radius);
       void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise);
 
+      Surface8uRef getImageData(int sx, int sy, int sw, int sh);
+      void putImageData(const Surface8uRef& imageData, int dx, int dy);
+
       // Utils
       void prepare();
       void flushBuffers();

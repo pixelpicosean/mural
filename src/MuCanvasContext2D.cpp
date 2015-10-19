@@ -498,6 +498,17 @@ namespace mural {
     path->arc(x, y, radius, startAngle, endAngle, antiClockwise);
   }
 
+  Surface8uRef MuCanvasContext2D::getImageData(int sx, int sy, int sw, int sh) {
+    finish();
+
+    return std::make_shared<Surface8u>(viewFramebuffer->readPixels8u({ sx, sy, sx + sw, sy + sh }));
+  }
+
+  void MuCanvasContext2D::putImageData(const Surface8uRef &imageData, int dx, int dy) {
+    auto tex = gl::Texture2d::create(*imageData.get());
+    drawImage(tex, dx, dy);
+  }
+
   void MuCanvasContext2D::prepare() {
     if (!frameBufferBinded) {
       viewFramebuffer->bindFramebuffer();
