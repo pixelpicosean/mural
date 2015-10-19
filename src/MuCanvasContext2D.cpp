@@ -264,6 +264,14 @@ namespace mural {
     resizeTo(size.x, size.y);
   }
 
+  void MuCanvasContext2D::setFont(const cinder::Font &font) {
+    state->font = font;
+  }
+
+  Font MuCanvasContext2D::getFont() {
+    return state->font;
+  }
+
   void MuCanvasContext2D::resizeTo(int newWidth, int newHeight) {
     size.x = newWidth;
     size.y = newHeight;
@@ -496,6 +504,55 @@ namespace mural {
 
   void MuCanvasContext2D::arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise) {
     path->arc(x, y, radius, startAngle, endAngle, antiClockwise);
+  }
+
+  // FIXME: stroke instead of fill
+  void MuCanvasContext2D::strokeText(const std::string &text, float x, float y) {
+    TextLayout t;
+    t.setFont(state->font);
+    t.setColor(state->strokeColor);
+
+    t.append(text);
+
+    auto tex = gl::Texture2d::create(t.render());
+
+    float leftTopX = x;
+    float leftTopY = y - tex->getHeight();
+
+    // Align to the center
+    if (state->textAlign == kMuTextAlignCenter) {
+      leftTopX = x - tex->getWidth() * 0.5f;
+    }
+    // Align to the right
+    else {
+      leftTopX = x - tex->getWidth();
+    }
+
+    drawImage(tex, leftTopX, leftTopY);
+  }
+
+  void MuCanvasContext2D::fillText(const std::string &text, float x, float y) {
+    TextLayout t;
+    t.setFont(state->font);
+    t.setColor(state->fillColor);
+
+    t.append(text);
+
+    auto tex = gl::Texture2d::create(t.render());
+
+    float leftTopX = x;
+    float leftTopY = y - tex->getHeight();
+
+    // Align to the center
+    if (state->textAlign == kMuTextAlignCenter) {
+      leftTopX = x - tex->getWidth() * 0.5f;
+    }
+    // Align to the right
+    else {
+      leftTopX = x - tex->getWidth();
+    }
+
+    drawImage(tex, leftTopX, leftTopY);
   }
 
   Surface8uRef MuCanvasContext2D::getImageData(int sx, int sy, int sw, int sh) {

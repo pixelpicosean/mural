@@ -32,7 +32,7 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] rect, arc
 - [x] stroke, fill
 - [x] strokeRect, fillRect
-- [ ] strokeText, fillText
+- [x] strokeText, fillText (stroke text performs the same as fill)
 - [x] drawImage
 - [x] translate, rotate, scale
 - [x] clearRect

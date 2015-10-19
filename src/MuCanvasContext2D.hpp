@@ -95,7 +95,7 @@ namespace mural {
 
     MuTextAlign textAlign = kMuTextAlignStart;
     MuTextBaseline textBaseline = kMuTextBaselineAlphabetic;
-    // MuFontDescriptor *font;
+    Font font = Font::getDefault();
 
     std::shared_ptr<MuPath> clipPath = nullptr;
   };
@@ -171,6 +171,9 @@ namespace mural {
       void setTextBaseline(const std::string& baseline);
       MuTextBaseline getTextBaseline();
 
+      void setFont(const Font& font);
+      Font getFont();
+
       // Ctor
       MuCanvasContext2D(int width, int height);
       virtual ~MuCanvasContext2D() {}
@@ -207,7 +210,8 @@ namespace mural {
       void quadraticCurveTo(float cpx, float cpy, float x, float y);
       void arcTo(float x1, float y1, float x2, float y2, float radius);
       void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise);
-
+      void strokeText(const std::string& text, float x, float y);
+      void fillText(const std::string& text, float x, float y);
       Surface8uRef getImageData(int sx, int sy, int sw, int sh);
       void putImageData(const Surface8uRef& imageData, int dx, int dy);
 
