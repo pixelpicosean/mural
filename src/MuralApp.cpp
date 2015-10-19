@@ -447,6 +447,14 @@ void MuralApp::draw() {
       imgPaddle->setSrc("paddle.png");
     };
 
+    auto testImageData = [&] {
+      ctx->setFillColor("teal");
+      ctx->fillRect(20, 20, 20, 20);
+
+      auto imgData = ctx->getImageData(20, 20, 40, 40);
+      ctx->putImageData(imgData, canvas->getWidth() * 0.5 + 20, 20);
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
@@ -458,8 +466,9 @@ void MuralApp::draw() {
     // testTextureContext();
     // testGlobalCompositeOperation();
     // testMSAA();
-    pong();
+    // pong();
     // testTransform();
+    testImageData();
 
     finished = true;
   }
