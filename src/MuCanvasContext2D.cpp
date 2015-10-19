@@ -555,6 +555,16 @@ namespace mural {
     drawImage(tex, leftTopX, leftTopY);
   }
 
+  vec2 MuCanvasContext2D::measureText(const std::string& text) {
+    textBox
+      .font(state->font)
+      .color(state->fillColor)
+      .premultiplied()
+      .text(text);
+
+    return textBox.measure();
+  }
+
   Surface8uRef MuCanvasContext2D::getImageData(int sx, int sy, int sw, int sh) {
     finish();
 

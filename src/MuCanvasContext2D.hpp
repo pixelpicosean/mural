@@ -212,6 +212,7 @@ namespace mural {
       void arc(float x, float y, float radius, float startAngle, float endAngle, bool antiClockwise);
       void strokeText(const std::string& text, float x, float y);
       void fillText(const std::string& text, float x, float y);
+      vec2 measureText(const std::string& text);
       Surface8uRef getImageData(int sx, int sy, int sw, int sh);
       void putImageData(const Surface8uRef& imageData, int dx, int dy);
 
