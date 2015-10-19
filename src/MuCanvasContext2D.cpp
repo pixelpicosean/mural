@@ -508,13 +508,13 @@ namespace mural {
 
   // FIXME: stroke instead of fill
   void MuCanvasContext2D::strokeText(const std::string &text, float x, float y) {
-    TextLayout t;
-    t.setFont(state->font);
-    t.setColor(state->strokeColor);
+    textBox
+      .font(state->font)
+      .color(state->fillColor)
+      .premultiplied()
+      .text(text);
 
-    t.append(text);
-
-    auto tex = gl::Texture2d::create(t.render());
+    auto tex = gl::Texture2d::create(textBox.render());
 
     float leftTopX = x;
     float leftTopY = y - tex->getHeight();
@@ -532,13 +532,13 @@ namespace mural {
   }
 
   void MuCanvasContext2D::fillText(const std::string &text, float x, float y) {
-    TextLayout t;
-    t.setFont(state->font);
-    t.setColor(state->fillColor);
+    textBox
+      .font(state->font)
+      .color(state->fillColor)
+      .premultiplied()
+      .text(text);
 
-    t.append(text);
-
-    auto tex = gl::Texture2d::create(t.render());
+    auto tex = gl::Texture2d::create(textBox.render());
 
     float leftTopX = x;
     float leftTopY = y - tex->getHeight();

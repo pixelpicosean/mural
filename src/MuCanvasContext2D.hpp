@@ -252,6 +252,7 @@ namespace mural {
       std::shared_ptr<MuPath> path = std::make_shared<MuPath>();
 
       gl::Texture2dRef currentTexture = nullptr;
+      TextBox textBox;
 
       // Batch for drawing pathes
       gl::BatchRef    batch = nullptr;
