@@ -51,15 +51,15 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] font
 - [x] texAlign
 - [ ] textBaseline
-- [ ] measureText
+- [x] measureText
 - [ ] imageSmoothingEnabled
+- [ ] createLinearGradient
+- [ ] createRadialGradient
+- [ ] createPattern
 - [ ] shadowBlur
 - [ ] shadowColor
 - [ ] shadowOffsetX
 - [ ] shadowOffsetY
-- [ ] createLinearGradient
-- [ ] createRadialGradient
-- [ ] createPattern
 
 ### Timers
 
