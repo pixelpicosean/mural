@@ -24,8 +24,8 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] strokeStyle, fillStyle (color)
 - [x] fillStyle (pattern)
 - [ ] strokeStyle, fillStyle (gradient)
-- [ ] globalAlpha
-- [ ] globalCompositeOperation
+- [x] globalAlpha
+- [x] globalCompositeOperation
 - [x] save, restore
 - [x] beginPath, closePath
 - [x] moveTo, lineTo
@@ -33,7 +33,7 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] stroke, fill
 - [x] strokeRect, fillRect
 - [ ] strokeText, fillText
-- [ ] drawImage (supports only Image for now, CanvasRenderingContext2D support is coming next week)
+- [x] drawImage
 - [x] translate, rotate, scale
 - [x] clearRect
 - [x] bezierCurveTo
@@ -41,9 +41,9 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] quadraticCurveTo
 - [x] setTrasform
 - [x] transform
-- [ ] createImageData
-- [ ] getImageData
-- [ ] putImageData
+- [x] createImageData (Surface API is great, no need to create ourselves)
+- [x] getImageData
+- [x] putImageData
 - [x] lineWidth
 - [x] lineCap
 - [x] lineJoin
