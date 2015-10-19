@@ -48,8 +48,8 @@ GREAT power, I'll recommend you to try it yourself.
 - [x] lineCap
 - [x] lineJoin
 - [x] miterLimit
-- [ ] font
-- [ ] texAlign
+- [x] font
+- [x] texAlign
 - [ ] textBaseline
 - [ ] measureText
 - [ ] imageSmoothingEnabled

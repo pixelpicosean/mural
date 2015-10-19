@@ -455,6 +455,13 @@ void MuralApp::draw() {
       ctx->putImageData(imgData, canvas->getWidth() * 0.5 + 20, 20);
     };
 
+    auto testDrawText = [&] {
+      ctx->setFont(Font("Verdana", 48.0f));
+      ctx->setFillColor("pink");
+      ctx->setTextAlign("center");
+      ctx->fillText("It Works!", canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+    };
+
     // testLineCap();
     // testLineJoin();
     // testImage();
@@ -468,7 +475,8 @@ void MuralApp::draw() {
     // testMSAA();
     // pong();
     // testTransform();
-    testImageData();
+    // testImageData();
+    testDrawText();
 
     finished = true;
   }
