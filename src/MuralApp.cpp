@@ -460,6 +460,9 @@ void MuralApp::draw() {
       ctx->setFillColor("pink");
       ctx->setTextAlign("center");
       ctx->fillText("It Works!", canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
+
+      vec2 m = ctx->measureText("IT Works!");
+      console() << "text measure result: " << m << std::endl;
     };
 
     // testLineCap();
