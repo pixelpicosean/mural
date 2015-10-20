@@ -513,22 +513,31 @@ namespace mural {
       .color(state->fillColor)
       .premultiplied()
       .text(text);
-
-    auto tex = gl::Texture2d::create(textBox.render());
+    vec2 size = textBox.measure();
 
     float leftTopX = x;
-    float leftTopY = y - tex->getHeight();
+    float leftTopY = y - size.y;
 
     // Align to the center
     if (state->textAlign == kMuTextAlignCenter) {
-      leftTopX = x - tex->getWidth() * 0.5f;
+      leftTopX = x - size.x * 0.5f;
     }
     // Align to the right
-    else {
-      leftTopX = x - tex->getWidth();
+    else if (state->textAlign == kMuTextAlignRight || state->textAlign == kMuTextAlignEnd) {
+      leftTopX = x - size.x;
     }
 
-    drawImage(tex, leftTopX, leftTopY);
+    gl::ScopedColor c(state->strokeColor);
+
+    auto glyphs = textBox.measureGlyphs();
+    for (auto i = glyphs.begin(); i != glyphs.end(); ++i) {
+      // FIXME: any benefits from caching font shapes?
+      Shape2d s = state->font.getGlyphShape(i->first);
+      mat3 m;
+      m = glm::translate(m, i->second + vec2(leftTopX, leftTopY));
+      s.transform(m);
+      gl::draw(s);
+    }
   }
 
   void MuCanvasContext2D::fillText(const std::string &text, float x, float y) {
@@ -548,7 +557,7 @@ namespace mural {
       leftTopX = x - tex->getWidth() * 0.5f;
     }
     // Align to the right
-    else {
+    else if (state->textAlign == kMuTextAlignRight || state->textAlign == kMuTextAlignEnd) {
       leftTopX = x - tex->getWidth();
     }
 
