@@ -510,7 +510,7 @@ namespace mural {
   void MuCanvasContext2D::strokeText(const std::string &text, float x, float y) {
     textBox
       .font(state->font)
-      .color(state->fillColor)
+      .color(state->strokeColor)
       .premultiplied()
       .text(text);
     vec2 size = textBox.measure();
