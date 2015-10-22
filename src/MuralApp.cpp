@@ -457,12 +457,22 @@ void MuralApp::draw() {
 
     auto testDrawText = [&] {
       ctx->setFont(Font("Verdana", 48.0f));
-      ctx->setFillColor("pink");
       ctx->setTextAlign("center");
-      ctx->fillText("It Works!", canvas->getWidth() * 0.5f, canvas->getHeight() * 0.5f);
 
-      vec2 m = ctx->measureText("IT Works!");
+      ctx->setFillColor("pink");
+      ctx->fillText("It Works!", canvas->getWidth() * 0.5f, 100.0f);
+
+      vec2 m = ctx->measureText("It Works!");
       console() << "text measure result: " << m << std::endl;
+
+      ctx->setStrokeColor("yellow");
+      ctx->strokeText("It Works!", canvas->getWidth() * 0.5, 200);
+
+      ctx->setLineWidth(10);
+      ctx->setStrokeColor("white");
+      ctx->moveTo(100, 300);
+      ctx->lineTo(canvas->getWidth() - 100, 300);
+      ctx->stroke();
     };
 
     // testLineCap();
