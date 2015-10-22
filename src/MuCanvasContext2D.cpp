@@ -506,7 +506,6 @@ namespace mural {
     path->arc(x, y, radius, startAngle, endAngle, antiClockwise);
   }
 
-  // FIXME: stroke instead of fill
   void MuCanvasContext2D::strokeText(const std::string &text, float x, float y) {
     textBox
       .font(state->font)
