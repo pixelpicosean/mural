@@ -33,15 +33,25 @@ void MuralApp::setup() {
   game = std::make_shared<TestApp>();
 }
 
-void MuralApp::mouseDown(MouseEvent event) {}
+void MuralApp::mouseDown(MouseEvent event) {
+  game->mouseDown(event);
+}
 
-void MuralApp::mouseMove(MouseEvent event) {}
+void MuralApp::mouseMove(MouseEvent event) {
+  game->mouseMove(event);
+}
 
-void MuralApp::mouseUp(MouseEvent event) {}
+void MuralApp::mouseUp(MouseEvent event) {
+  game->mouseUp(event);
+}
 
-void MuralApp::keyDown(KeyEvent event) {}
+void MuralApp::keyDown(KeyEvent event) {
+  game->keyDown(event);
+}
 
-void MuralApp::keyUp(KeyEvent event) {}
+void MuralApp::keyUp(KeyEvent event) {
+  game->keyUp(event);
+}
 
 void MuralApp::update() {}
 
@@ -53,6 +63,8 @@ void MuralApp::draw() {
   }
 
   theScheduler.update();
+  game->update();
+  game->draw();
   theCanvasManager.drawScreenCanvas();
 }
 
