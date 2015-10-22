@@ -37,7 +37,7 @@ void animate() {
 
 class TestApp : public MuGameController {
   public:
-    void init() {
+    void init() override {
       // Screen canvas
       canvas = std::make_shared<mural::MuCanvas>();
 
@@ -490,10 +490,6 @@ class TestApp : public MuGameController {
       // testDrawText();
       testDuktape();
     }
-
-    void update() {}
-
-    void draw() {}
 
   protected:
     std::shared_ptr<MuCanvas> canvas;

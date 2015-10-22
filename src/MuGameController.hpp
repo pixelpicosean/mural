@@ -10,11 +10,21 @@
 
 namespace mural {
 
+  using ci::app::MouseEvent;
+  using ci::app::KeyEvent;
+
   class MuGameController {
     public:
-      virtual void init() = 0;
-      virtual void update() = 0;
-      virtual void draw() = 0;
+      virtual void init() {}
+      virtual void update() {}
+      virtual void draw() {}
+
+      virtual void mouseDown(MouseEvent event) {}
+      virtual void mouseMove(MouseEvent event) {}
+      virtual void mouseUp(MouseEvent event) {}
+
+      virtual void keyDown(KeyEvent event) {}
+      virtual void keyUp(KeyEvent event) {}
   };
 
 }
