@@ -17,6 +17,8 @@
 #include "MuTimer.hpp"
 #include "MuCanvasPattern.hpp"
 
+#include "duktape.h"
+
 #include <random>
 
 using namespace ci;
@@ -462,6 +464,14 @@ class TestApp : public MuGameManager {
         ctx->lineTo(canvas->getWidth() - 100, 300);
         ctx->stroke();
       };
+
+      auto testDuktape = [&] {
+        duk_context *jsContext = duk_create_heap_default();
+
+        duk_eval_string(jsContext, "print('Hello from Duktape!');");
+
+        duk_destroy_heap(jsContext);
+      };
       
       // testLineCap();
       // testLineJoin();
@@ -477,7 +487,8 @@ class TestApp : public MuGameManager {
       // pong();
       // testTransform();
       // testImageData();
-      testDrawText();
+      // testDrawText();
+      testDuktape();
     }
 
     void update() {}
