@@ -26,7 +26,7 @@ class MuralApp : public App {
 
   protected:
     bool started = false;
-    std::shared_ptr<MuGameManager> game;
+    std::shared_ptr<MuGameController> game;
 };
 
 void MuralApp::setup() {

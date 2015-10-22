@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "MuGameManager.hpp"
+#include "MuGameController.hpp"
 
 #include "MuCanvas.hpp"
 #include "MuCanvasManager.hpp"
@@ -35,7 +35,7 @@ void animate() {
   }
 }
 
-class TestApp : public MuGameManager {
+class TestApp : public MuGameController {
   public:
     void init() {
       // Screen canvas
