@@ -818,6 +818,7 @@ namespace mural {
     if (glsl != batch->getGlslProg()) {
       flushBuffers();
       batch->replaceGlslProg(glsl);
+      prepare();
     }
   }
 
