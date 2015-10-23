@@ -19,6 +19,7 @@
 		1409BB071BBD03B00029F8D4 /* MuCanvasContext2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1409BB051BBD03B00029F8D4 /* MuCanvasContext2D.cpp */; settings = {ASSET_TAGS = (); }; };
 		144B08471BCE73C3002E81AA /* MuCanvasGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 144B08451BCE73C3002E81AA /* MuCanvasGradient.cpp */; settings = {ASSET_TAGS = (); }; };
 		1450B3721BC256F7007B1F2D /* MuImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1450B3701BC256F7007B1F2D /* MuImage.cpp */; settings = {ASSET_TAGS = (); }; };
+		147EC5D01BD901C1002E436A /* JavaScriptApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 147EC5CE1BD901C1002E436A /* JavaScriptApp.cpp */; settings = {ASSET_TAGS = (); }; };
 		14AC89341BC40C1900E1E9BD /* MuTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14AC89321BC40C1900E1E9BD /* MuTimer.cpp */; settings = {ASSET_TAGS = (); }; };
 		14C034991BD894D200E4FAB8 /* duktape.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C034971BD894D200E4FAB8 /* duktape.c */; settings = {ASSET_TAGS = (); }; };
 		14DCFB601BBEB496003C2144 /* MuCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14DCFB5E1BBEB496003C2144 /* MuCanvas.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -51,6 +52,8 @@
 		144B08461BCE73C3002E81AA /* MuCanvasGradient.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuCanvasGradient.hpp; path = ../src/MuCanvasGradient.hpp; sourceTree = "<group>"; };
 		1450B3701BC256F7007B1F2D /* MuImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuImage.cpp; path = ../src/MuImage.cpp; sourceTree = "<group>"; };
 		1450B3711BC256F7007B1F2D /* MuImage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuImage.hpp; path = ../src/MuImage.hpp; sourceTree = "<group>"; };
+		147EC5CE1BD901C1002E436A /* JavaScriptApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JavaScriptApp.cpp; sourceTree = "<group>"; };
+		147EC5CF1BD901C1002E436A /* JavaScriptApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JavaScriptApp.hpp; sourceTree = "<group>"; };
 		14AC89321BC40C1900E1E9BD /* MuTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MuTimer.cpp; path = ../src/MuTimer.cpp; sourceTree = "<group>"; };
 		14AC89331BC40C1900E1E9BD /* MuTimer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MuTimer.hpp; path = ../src/MuTimer.hpp; sourceTree = "<group>"; };
 		14C034961BD894D200E4FAB8 /* duk_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = duk_config.h; sourceTree = "<group>"; };
@@ -178,6 +181,8 @@
 				14C034971BD894D200E4FAB8 /* duktape.c */,
 				14C034981BD894D200E4FAB8 /* duktape.h */,
 				14C0349B1BD8953800E4FAB8 /* TestApp.hpp */,
+				147EC5CE1BD901C1002E436A /* JavaScriptApp.cpp */,
+				147EC5CF1BD901C1002E436A /* JavaScriptApp.hpp */,
 			);
 			name = Game;
 			path = ../src/Game;
@@ -300,6 +305,7 @@
 				14DCFB691BBF759E003C2144 /* MuCanvasContext2DTexture.cpp in Sources */,
 				97464A5B7C954628AF0DA59B /* MuralApp.cpp in Sources */,
 				14C034991BD894D200E4FAB8 /* duktape.c in Sources */,
+				147EC5D01BD901C1002E436A /* JavaScriptApp.cpp in Sources */,
 				14DCFB631BBEBB04003C2144 /* MuCanvasManager.cpp in Sources */,
 				14F314EA1BC653E6002CD1CF /* MuCanvasPattern.cpp in Sources */,
 				14DCFB601BBEB496003C2144 /* MuCanvas.cpp in Sources */,
