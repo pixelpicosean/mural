@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "cinder/Rand.h"
+
 #include "MuGameController.hpp"
 
 #include "MuCanvas.hpp"
@@ -18,8 +20,6 @@
 #include "MuCanvasPattern.hpp"
 
 #include "duktape.h"
-
-#include <random>
 
 using namespace ci;
 using namespace ci::app;
@@ -184,15 +184,15 @@ class TestApp : public MuGameController {
         struct Curve {
           float current = 0.0f;
           float inc = 0.0f;
-          Color color = { rand() * 1.0f / RAND_MAX, rand() * 1.0f / RAND_MAX, rand() * 1.0f / RAND_MAX };
+          Color color = { ci::randFloat(), ci::randFloat(), ci::randFloat() };
           Curve(float curr = 0.0f, float i = 0.0f): current(curr), inc(i) {}
         };
 
         std::vector<Curve*> curves;
         for (auto i = 0; i < 70; i++) {
           curves.push_back(new Curve {
-            (rand() * 1.0f / RAND_MAX) * 1000.0f,           // current
-            (rand() * 1.0f / RAND_MAX) * 0.005f + 0.002f    // inc
+            ci::randFloat(1000.0f),              // current
+            ci::randFloat() * 0.005f + 0.002f    // inc
           });
         }
 
